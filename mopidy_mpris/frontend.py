@@ -6,9 +6,9 @@ import os
 import pykka
 
 from mopidy.core import CoreListener
-from mopidy.frontends.mpris import objects
+from mopidy_mpris import objects
 
-logger = logging.getLogger('mopidy.frontends.mpris')
+logger = logging.getLogger('mopidy_mpris')
 
 try:
     indicate = None

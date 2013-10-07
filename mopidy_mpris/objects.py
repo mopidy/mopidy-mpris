@@ -13,7 +13,7 @@ from mopidy.core import PlaybackState
 from mopidy.utils.process import exit_process
 
 
-logger = logging.getLogger('mopidy.frontends.mpris')
+logger = logging.getLogger('mopidy_mpris')
 
 # Must be done before dbus.SessionBus() is called
 gobject.threads_init()
