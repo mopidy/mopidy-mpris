@@ -17,14 +17,16 @@ setup(
     license='Apache License, Version 2.0',
     author='Stein Magnus Jodal',
     author_email='stein.magnus@jodal.no',
-    description='Mopidy extension for controlling Mopidy through the MPRIS D-Bus interface',
+    description=(
+        'Mopidy extension for controlling Mopidy through the '
+        'MPRIS D-Bus interface'),
     long_description=open('README.rst').read(),
     packages=find_packages(exclude=['tests', 'tests.*']),
     zip_safe=False,
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'Mopidy >= 0.14',
+        'Mopidy >= 0.16',
         'Pykka >= 1.1',
     ],
     test_suite='nose.collector',

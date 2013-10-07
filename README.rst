@@ -1,6 +1,6 @@
-****************************
+************
 Mopidy-MPRIS
-****************************
+************
 
 .. image:: https://pypip.in/v/Mopidy-MPRIS/badge.png
     :target: https://crate.io/packages/Mopidy-MPRIS/
@@ -18,7 +18,8 @@ Mopidy-MPRIS
    :target: https://coveralls.io/r/mopidy/mopidy-mpris?branch=master
    :alt: Test coverage
 
-Mopidy extension for controlling Mopidy through the MPRIS D-Bus interface
+`Mopidy <http://www.mopidy.com/>`_ extension for controlling Mopidy through the
+`MPRIS D-Bus interface <http://www.mpris.org/>`_.
 
 
 Installation
@@ -35,11 +36,12 @@ Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
 Configuration
 =============
 
-Before starting Mopidy, you must add configuration for
-Mopidy-MPRIS to your Mopidy configuration file::
+There's no configuration needed for the MPRIS extension to work.
 
-    [mpris]
-    # TODO: Add example of extension config
+The following configuration values are available:
+
+- ``mpris/enabled``: If the MPRIS extension should be enabled or not.
+- ``mpris/desktop_file``: Path to Mopidy's ``.desktop`` file.
 
 
 Project resources
@@ -54,6 +56,6 @@ Changelog
 =========
 
 v0.1.0 (UNRELEASED)
-----------------------------------------
+-------------------
 
-- Initial release.
+- Moved extension out of the main Mopidy project.

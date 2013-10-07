@@ -2,14 +2,7 @@ from __future__ import unicode_literals
 
 import os
 
-# TODO: Comment in if you need to register GStreamer elements below, else
-# remove entirely
-#import pygst
-#pygst.require('0.10')
-#import gst
-#import gobject
-
-from mopidy import config, ext
+from mopidy import config, exceptions, ext
 
 
 __version__ = '0.1.0'
@@ -27,27 +20,19 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
-        # TODO: Comment in and edit, or remove entirely
-        #schema['username'] = config.String()
-        #schema['password'] = config.Secret()
+        schema['desktop_file'] = config.Path()
         return schema
 
-    # You will typically only implement one of the next three methods
-    # in a single extension.
+    def validate_environment(self):
+        if 'DISPLAY' not in os.environ:
+            raise exceptions.ExtensionError(
+                'An X11 $DISPLAY is needed to use D-Bus')
 
-    # TODO: Comment in and edit, or remove entirely
-    #def get_frontend_classes(self):
-    #    from .frontend import FoobarFrontend
-    #    return [FoobarFrontend]
+        try:
+            import dbus  # noqa
+        except ImportError as e:
+            raise exceptions.ExtensionError('dbus library not found', e)
 
-    # TODO: Comment in and edit, or remove entirely
-    #def get_backend_classes(self):
-    #    from .backend import FoobarBackend
-    #    return [FoobarBackend]
-
-    # TODO: Comment in and edit, or remove entirely
-    #def register_gstreamer_elements(self):
-    #    from .mixer import FoobarMixer
-    #    gobject.type_register(FoobarMixer)
-    #    gst.element_register(
-    #        FoobarMixer, 'foobarmixer', gst.RANK_MARGINAL)
+    def get_frontend_classes(self):
+        from .frontend import MprisFrontend
+        return [MprisFrontend]
