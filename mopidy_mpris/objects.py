@@ -301,8 +301,8 @@ class MprisObject(dbus.service.Object):
             return 'Stopped'
 
     def get_LoopStatus(self):
-        repeat = self.core.playback.repeat.get()
-        single = self.core.playback.single.get()
+        repeat = self.core.tracklist.repeat.get()
+        single = self.core.tracklist.single.get()
         if not repeat:
             return 'None'
         else:
@@ -316,14 +316,14 @@ class MprisObject(dbus.service.Object):
             logger.debug('Setting %s.LoopStatus not allowed', PLAYER_IFACE)
             return
         if value == 'None':
-            self.core.playback.repeat = False
-            self.core.playback.single = False
+            self.core.tracklist.repeat = False
+            self.core.tracklist.single = False
         elif value == 'Track':
-            self.core.playback.repeat = True
-            self.core.playback.single = True
+            self.core.tracklist.repeat = True
+            self.core.tracklist.single = True
         elif value == 'Playlist':
-            self.core.playback.repeat = True
-            self.core.playback.single = False
+            self.core.tracklist.repeat = True
+            self.core.tracklist.single = False
 
     def set_Rate(self, value):
         if not self.get_CanControl():
@@ -335,16 +335,16 @@ class MprisObject(dbus.service.Object):
             self.Pause()
 
     def get_Shuffle(self):
-        return self.core.playback.random.get()
+        return self.core.tracklist.random.get()
 
     def set_Shuffle(self, value):
         if not self.get_CanControl():
             logger.debug('Setting %s.Shuffle not allowed', PLAYER_IFACE)
             return
         if value:
-            self.core.playback.random = True
+            self.core.tracklist.random = True
         else:
-            self.core.playback.random = False
+            self.core.tracklist.random = False
 
     def get_Metadata(self):
         current_tl_track = self.core.playback.current_tl_track.get()
@@ -406,23 +406,24 @@ class MprisObject(dbus.service.Object):
     def get_CanGoNext(self):
         if not self.get_CanControl():
             return False
-        return (
-            self.core.playback.tl_track_at_next.get() !=
-            self.core.playback.current_tl_track.get())
+        current_tl_track = self.core.playback.current_tl_track.get()
+        next_tl_track = self.core.tracklist.next_track(current_tl_track).get()
+        return next_tl_track != current_tl_track
 
     def get_CanGoPrevious(self):
         if not self.get_CanControl():
             return False
-        return (
-            self.core.playback.tl_track_at_previous.get() !=
-            self.core.playback.current_tl_track.get())
+        current_tl_track = self.core.playback.current_tl_track.get()
+        previous_tl_track = (
+            self.core.tracklist.previous_track(current_tl_track).get())
+        return previous_tl_track != current_tl_track
 
     def get_CanPlay(self):
         if not self.get_CanControl():
             return False
-        return (
-            self.core.playback.current_tl_track.get() is not None or
-            self.core.playback.tl_track_at_next.get() is not None)
+        current_tl_track = self.core.playback.current_tl_track.get()
+        next_tl_track = self.core.tracklist.next_track(current_tl_track).get()
+        return current_tl_track is not None or next_tl_track is not None
 
     def get_CanPause(self):
         if not self.get_CanControl():
