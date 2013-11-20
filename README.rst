@@ -133,6 +133,13 @@ Project resources
 Changelog
 =========
 
+v1.0.1 (2013-11-20)
+-------------------
+
+- Update to work with Mopidy 0.16 which changed some APIs.
+
+- Remove redundant event loop setup already done by the ``mopidy`` process.
+
 v1.0.0 (2013-10-08)
 -------------------
 
