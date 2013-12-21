@@ -3,11 +3,11 @@ Mopidy-MPRIS
 ************
 
 .. image:: https://pypip.in/v/Mopidy-MPRIS/badge.png
-    :target: https://crate.io/packages/Mopidy-MPRIS/
+    :target: https://pypi.python.org/pypi/Mopidy-MPRIS/
     :alt: Latest PyPI version
 
 .. image:: https://pypip.in/d/Mopidy-MPRIS/badge.png
-    :target: https://crate.io/packages/Mopidy-MPRIS/
+    :target: https://pypi.python.org/pypi/Mopidy-MPRIS/
     :alt: Number of PyPI downloads
 
 .. image:: https://travis-ci.org/mopidy/mopidy-mpris.png?branch=master
