@@ -11,7 +11,7 @@ except ImportError:
     dbus = False
 
 from mopidy import core
-from mopidy.backends import dummy
+from mopidy.backend import dummy
 from mopidy.core import PlaybackState
 from mopidy.models import Album, Artist, Track
 
