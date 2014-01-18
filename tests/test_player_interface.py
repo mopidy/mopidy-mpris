@@ -806,8 +806,8 @@ class PlayerInterfaceTest(unittest.TestCase):
         self.assertEqual(self.core.playback.state.get(), PLAYING)
         self.assertEqual(self.core.playback.current_track.get().uri, 'dummy:a')
 
-    def test_open_uri_is_ignored_if_can_play_is_false(self):
-        self.mpris.get_CanPlay = lambda *_: False
+    def test_open_uri_is_ignored_if_can_control_is_false(self):
+        self.mpris.get_CanControl = lambda *_: False
         self.backend.library.dummy_library = [
             Track(uri='dummy:/test/uri')]
         self.mpris.OpenUri('dummy:/test/uri')
