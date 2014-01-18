@@ -33,6 +33,6 @@ class Extension(ext.Extension):
         except ImportError as e:
             raise exceptions.ExtensionError('dbus library not found', e)
 
-    def get_frontend_classes(self):
+    def setup(self, registry):
         from .frontend import MprisFrontend
-        return [MprisFrontend]
+        registry.add('frontend', MprisFrontend)

@@ -1,3 +1,4 @@
+import mock
 import unittest
 
 from mopidy_mpris import Extension, frontend as frontend_lib
@@ -22,7 +23,9 @@ class ExtensionTest(unittest.TestCase):
 
     def test_get_frontend_classes(self):
         ext = Extension()
+        registry = mock.Mock()
 
-        frontends = ext.get_frontend_classes()
+        ext.setup(registry)
 
-        self.assertIn(frontend_lib.MprisFrontend, frontends)
+        registry.add.assert_called_once_with(
+            'frontend', frontend_lib.MprisFrontend)
