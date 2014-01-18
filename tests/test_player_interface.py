@@ -815,20 +815,17 @@ class PlayerInterfaceTest(unittest.TestCase):
 
     def test_open_uri_ignores_uris_with_unknown_uri_scheme(self):
         self.assertListEqual(self.core.uri_schemes.get(), ['dummy'])
-        self.mpris.get_CanPlay = lambda *_: True
         self.backend.library.dummy_library = [Track(uri='notdummy:/test/uri')]
         self.mpris.OpenUri('notdummy:/test/uri')
         self.assertEqual(len(self.core.tracklist.tracks.get()), 0)
 
     def test_open_uri_adds_uri_to_tracklist(self):
-        self.mpris.get_CanPlay = lambda *_: True
         self.backend.library.dummy_library = [Track(uri='dummy:/test/uri')]
         self.mpris.OpenUri('dummy:/test/uri')
         self.assertEqual(
             self.core.tracklist.tracks.get()[0].uri, 'dummy:/test/uri')
 
     def test_open_uri_starts_playback_of_new_track_if_stopped(self):
-        self.mpris.get_CanPlay = lambda *_: True
         self.backend.library.dummy_library = [Track(uri='dummy:/test/uri')]
         self.core.tracklist.add([Track(uri='dummy:a'), Track(uri='dummy:b')])
         self.assertEqual(self.core.playback.state.get(), STOPPED)
@@ -840,7 +837,6 @@ class PlayerInterfaceTest(unittest.TestCase):
             self.core.playback.current_track.get().uri, 'dummy:/test/uri')
 
     def test_open_uri_starts_playback_of_new_track_if_paused(self):
-        self.mpris.get_CanPlay = lambda *_: True
         self.backend.library.dummy_library = [Track(uri='dummy:/test/uri')]
         self.core.tracklist.add([Track(uri='dummy:a'), Track(uri='dummy:b')])
         self.core.playback.play()
@@ -855,7 +851,6 @@ class PlayerInterfaceTest(unittest.TestCase):
             self.core.playback.current_track.get().uri, 'dummy:/test/uri')
 
     def test_open_uri_starts_playback_of_new_track_if_playing(self):
-        self.mpris.get_CanPlay = lambda *_: True
         self.backend.library.dummy_library = [Track(uri='dummy:/test/uri')]
         self.core.tracklist.add([Track(uri='dummy:a'), Track(uri='dummy:b')])
         self.core.playback.play()
