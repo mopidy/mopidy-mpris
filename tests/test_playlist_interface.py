@@ -13,7 +13,7 @@ except ImportError:
 
 from mopidy import core
 from mopidy.audio import PlaybackState
-from mopidy.backends import dummy
+from mopidy.backend import dummy
 from mopidy.models import Track
 
 if dbus:
