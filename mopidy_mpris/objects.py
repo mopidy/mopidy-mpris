@@ -11,7 +11,7 @@ from mopidy.core import PlaybackState
 from mopidy.utils.process import exit_process
 
 
-logger = logging.getLogger('mopidy_mpris')
+logger = logging.getLogger(__name__)
 
 BUS_NAME = 'org.mpris.MediaPlayer2.mopidy'
 OBJECT_PATH = '/org/mpris/MediaPlayer2'

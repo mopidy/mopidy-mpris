@@ -8,7 +8,7 @@ import pykka
 from mopidy.core import CoreListener
 from mopidy_mpris import objects
 
-logger = logging.getLogger('mopidy_mpris')
+logger = logging.getLogger(__name__)
 
 try:
     indicate = None
