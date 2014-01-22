@@ -133,7 +133,7 @@ Project resources
 Changelog
 =========
 
-v1.1.1 (UNRELEASED)
+v1.1.1 (2014-01-22)
 -------------------
 
 - Fix: Make ``OpenUri()`` work even if the tracklist is empty.
