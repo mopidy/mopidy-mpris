@@ -103,7 +103,7 @@ class MprisObject(dbus.service.Object):
         assert track_id.startswith('/com/mopidy/track/')
         return track_id.split('/')[-1]
 
-    ### Properties interface
+    # --- Properties interface
 
     @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
                          in_signature='ss', out_signature='v')
@@ -148,7 +148,7 @@ class MprisObject(dbus.service.Object):
             dbus.PROPERTIES_IFACE, interface, changed_properties,
             invalidated_properties)
 
-    ### Root interface methods
+    # --- Root interface methods
 
     @dbus.service.method(dbus_interface=ROOT_IFACE)
     def Raise(self):
@@ -160,7 +160,7 @@ class MprisObject(dbus.service.Object):
         logger.debug('%s.Quit called', ROOT_IFACE)
         exit_process()
 
-    ### Root interface properties
+    # --- Root interface properties
 
     def get_DesktopEntry(self):
         return os.path.splitext(os.path.basename(
@@ -169,7 +169,7 @@ class MprisObject(dbus.service.Object):
     def get_SupportedUriSchemes(self):
         return dbus.Array(self.core.uri_schemes.get(), signature='s')
 
-    ### Player interface methods
+    # --- Player interface methods
 
     @dbus.service.method(dbus_interface=PLAYER_IFACE)
     def Next(self):
@@ -274,14 +274,14 @@ class MprisObject(dbus.service.Object):
         else:
             logger.debug('Track with URI "%s" not found in library.', uri)
 
-    ### Player interface signals
+    # --- Player interface signals
 
     @dbus.service.signal(dbus_interface=PLAYER_IFACE, signature='x')
     def Seeked(self, position):
         logger.debug('%s.Seeked signaled', PLAYER_IFACE)
         # Do nothing, as just calling the method is enough to emit the signal.
 
-    ### Player interface properties
+    # --- Player interface properties
 
     def get_PlaybackStatus(self):
         state = self.core.playback.state.get()
@@ -435,7 +435,7 @@ class MprisObject(dbus.service.Object):
         # NOTE This could be a setting for the end user to change.
         return True
 
-    ### Playlists interface methods
+    # --- Playlists interface methods
 
     @dbus.service.method(dbus_interface=PLAYLISTS_IFACE)
     def ActivatePlaylist(self, playlist_id):
@@ -466,14 +466,14 @@ class MprisObject(dbus.service.Object):
             for p in playlists]
         return dbus.Array(results, signature='(oss)')
 
-    ### Playlists interface signals
+    # --- Playlists interface signals
 
     @dbus.service.signal(dbus_interface=PLAYLISTS_IFACE, signature='(oss)')
     def PlaylistChanged(self, playlist):
         logger.debug('%s.PlaylistChanged signaled', PLAYLISTS_IFACE)
         # Do nothing, as just calling the method is enough to emit the signal.
 
-    ### Playlists interface properties
+    # --- Playlists interface properties
 
     def get_PlaylistCount(self):
         return len(self.core.playlists.playlists.get())
