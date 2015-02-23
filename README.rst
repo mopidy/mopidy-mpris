@@ -55,10 +55,17 @@ Configuration
 
 There's no configuration needed for the MPRIS extension to work.
 
+If Mopidy is running as an user without an X display, Mopidy-MPRIS will fail by
+default. To fix this, the config option ``system_bus`` can be set to ``true``,
+this will lead to Mopidy-MPRIS making itself available on the system bus. Few
+MPRIS clients will try to access MPRIS devices on the system bus.
+
 The following configuration values are available:
 
 - ``mpris/enabled``: If the MPRIS extension should be enabled or not.
 - ``mpris/desktop_file``: Path to Mopidy's ``.desktop`` file.
+- ``mpris/system_bus``: If Mopidy-MPRIS should connect to the system bus
+                        instead of the session bus.
 
 
 Usage

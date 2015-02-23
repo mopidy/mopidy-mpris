@@ -80,7 +80,10 @@ class MprisObject(dbus.service.Object):
 
     def _connect_to_dbus(self):
         logger.debug('Connecting to D-Bus...')
-        bus_name = dbus.service.BusName(BUS_NAME, dbus.SessionBus())
+        if (self.config['mpris']['system_bus']):
+            bus_name = dbus.service.BusName(BUS_NAME, dbus.SystemBus())
+        else:
+            bus_name = dbus.service.BusName(BUS_NAME, dbus.SessionBus())
         logger.info('MPRIS server connected to D-Bus')
         return bus_name
 

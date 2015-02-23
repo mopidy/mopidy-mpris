@@ -13,6 +13,7 @@ class ExtensionTest(unittest.TestCase):
 
         self.assertIn('[mpris]', config)
         self.assertIn('enabled = true', config)
+        self.assertIn('system_bus = false', config)
 
     def test_get_config_schema(self):
         ext = Extension()
@@ -20,6 +21,7 @@ class ExtensionTest(unittest.TestCase):
         schema = ext.get_config_schema()
 
         self.assertIn('desktop_file', schema)
+        self.assertIn('system_bus', schema)
 
     def test_get_frontend_classes(self):
         ext = Extension()
