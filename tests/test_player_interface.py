@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 import unittest
 
+import dbus
+
 import mock
 
 from mopidy import core
@@ -10,13 +12,7 @@ from mopidy.models import Album, Artist, Track
 
 import pykka
 
-try:
-    import dbus
-except ImportError:
-    dbus = False
-
-if dbus:
-    from mopidy_mpris import objects
+from mopidy_mpris import objects
 
 from tests import dummy_backend, dummy_mixer
 
@@ -26,7 +22,6 @@ PAUSED = PlaybackState.PAUSED
 STOPPED = PlaybackState.STOPPED
 
 
-@unittest.skipUnless(dbus, 'dbus not found')
 class PlayerInterfaceTest(unittest.TestCase):
     def setUp(self):
         objects.MprisObject._connect_to_dbus = mock.Mock()

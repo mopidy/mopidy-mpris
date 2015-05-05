@@ -4,18 +4,11 @@ import unittest
 
 import mock
 
-try:
-    import dbus
-except ImportError:
-    dbus = False
-
 from mopidy.models import Playlist, TlTrack
 
-if dbus:
-    from mopidy_mpris import frontend, objects
+from mopidy_mpris import frontend, objects
 
 
-@unittest.skipUnless(dbus, 'dbus not found')
 class BackendEventsTest(unittest.TestCase):
     def setUp(self):
         # As a plain class, not an actor:

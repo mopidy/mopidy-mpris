@@ -10,18 +10,11 @@ from mopidy.models import Track
 
 import pykka
 
-try:
-    import dbus
-except ImportError:
-    dbus = False
-
-if dbus:
-    from mopidy_mpris import objects
+from mopidy_mpris import objects
 
 from tests import dummy_backend
 
 
-@unittest.skipUnless(dbus, 'dbus not found')
 class PlayerInterfaceTest(unittest.TestCase):
     def setUp(self):
         objects.MprisObject._connect_to_dbus = mock.Mock()

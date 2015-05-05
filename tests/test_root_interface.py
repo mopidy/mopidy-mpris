@@ -8,18 +8,11 @@ from mopidy import core
 
 import pykka
 
-try:
-    import dbus
-except ImportError:
-    dbus = False
-
-if dbus:
-    from mopidy_mpris import objects
+from mopidy_mpris import objects
 
 from tests import dummy_backend
 
 
-@unittest.skipUnless(dbus, 'dbus not found')
 class RootInterfaceTest(unittest.TestCase):
     def setUp(self):
         config = {
