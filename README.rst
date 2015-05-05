@@ -145,7 +145,7 @@ v1.2.0 (UNRELEASED)
 - Add a hardcoded list of MIME types to the root interface
   ``SupportedMimeTypes`` property. This is a temporary solution to be able to
   play audio through UPnP using Rygel and Mopidy-MPRIS. Long term,
-  mopidy/mopidy#812 is the proper solution. (PR: #11)
+  mopidy/mopidy#812 is the proper solution. (Fixes: #7, PR: #11)
 
 v1.1.1 (2014-01-22)
 -------------------
