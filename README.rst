@@ -138,6 +138,10 @@ v1.2.0 (UNRELEASED)
 
 - Update tests to pass with Mopidy 1.0.
 
+- Update ``Seek()`` implementation to only pass positive numbers to Mopidy, as
+  Mopidy 1.1 is stricter about its input validation and no longer accepts seeks
+  to negative positions.
+
 v1.1.1 (2014-01-22)
 -------------------
 

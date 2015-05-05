@@ -238,6 +238,8 @@ class MprisObject(dbus.service.Object):
         offset_in_milliseconds = offset // 1000
         current_position = self.core.playback.time_position.get()
         new_position = current_position + offset_in_milliseconds
+        if new_position < 0:
+            new_position = 0
         self.core.playback.seek(new_position)
 
     @dbus.service.method(dbus_interface=PLAYER_IFACE)
