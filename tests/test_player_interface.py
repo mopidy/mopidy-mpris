@@ -17,7 +17,7 @@ from mopidy.models import Album, Artist, Track
 if dbus:
     from mopidy_mpris import objects
 
-from tests import dummy_backend
+from tests import dummy_backend, dummy_mixer
 
 
 PLAYING = PlaybackState.PLAYING
@@ -30,7 +30,9 @@ class PlayerInterfaceTest(unittest.TestCase):
     def setUp(self):
         objects.MprisObject._connect_to_dbus = mock.Mock()
         self.backend = dummy_backend.create_proxy()
-        self.core = core.Core.start(backends=[self.backend]).proxy()
+        self.mixer = dummy_mixer.create_proxy()
+        self.core = core.Core.start(
+            backends=[self.backend], mixer=self.mixer).proxy()
         self.mpris = objects.MprisObject(config={}, core=self.core)
 
     def tearDown(self):
@@ -242,7 +244,7 @@ class PlayerInterfaceTest(unittest.TestCase):
         self.assertEqual(result['xesam:trackNumber'], 7)
 
     def test_get_volume_should_return_volume_between_zero_and_one(self):
-        self.core.playback.volume = None
+        # dummy_mixer starts out with None as the volume
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Volume')
         self.assertEqual(result, 0)
 

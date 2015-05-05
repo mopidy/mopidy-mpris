@@ -133,6 +133,11 @@ Project resources
 Changelog
 =========
 
+v1.2.0 (UNRELEASED)
+-------------------
+
+- Update tests to pass with Mopidy 1.0.
+
 v1.1.1 (2014-01-22)
 -------------------
 
