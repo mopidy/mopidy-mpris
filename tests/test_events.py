@@ -25,7 +25,8 @@ class BackendEventsTest(unittest.TestCase):
 
     def test_track_playback_paused_event_changes_playback_status(self):
         self.mpris_object.Get.return_value = 'Paused'
-        self.mpris_frontend.track_playback_paused(TlTrack(), 0)
+        self.mpris_frontend.track_playback_paused(
+            tl_track=TlTrack(), time_position=0)
         self.assertListEqual(self.mpris_object.Get.call_args_list, [
             ((objects.PLAYER_IFACE, 'PlaybackStatus'), {}),
         ])
@@ -34,7 +35,8 @@ class BackendEventsTest(unittest.TestCase):
 
     def test_track_playback_resumed_event_changes_playback_status(self):
         self.mpris_object.Get.return_value = 'Playing'
-        self.mpris_frontend.track_playback_resumed(TlTrack(), 0)
+        self.mpris_frontend.track_playback_resumed(
+            tl_track=TlTrack(), time_position=0)
         self.assertListEqual(self.mpris_object.Get.call_args_list, [
             ((objects.PLAYER_IFACE, 'PlaybackStatus'), {}),
         ])
@@ -43,7 +45,7 @@ class BackendEventsTest(unittest.TestCase):
 
     def test_track_playback_started_changes_playback_status_and_metadata(self):
         self.mpris_object.Get.return_value = '...'
-        self.mpris_frontend.track_playback_started(TlTrack())
+        self.mpris_frontend.track_playback_started(tl_track=TlTrack())
         self.assertListEqual(self.mpris_object.Get.call_args_list, [
             ((objects.PLAYER_IFACE, 'PlaybackStatus'), {}),
             ((objects.PLAYER_IFACE, 'Metadata'), {}),
@@ -54,7 +56,8 @@ class BackendEventsTest(unittest.TestCase):
 
     def test_track_playback_ended_changes_playback_status_and_metadata(self):
         self.mpris_object.Get.return_value = '...'
-        self.mpris_frontend.track_playback_ended(TlTrack(), 0)
+        self.mpris_frontend.track_playback_ended(
+            tl_track=TlTrack(), time_position=0)
         self.assertListEqual(self.mpris_object.Get.call_args_list, [
             ((objects.PLAYER_IFACE, 'PlaybackStatus'), {}),
             ((objects.PLAYER_IFACE, 'Metadata'), {}),
@@ -73,7 +76,7 @@ class BackendEventsTest(unittest.TestCase):
             objects.PLAYER_IFACE, {'Volume': 1.0}, [])
 
     def test_seeked_event_causes_mpris_seeked_event(self):
-        self.mpris_frontend.seeked(31000)
+        self.mpris_frontend.seeked(time_position=31000)
         self.mpris_object.Seeked.assert_called_with(31000000)
 
     def test_playlists_loaded_event_changes_playlist_count(self):
@@ -88,6 +91,6 @@ class BackendEventsTest(unittest.TestCase):
     def test_playlist_changed_event_causes_mpris_playlist_changed_event(self):
         self.mpris_object.get_playlist_id.return_value = 'id-for-dummy:foo'
         playlist = Playlist(uri='dummy:foo', name='foo')
-        self.mpris_frontend.playlist_changed(playlist)
+        self.mpris_frontend.playlist_changed(playlist=playlist)
         self.mpris_object.PlaylistChanged.assert_called_with(
             ('id-for-dummy:foo', 'foo', ''))

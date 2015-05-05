@@ -96,9 +96,10 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
         logger.debug('Received volume_changed event')
         self._emit_properties_changed(objects.PLAYER_IFACE, ['Volume'])
 
-    def seeked(self, time_position_in_ms):
+    def seeked(self, time_position):
         logger.debug('Received seeked event')
-        self.mpris_object.Seeked(time_position_in_ms * 1000)
+        time_position_in_microseconds = time_position * 1000
+        self.mpris_object.Seeked(time_position_in_microseconds)
 
     def playlists_loaded(self):
         logger.debug('Received playlists_loaded event')
