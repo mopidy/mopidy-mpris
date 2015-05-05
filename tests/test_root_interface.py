@@ -84,4 +84,4 @@ class RootInterfaceTest(unittest.TestCase):
 
     def test_supported_mime_types_is_empty(self):
         result = self.mpris.Get(objects.ROOT_IFACE, 'SupportedMimeTypes')
-        self.assertEquals(len(result), 0)
+        self.assertGreater(len(result), 0)

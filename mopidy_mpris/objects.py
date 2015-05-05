@@ -49,7 +49,15 @@ class MprisObject(dbus.service.Object):
             'SupportedUriSchemes': (self.get_SupportedUriSchemes, None),
             # NOTE Return MIME types supported by local backend if support for
             # reporting supported MIME types is added
-            'SupportedMimeTypes': (dbus.Array([], signature='s'), None),
+            'SupportedMimeTypes': (dbus.Array([
+                dbus.String(u'audio/mpeg'),
+                dbus.String(u'audio/x-ms-wma'),
+                dbus.String(u'audio/x-ms-asf'),
+                dbus.String(u'audio/x-flac'),
+                dbus.String(u'audio/flac'),
+                dbus.String(u'audio/l16;channels=2;rate=44100'),
+                dbus.String(u'audio/l16;rate=44100;channels=2')
+                ], signature='s'), None),
         }
 
     def _get_player_iface_properties(self):
