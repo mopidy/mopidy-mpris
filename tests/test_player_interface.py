@@ -11,12 +11,14 @@ except ImportError:
     dbus = False
 
 from mopidy import core
-from mopidy.backend import dummy
 from mopidy.core import PlaybackState
 from mopidy.models import Album, Artist, Track
 
 if dbus:
     from mopidy_mpris import objects
+
+from tests import dummy_backend
+
 
 PLAYING = PlaybackState.PLAYING
 PAUSED = PlaybackState.PAUSED
@@ -27,7 +29,7 @@ STOPPED = PlaybackState.STOPPED
 class PlayerInterfaceTest(unittest.TestCase):
     def setUp(self):
         objects.MprisObject._connect_to_dbus = mock.Mock()
-        self.backend = dummy.create_dummy_backend_proxy()
+        self.backend = dummy_backend.create_proxy()
         self.core = core.Core.start(backends=[self.backend]).proxy()
         self.mpris = objects.MprisObject(config={}, core=self.core)
 

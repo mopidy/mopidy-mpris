@@ -13,18 +13,19 @@ except ImportError:
 
 from mopidy import core
 from mopidy.audio import PlaybackState
-from mopidy.backend import dummy
 from mopidy.models import Track
 
 if dbus:
     from mopidy_mpris import objects
+
+from tests import dummy_backend
 
 
 @unittest.skipUnless(dbus, 'dbus not found')
 class PlayerInterfaceTest(unittest.TestCase):
     def setUp(self):
         objects.MprisObject._connect_to_dbus = mock.Mock()
-        self.backend = dummy.create_dummy_backend_proxy()
+        self.backend = dummy_backend.create_proxy()
         self.core = core.Core.start(backends=[self.backend]).proxy()
         self.mpris = objects.MprisObject(config={}, core=self.core)
 

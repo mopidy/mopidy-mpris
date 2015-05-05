@@ -11,10 +11,11 @@ except ImportError:
     dbus = False
 
 from mopidy import core
-from mopidy.backend import dummy
 
 if dbus:
     from mopidy_mpris import objects
+
+from tests import dummy_backend
 
 
 @unittest.skipUnless(dbus, 'dbus not found')
@@ -28,7 +29,7 @@ class RootInterfaceTest(unittest.TestCase):
 
         objects.exit_process = mock.Mock()
         objects.MprisObject._connect_to_dbus = mock.Mock()
-        self.backend = dummy.create_dummy_backend_proxy()
+        self.backend = dummy_backend.create_proxy()
         self.core = core.Core.start(backends=[self.backend]).proxy()
         self.mpris = objects.MprisObject(config=config, core=self.core)
 
