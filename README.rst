@@ -156,7 +156,7 @@ Project resources
 Changelog
 =========
 
-v1.2.0 (UNRELEASED)
+v1.2.0 (2015-05-05)
 -------------------
 
 - Fix crash on seek event: Update ``seeked`` event handler to accept the
