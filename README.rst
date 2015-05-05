@@ -88,10 +88,10 @@ found in the ``data/`` dir of the Mopidy source repo into the
 ``/usr/share/applications`` dir by hand::
 
     cd /path/to/mopidy/source
-    sudo cp data/mopidy.desktop /usr/share/applications/
+    sudo cp extra/desktop/mopidy.desktop /usr/share/applications/
 
 If the correct path to the installed ``mopidy.desktop`` file on your system
-isn't ``/usr/share/applications/mopidy.conf``, you'll need to set the
+isn't ``/usr/share/applications/mopidy.desktop``, you'll need to set the
 ``mpris/desktop_file`` config value.
 
 After you have installed the file, start Mopidy in any way, and Mopidy should
