@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
-import pykka
-
 from mopidy import mixer
+
+import pykka
 
 
 def create_proxy(config=None):

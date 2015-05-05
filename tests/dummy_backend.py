@@ -6,10 +6,10 @@ used in tests of the frontends.
 
 from __future__ import absolute_import, unicode_literals
 
-import pykka
-
 from mopidy import backend
 from mopidy.models import Playlist, Ref, SearchResult
+
+import pykka
 
 
 def create_proxy(config=None, audio=None):

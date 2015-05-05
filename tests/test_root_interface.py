@@ -1,7 +1,10 @@
 from __future__ import unicode_literals
 
-import mock
 import unittest
+
+import mock
+
+from mopidy import core
 
 import pykka
 
@@ -9,8 +12,6 @@ try:
     import dbus
 except ImportError:
     dbus = False
-
-from mopidy import core
 
 if dbus:
     from mopidy_mpris import objects

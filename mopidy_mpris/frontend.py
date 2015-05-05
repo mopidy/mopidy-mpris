@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 import logging
 import os
 
+from mopidy.core import CoreListener
+
 import pykka
 
-from mopidy.core import CoreListener
 from mopidy_mpris import objects
+
 
 logger = logging.getLogger(__name__)
 
