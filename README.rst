@@ -79,8 +79,8 @@ Controlling Mopidy through the Ubuntu Sound Menu
 ------------------------------------------------
 
 If you are running Ubuntu and installed Mopidy using the Debian package from
-APT you should be able to control Mopidy through the Ubuntu Sound Menu without
-any changes.
+APT you should be able to control Mopidy instances running as your own user
+through the Ubuntu Sound Menu without any additional setup.
 
 If you installed Mopidy in any other way and want to control Mopidy through the
 Ubuntu Sound Menu, you must install the ``mopidy.desktop`` file which can be
