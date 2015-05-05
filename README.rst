@@ -63,23 +63,31 @@ Configuration
 
 There's no configuration needed for the MPRIS extension to work.
 
-If Mopidy is running as an user without an X display, Mopidy-MPRIS will fail by
-default. To fix this, the config option ``system_bus`` can be set to ``true``,
-this will lead to Mopidy-MPRIS making itself available on the system bus. Few
-MPRIS clients will try to access MPRIS devices on the system bus.
-
 The following configuration values are available:
 
 - ``mpris/enabled``: If the MPRIS extension should be enabled or not.
+
 - ``mpris/desktop_file``: Path to Mopidy's ``.desktop`` file.
-- ``mpris/system_bus``: If Mopidy-MPRIS should connect to the system bus
-                        instead of the session bus.
+
+- ``mpris/bus_type``: The type of D-Bus bus Mopidy-MPRIS should connect to.
+  Choices include ``session`` (the default) and ``system``.
 
 
 Usage
 =====
 
 The extension is enabled by default if all dependencies are available.
+
+
+Running as a service and connecting to the system bus
+-----------------------------------------------------
+
+If Mopidy is running as an user without an X display, e.g. as a system service,
+then Mopidy-MPRIS will fail with the default config. To fix this, you can set
+the ``mpris/bus_type`` config value to ``system``. This will lead to
+Mopidy-MPRIS making itself available on the system bus instead of the logged in
+user's session bus. Note that few MPRIS clients will try to access MPRIS
+devices on the system bus, so this will give you limited functionality.
 
 
 Controlling Mopidy through the Ubuntu Sound Menu
@@ -161,6 +169,9 @@ v1.2.0 (UNRELEASED)
   ``SupportedMimeTypes`` property. This is a temporary solution to be able to
   play audio through UPnP using Rygel and Mopidy-MPRIS. Long term,
   mopidy/mopidy#812 is the proper solution. (Fixes: #7, PR: #11)
+
+- Add a ``mpris/bus_type`` config value for making Mopidy-MPRIS connect to the
+  D-Bus system bus instead of the session bus. (Fixes: #9, PR: #10)
 
 v1.1.1 (2014-01-22)
 -------------------

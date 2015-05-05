@@ -87,12 +87,17 @@ class MprisObject(dbus.service.Object):
         }
 
     def _connect_to_dbus(self):
-        logger.debug('Connecting to D-Bus...')
-        if (self.config['mpris']['system_bus']):
-            bus_name = dbus.service.BusName(BUS_NAME, dbus.SystemBus())
+        bus_type = self.config['mpris']['bus_type']
+        logger.debug('Connecting to D-Bus %s bus...', bus_type)
+
+        if bus_type == 'system':
+            bus = dbus.SystemBus()
         else:
-            bus_name = dbus.service.BusName(BUS_NAME, dbus.SessionBus())
-        logger.info('MPRIS server connected to D-Bus')
+            bus = dbus.SessionBus()
+
+        bus_name = dbus.service.BusName(BUS_NAME, bus)
+        logger.info('MPRIS server connected to D-Bus %s bus', bus_type)
+
         return bus_name
 
     def get_playlist_id(self, playlist_uri):

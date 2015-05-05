@@ -21,7 +21,7 @@ class Extension(ext.Extension):
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
         schema['desktop_file'] = config.Path()
-        schema['system_bus'] = config.Boolean()
+        schema['bus_type'] = config.String(choices=['session', 'system'])
         return schema
 
     def validate_environment(self):
