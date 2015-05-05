@@ -50,13 +50,13 @@ class MprisObject(dbus.service.Object):
             # NOTE Return MIME types supported by local backend if support for
             # reporting supported MIME types is added
             'SupportedMimeTypes': (dbus.Array([
-                dbus.String(u'audio/mpeg'),
-                dbus.String(u'audio/x-ms-wma'),
-                dbus.String(u'audio/x-ms-asf'),
-                dbus.String(u'audio/x-flac'),
-                dbus.String(u'audio/flac'),
-                dbus.String(u'audio/l16;channels=2;rate=44100'),
-                dbus.String(u'audio/l16;rate=44100;channels=2')
+                dbus.String('audio/mpeg'),
+                dbus.String('audio/x-ms-wma'),
+                dbus.String('audio/x-ms-asf'),
+                dbus.String('audio/x-flac'),
+                dbus.String('audio/flac'),
+                dbus.String('audio/l16;channels=2;rate=44100'),
+                dbus.String('audio/l16;rate=44100;channels=2')
                 ], signature='s'), None),
         }
 
