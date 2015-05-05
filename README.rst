@@ -42,12 +42,20 @@ Dependencies
 Installation
 ============
 
-Install by running::
+Debian/Ubuntu/Raspbian: Install the ``mopidy-mpris`` package from
+`apt.mopidy.com <http://apt.mopidy.com/>`_::
+
+    sudo apt-get install mopidy-mpris
+
+Arch Linux: Install the ``mopidy-mpris`` package from
+`AUR <https://aur.archlinux.org/packages/mopidy-mpris/>`_::
+
+    yaourt -S mopidy-mpris
+
+Else: Install the dependencies listed above yourself, and then install the
+package from PyPI::
 
     pip install Mopidy-MPRIS
-
-Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
-<http://apt.mopidy.com/>`_.
 
 
 Configuration
