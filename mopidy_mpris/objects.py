@@ -56,7 +56,7 @@ class MprisObject(dbus.service.Object):
                 dbus.String('audio/x-flac'),
                 dbus.String('audio/flac'),
                 dbus.String('audio/l16;channels=2;rate=44100'),
-                dbus.String('audio/l16;rate=44100;channels=2')
+                dbus.String('audio/l16;rate=44100;channels=2'),
                 ], signature='s'), None),
         }
 

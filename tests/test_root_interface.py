@@ -84,6 +84,14 @@ class RootInterfaceTest(unittest.TestCase):
         self.assertEquals(len(result), 1)
         self.assertEquals(result[0], 'dummy')
 
-    def test_supported_mime_types_is_empty(self):
+    def test_supported_mime_types_has_hardcoded_entries(self):
         result = self.mpris.Get(objects.ROOT_IFACE, 'SupportedMimeTypes')
-        self.assertGreater(len(result), 0)
+        self.assertEqual(result, [
+            'audio/mpeg',
+            'audio/x-ms-wma',
+            'audio/x-ms-asf',
+            'audio/x-flac',
+            'audio/flac',
+            'audio/l16;channels=2;rate=44100',
+            'audio/l16;rate=44100;channels=2',
+        ])
