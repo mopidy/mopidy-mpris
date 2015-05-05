@@ -163,11 +163,12 @@ class PlayerInterfaceTest(unittest.TestCase):
             result['mpris:trackid'], '/com/mopidy/track/%d' % tlid)
 
     def test_get_metadata_has_track_length(self):
-        self.core.tracklist.add([Track(uri='dummy:a', length=40000)])
+        self.core.tracklist.add([Track(uri='dummy:a', length=3600000)])
         self.core.playback.play()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
         self.assertIn('mpris:length', result.keys())
-        self.assertEqual(result['mpris:length'], 40000000)
+        self.assertEqual(result['mpris:length'], 3600000000)
+        self.assertIsInstance(result['mpris:length'], dbus.Int64)
 
     def test_get_metadata_has_track_uri(self):
         self.core.tracklist.add([Track(uri='dummy:a')])

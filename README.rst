@@ -159,9 +159,13 @@ Changelog
 v1.2.0 (UNRELEASED)
 -------------------
 
-- Update ``seeked`` event handler to accept the ``time_position`` keyword
-  argument. Recent versions of Mopidy passes all arguments to event handlers as
-  keyword arguments, not positional arguments. (Fixes: #12)
+- Fix crash on seek event: Update ``seeked`` event handler to accept the
+  ``time_position`` keyword argument. Recent versions of Mopidy passes all
+  arguments to event handlers as keyword arguments, not positional arguments.
+  (Fixes: #12)
+
+- Fix crash on tracks longer than 35 minutes: The ``mpris:length`` attribute in
+  the ``Metadata`` property is now typed to a 64-bit integer.
 
 - Update ``Seek()`` implementation to only pass positive numbers to Mopidy, as
   Mopidy 1.1 is stricter about its input validation and no longer accepts seeks

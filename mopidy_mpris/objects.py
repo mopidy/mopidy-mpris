@@ -364,7 +364,7 @@ class MprisObject(dbus.service.Object):
             (_, track) = current_tl_track
             metadata = {'mpris:trackid': self.get_track_id(current_tl_track)}
             if track.length:
-                metadata['mpris:length'] = track.length * 1000
+                metadata['mpris:length'] = dbus.Int64(track.length * 1000)
             if track.uri:
                 metadata['xesam:url'] = track.uri
             if track.name:
