@@ -8,7 +8,6 @@ import dbus
 import dbus.service
 
 from mopidy.core import PlaybackState
-from mopidy.utils.process import exit_process
 
 
 logger = logging.getLogger(__name__)
@@ -174,7 +173,7 @@ class MprisObject(dbus.service.Object):
     @dbus.service.method(dbus_interface=ROOT_IFACE)
     def Quit(self):
         logger.debug('%s.Quit called', ROOT_IFACE)
-        exit_process()
+        # Do nothing, as we do not allow MPRIS clients to shut down Mopidy
 
     # --- Root interface properties
 

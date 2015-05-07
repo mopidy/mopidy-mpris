@@ -21,7 +21,6 @@ class RootInterfaceTest(unittest.TestCase):
             }
         }
 
-        objects.exit_process = mock.Mock()
         objects.MprisObject._connect_to_dbus = mock.Mock()
         self.backend = dummy_backend.create_proxy()
         self.core = core.Core.start(backends=[self.backend]).proxy()
@@ -56,9 +55,8 @@ class RootInterfaceTest(unittest.TestCase):
         result = self.mpris.Get(objects.ROOT_IFACE, 'CanQuit')
         self.assertTrue(result)
 
-    def test_quit_should_stop_all_actors(self):
+    def test_quit_does_nothing(self):
         self.mpris.Quit()
-        self.assert_(objects.exit_process.called)
 
     def test_has_track_list_returns_false(self):
         result = self.mpris.Get(objects.ROOT_IFACE, 'HasTrackList')
