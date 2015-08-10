@@ -156,7 +156,7 @@ Project resources
 Changelog
 =========
 
-v1.3.0 (UNRELEASED)
+v1.3.0 (2015-08-11)
 -------------------
 
 - No longer allow ``Quit()`` to shut down the Mopidy server process. Mopidy has
