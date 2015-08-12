@@ -19,7 +19,9 @@ class PlayerInterfaceTest(unittest.TestCase):
     def setUp(self):
         objects.MprisObject._connect_to_dbus = mock.Mock()
         self.backend = dummy_backend.create_proxy()
-        self.core = core.Core.start(backends=[self.backend]).proxy()
+        config = {'core': {'max_tracklist_length': 10000}}
+        self.core = core.Core.start(
+            config=config, backends=[self.backend]).proxy()
         self.mpris = objects.MprisObject(config={}, core=self.core)
 
         foo = self.core.playlists.create('foo').get()
