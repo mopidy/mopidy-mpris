@@ -156,6 +156,11 @@ Project resources
 Changelog
 =========
 
+v1.3.1 (2015-08-18)
+-------------------
+
+- Make tests pass with Mopidy >= 1.1.
+
 v1.3.0 (2015-08-11)
 -------------------
 
