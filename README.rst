@@ -10,12 +10,12 @@ Mopidy-MPRIS
     :target: https://pypi.python.org/pypi/Mopidy-MPRIS/
     :alt: Number of PyPI downloads
 
-.. image:: https://img.shields.io/travis/mopidy/mopidy-mpris/master.svg?style=flat
+.. image:: https://img.shields.io/travis/mopidy/mopidy-mpris/develop.svg?style=flat
     :target: https://travis-ci.org/mopidy/mopidy-mpris
     :alt: Travis CI build status
 
-.. image:: https://img.shields.io/coveralls/mopidy/mopidy-mpris/master.svg?style=flat
-   :target: https://coveralls.io/r/mopidy/mopidy-mpris?branch=master
+.. image:: https://img.shields.io/coveralls/mopidy/mopidy-mpris/develop.svg?style=flat
+   :target: https://coveralls.io/r/mopidy/mopidy-mpris
    :alt: Test coverage
 
 `Mopidy <http://www.mopidy.com/>`_ extension for controlling Mopidy through the
@@ -150,7 +150,7 @@ Project resources
 
 - `Source code <https://github.com/mopidy/mopidy-mpris>`_
 - `Issue tracker <https://github.com/mopidy/mopidy-mpris/issues>`_
-- `Download development snapshot <https://github.com/mopidy/mopidy-mpris/tarball/master#egg=Mopidy-MPRIS-dev>`_
+- `Download development snapshot <https://github.com/mopidy/mopidy-mpris/tarball/develop#egg=Mopidy-MPRIS-dev>`_
 
 
 Changelog
