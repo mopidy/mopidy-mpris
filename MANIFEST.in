@@ -1,4 +1,3 @@
-include .coveragerc
 include .mailmap
 include .travis.yml
 include LICENSE
