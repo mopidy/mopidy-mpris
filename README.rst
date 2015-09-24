@@ -150,7 +150,6 @@ Project resources
 
 - `Source code <https://github.com/mopidy/mopidy-mpris>`_
 - `Issue tracker <https://github.com/mopidy/mopidy-mpris/issues>`_
-- `Download development snapshot <https://github.com/mopidy/mopidy-mpris/tarball/develop#egg=Mopidy-MPRIS-dev>`_
 
 
 Changelog
