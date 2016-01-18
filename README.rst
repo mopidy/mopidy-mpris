@@ -152,6 +152,14 @@ Project resources
 - `Issue tracker <https://github.com/mopidy/mopidy-mpris/issues>`_
 
 
+Credits
+=======
+
+- Original author: `Stein Magnus Jodal <https://github.com/jodal>`__
+- Current maintainer: `Stein Magnus Jodal <https://github.com/jodal>`__
+- `Contributors <https://github.com/mopidy/mopidy-mpris/graphs/contributors>`_
+
+
 Changelog
 =========
 
