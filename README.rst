@@ -26,10 +26,6 @@ Dependencies
 - D-Bus Python bindings. The package is named ``python-dbus`` in
   Ubuntu/Debian.
 
-- ``libindicate`` Python bindings is needed to expose Mopidy in e.g. the
-  Ubuntu Sound Menu. The package is named ``python-indicate`` in
-  Ubuntu/Debian.
-
 - An ``.desktop`` file for Mopidy installed at the path set in the
   ``mpris/desktop_file`` config value. Mopidy installs this by default.
   See usage section below for details.
@@ -158,6 +154,13 @@ Credits
 
 Changelog
 =========
+
+v1.4.0 (UNRELEASED)
+-------------------
+
+- Remove dependency on python-indicate and libindicate, as it is deprecated and
+  it no longer seems to no be necessary to send a startup notification with
+  libindicate.
 
 v1.3.1 (2015-08-18)
 -------------------
