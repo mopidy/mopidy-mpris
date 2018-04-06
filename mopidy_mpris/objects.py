@@ -244,7 +244,7 @@ class MprisObject(dbus.service.Object):
         else:
             self.core.playback.play().get()
 
-    @dbus.service.method(dbus_interface=PLAYER_IFACE)
+    @dbus.service.method(dbus_interface=PLAYER_IFACE, in_signature='x')
     def Seek(self, offset):
         logger.debug('%s.Seek called', PLAYER_IFACE)
         if not self.get_CanSeek():
@@ -257,7 +257,7 @@ class MprisObject(dbus.service.Object):
             new_position = 0
         self.core.playback.seek(new_position)
 
-    @dbus.service.method(dbus_interface=PLAYER_IFACE)
+    @dbus.service.method(dbus_interface=PLAYER_IFACE, in_signature='ox')
     def SetPosition(self, track_id, position):
         logger.debug('%s.SetPosition called', PLAYER_IFACE)
         if not self.get_CanSeek():
@@ -275,7 +275,7 @@ class MprisObject(dbus.service.Object):
             return
         self.core.playback.seek(position)
 
-    @dbus.service.method(dbus_interface=PLAYER_IFACE)
+    @dbus.service.method(dbus_interface=PLAYER_IFACE, in_signature='s')
     def OpenUri(self, uri):
         logger.debug('%s.OpenUri called', PLAYER_IFACE)
         if not self.get_CanControl():
