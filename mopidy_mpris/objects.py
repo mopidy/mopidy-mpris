@@ -20,7 +20,7 @@ PLAYLISTS_IFACE = 'org.mpris.MediaPlayer2.Playlists'
 
 
 class MprisObject(dbus.service.Object):
-    """Implements http://www.mpris.org/2.2/spec/"""
+    """Implements https://specifications.freedesktop.org/mpris-spec/2.2/"""
 
     properties = None
 

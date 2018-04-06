@@ -15,7 +15,8 @@ Mopidy-MPRIS
    :alt: Test coverage
 
 `Mopidy <http://www.mopidy.com/>`_ extension for controlling Mopidy through the
-`MPRIS D-Bus interface <http://www.mpris.org/>`_.
+`MPRIS D-Bus interface
+<https://specifications.freedesktop.org/mpris-spec/latest/>`_.
 
 An example of an MPRIS client is the Ubuntu Sound Menu.
 
@@ -107,8 +108,8 @@ in the Ubuntu Sound Menu, and may be restarted by selecting it there.
 
 The Ubuntu Sound Menu interacts with Mopidy's MPRIS frontend. The MPRIS
 frontend supports the minimum requirements of the `MPRIS specification
-<http://www.mpris.org/>`_. The ``TrackList`` interface of the spec is not
-supported.
+<https://specifications.freedesktop.org/mpris-spec/latest/>`_. The
+``TrackList`` interface of the spec is not supported.
 
 
 Testing the MPRIS API directly
@@ -134,7 +135,7 @@ Now you can control Mopidy through the player object. Examples:
     player.Quit(dbus_interface='org.mpris.MediaPlayer2')
 
 For details on the API, please refer to the `MPRIS specification
-<http://www.mpris.org/>`__.
+<https://specifications.freedesktop.org/mpris-spec/latest/>`__.
 
 
 Project resources
