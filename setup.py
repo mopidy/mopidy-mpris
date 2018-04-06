@@ -30,11 +30,6 @@ setup(
         'Mopidy >= 0.18',
         'Pykka >= 1.1',
     ],
-    test_suite='nose.collector',
-    tests_require=[
-        'nose',
-        'mock >= 1.0',
-    ],
     entry_points={
         'mopidy.ext': [
             'mpris = mopidy_mpris:Extension',
