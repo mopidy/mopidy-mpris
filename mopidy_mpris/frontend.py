@@ -6,7 +6,8 @@ from mopidy.core import CoreListener
 
 import pykka
 
-from mopidy_mpris import objects
+from mopidy_mpris.playlists import get_playlist_id
+from mopidy_mpris.server import Server
 
 
 logger = logging.getLogger(__name__)
@@ -17,65 +18,78 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
         super(MprisFrontend, self).__init__()
         self.config = config
         self.core = core
-        self.mpris_object = None
+        self.mpris = None
 
     def on_start(self):
         try:
-            self.mpris_object = objects.MprisObject(self.config, self.core)
+            self.mpris = Server(self.config, self.core)
+            self.mpris.publish()
         except Exception as e:
             logger.warning('MPRIS frontend setup failed (%s)', e)
             self.stop()
 
     def on_stop(self):
         logger.debug('Removing MPRIS object from D-Bus connection...')
-        if self.mpris_object:
-            self.mpris_object.remove_from_connection()
-            self.mpris_object = None
+        if self.mpris:
+            self.mpris.unpublish()
+            self.mpris = None
         logger.debug('Removed MPRIS object from D-Bus connection')
-
-    def _emit_properties_changed(self, interface, changed_properties):
-        if self.mpris_object is None:
-            return
-        props_with_new_values = [
-            (p, self.mpris_object.Get(interface, p))
-            for p in changed_properties]
-        self.mpris_object.PropertiesChanged(
-            interface, dict(props_with_new_values), [])
 
     def track_playback_paused(self, tl_track, time_position):
         logger.debug('Received track_playback_paused event')
-        self._emit_properties_changed(objects.PLAYER_IFACE, ['PlaybackStatus'])
+        if self.mpris is None:
+            return
+        _emit_properties_changed(self.mpris.player, ['PlaybackStatus'])
 
     def track_playback_resumed(self, tl_track, time_position):
         logger.debug('Received track_playback_resumed event')
-        self._emit_properties_changed(objects.PLAYER_IFACE, ['PlaybackStatus'])
+        if self.mpris is None:
+            return
+        _emit_properties_changed(self.mpris.player, ['PlaybackStatus'])
 
     def track_playback_started(self, tl_track):
         logger.debug('Received track_playback_started event')
-        self._emit_properties_changed(
-            objects.PLAYER_IFACE, ['PlaybackStatus', 'Metadata'])
+        if self.mpris is None:
+            return
+        _emit_properties_changed(
+            self.mpris.player, ['PlaybackStatus', 'Metadata'])
 
     def track_playback_ended(self, tl_track, time_position):
         logger.debug('Received track_playback_ended event')
-        self._emit_properties_changed(
-            objects.PLAYER_IFACE, ['PlaybackStatus', 'Metadata'])
+        if self.mpris is None:
+            return
+        _emit_properties_changed(
+            self.mpris.player, ['PlaybackStatus', 'Metadata'])
 
     def volume_changed(self, volume):
         logger.debug('Received volume_changed event')
-        self._emit_properties_changed(objects.PLAYER_IFACE, ['Volume'])
+        if self.mpris is None:
+            return
+        _emit_properties_changed(self.mpris.player, ['Volume'])
 
     def seeked(self, time_position):
         logger.debug('Received seeked event')
+        if self.mpris is None:
+            return
         time_position_in_microseconds = time_position * 1000
-        self.mpris_object.Seeked(time_position_in_microseconds)
+        self.mpris.player.Seeked(time_position_in_microseconds)
 
     def playlists_loaded(self):
         logger.debug('Received playlists_loaded event')
-        self._emit_properties_changed(
-            objects.PLAYLISTS_IFACE, ['PlaylistCount'])
+        _emit_properties_changed(self.mpris.playlists, ['PlaylistCount'])
 
     def playlist_changed(self, playlist):
         logger.debug('Received playlist_changed event')
-        playlist_id = self.mpris_object.get_playlist_id(playlist.uri)
+        if self.mpris is None:
+            return
+        playlist_id = get_playlist_id(playlist.uri)
         playlist = (playlist_id, playlist.name, '')
-        self.mpris_object.PlaylistChanged(playlist)
+        self.mpris.playlists.PlaylistChanged(playlist)
+
+
+def _emit_properties_changed(interface, changed_properties):
+    props_with_new_values = [
+        (p, getattr(interface, p))
+        for p in changed_properties]
+    interface.PropertiesChanged(
+        interface.INTERFACE, dict(props_with_new_values), [])
