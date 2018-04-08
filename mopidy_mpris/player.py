@@ -63,6 +63,9 @@ class Player(Interface):
 
     INTERFACE = 'org.mpris.MediaPlayer2.Player'
 
+    # To override from tests.
+    _CanControl = True
+
     def Next(self):
         logger.debug('%s.Next called', self.INTERFACE)
         if not self.CanGoNext:
@@ -335,7 +338,7 @@ class Player(Interface):
     @property
     def CanControl(self):
         # NOTE This could be a setting for the end user to change.
-        return True
+        return self._CanControl
 
 
 def get_track_id(tl_track):

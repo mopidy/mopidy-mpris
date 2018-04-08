@@ -161,6 +161,8 @@ v2.0.0 (UNRELEASED)
 
 - Replace dependency on python-dbus with python-pydbus.
 
+- Port tests to pytest.
+
 v1.4.0 (2018-04-10)
 -------------------
 
