@@ -6,11 +6,11 @@ Mopidy-MPRIS
     :target: https://pypi.python.org/pypi/Mopidy-MPRIS/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/travis/mopidy/mopidy-mpris/develop.svg?style=flat
+.. image:: https://img.shields.io/travis/mopidy/mopidy-mpris/master.svg?style=flat
     :target: https://travis-ci.org/mopidy/mopidy-mpris
     :alt: Travis CI build status
 
-.. image:: https://img.shields.io/coveralls/mopidy/mopidy-mpris/develop.svg?style=flat
+.. image:: https://img.shields.io/coveralls/mopidy/mopidy-mpris/master.svg?style=flat
    :target: https://coveralls.io/r/mopidy/mopidy-mpris
    :alt: Test coverage
 
