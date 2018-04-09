@@ -731,7 +731,7 @@ class PlayerInterfaceTest(unittest.TestCase):
         self.assertLessEqual(before_set_position, 5000)
         self.assertEqual(self.core.playback.state.get(), PLAYING)
 
-        track_id = '/com/mopidy/track/0'
+        track_id = '/com/mopidy/track/1'
 
         position_to_set_in_millisec = 20000
         position_to_set_in_microsec = position_to_set_in_millisec * 1000
@@ -755,7 +755,7 @@ class PlayerInterfaceTest(unittest.TestCase):
         self.assertEqual(self.core.playback.state.get(), PLAYING)
         self.assertEqual(self.core.playback.current_track.get().uri, 'dummy:a')
 
-        track_id = '/com/mopidy/track/0'
+        track_id = '/com/mopidy/track/1'
 
         position_to_set_in_millisec = -1000
         position_to_set_in_microsec = position_to_set_in_millisec * 1000
