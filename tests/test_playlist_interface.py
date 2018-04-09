@@ -12,16 +12,20 @@ import pykka
 
 from mopidy_mpris import objects
 
-from tests import dummy_backend
+from tests import dummy_audio, dummy_backend
 
 
 class PlayerInterfaceTest(unittest.TestCase):
     def setUp(self):
         objects.MprisObject._connect_to_dbus = mock.Mock()
-        self.backend = dummy_backend.create_proxy()
+        self.audio = dummy_audio.create_proxy()
+        self.backend = dummy_backend.create_proxy(audio=self.audio)
         config = {'core': {'max_tracklist_length': 10000}}
         self.core = core.Core.start(
-            config=config, backends=[self.backend]).proxy()
+            config=config,
+            backends=[self.backend],
+            audio=self.audio,
+        ).proxy()
         self.mpris = objects.MprisObject(config={}, core=self.core)
 
         foo = self.core.playlists.create('foo').get()
