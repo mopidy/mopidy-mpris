@@ -179,14 +179,14 @@ class PlayerInterfaceTest(unittest.TestCase):
         self.assertEqual(result['xesam:url'], 'dummy:a')
 
     def test_get_metadata_has_track_title(self):
-        self.core.tracklist.add([Track(name='a')])
+        self.core.tracklist.add([Track(uri='dummy:a', name='a')])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
         self.assertIn('xesam:title', result.keys())
         self.assertEqual(result['xesam:title'], 'a')
 
     def test_get_metadata_has_track_artists(self):
-        self.core.tracklist.add([Track(artists=[
+        self.core.tracklist.add([Track(uri='dummy:a', artists=[
             Artist(name='a'), Artist(name='b'), Artist(name=None)])])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
@@ -194,14 +194,14 @@ class PlayerInterfaceTest(unittest.TestCase):
         self.assertEqual(result['xesam:artist'], ['a', 'b'])
 
     def test_get_metadata_has_track_album(self):
-        self.core.tracklist.add([Track(album=Album(name='a'))])
+        self.core.tracklist.add([Track(uri='dummy:a', album=Album(name='a'))])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
         self.assertIn('xesam:album', result.keys())
         self.assertEqual(result['xesam:album'], 'a')
 
     def test_get_metadata_has_track_album_artists(self):
-        self.core.tracklist.add([Track(album=Album(artists=[
+        self.core.tracklist.add([Track(uri='dummy:a', album=Album(artists=[
             Artist(name='a'), Artist(name='b'), Artist(name=None)]))])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
@@ -213,7 +213,7 @@ class PlayerInterfaceTest(unittest.TestCase):
         # are stored as a frozenset(). We pick the first in the set, which is
         # sorted alphabetically, thus we get 'bar.jpg', not 'foo.jpg', which
         # would probably make more sense.
-        self.core.tracklist.add([Track(album=Album(images=[
+        self.core.tracklist.add([Track(uri='dummy:a', album=Album(images=[
             'http://example.com/foo.jpg', 'http://example.com/bar.jpg']))])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
@@ -221,26 +221,26 @@ class PlayerInterfaceTest(unittest.TestCase):
         self.assertEqual(result['mpris:artUrl'], 'http://example.com/bar.jpg')
 
     def test_get_metadata_has_no_art_url_if_no_album(self):
-        self.core.tracklist.add([Track()])
+        self.core.tracklist.add([Track(uri='dummy:a')])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
         self.assertNotIn('mpris:artUrl', result.keys())
 
     def test_get_metadata_has_no_art_url_if_no_album_images(self):
-        self.core.tracklist.add([Track(Album(images=[]))])
+        self.core.tracklist.add([Track(uri='dummy:a', album=Album(images=[]))])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
         self.assertNotIn('mpris:artUrl', result.keys())
 
     def test_get_metadata_has_disc_number_in_album(self):
-        self.core.tracklist.add([Track(disc_no=2)])
+        self.core.tracklist.add([Track(uri='dummy:a', disc_no=2)])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
         self.assertIn('xesam:discNumber', result.keys())
         self.assertEqual(result['xesam:discNumber'], 2)
 
     def test_get_metadata_has_track_number_in_album(self):
-        self.core.tracklist.add([Track(track_no=7)])
+        self.core.tracklist.add([Track(uri='dummy:a', track_no=7)])
         self.core.playback.play().get()
         result = self.mpris.Get(objects.PLAYER_IFACE, 'Metadata')
         self.assertIn('xesam:trackNumber', result.keys())
