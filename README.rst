@@ -163,6 +163,8 @@ v1.4.0 (UNRELEASED)
   it no longer seems to no be necessary to send a startup notification with
   libindicate.
 
+- Make tests pass with Mopidy >= 2.0.
+
 v1.3.1 (2015-08-18)
 -------------------
 
