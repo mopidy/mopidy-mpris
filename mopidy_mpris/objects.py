@@ -255,7 +255,7 @@ class MprisObject(dbus.service.Object):
         new_position = current_position + offset_in_milliseconds
         if new_position < 0:
             new_position = 0
-        self.core.playback.seek(new_position)
+        self.core.playback.seek(new_position).get()
 
     @dbus.service.method(dbus_interface=PLAYER_IFACE, in_signature='ox')
     def SetPosition(self, track_id, position):
@@ -273,7 +273,7 @@ class MprisObject(dbus.service.Object):
             return
         if current_tl_track.track.length < position:
             return
-        self.core.playback.seek(position)
+        self.core.playback.seek(position).get()
 
     @dbus.service.method(dbus_interface=PLAYER_IFACE, in_signature='s')
     def OpenUri(self, uri):
@@ -287,7 +287,7 @@ class MprisObject(dbus.service.Object):
         # is added to the backend.
         tl_tracks = self.core.tracklist.add(uri=uri).get()
         if tl_tracks:
-            self.core.playback.play(tl_tracks[0])
+            self.core.playback.play(tl_tracks[0]).get()
         else:
             logger.debug('Track with URI "%s" not found in library.', uri)
 
@@ -462,7 +462,7 @@ class MprisObject(dbus.service.Object):
         playlist = self.core.playlists.lookup(playlist_uri).get()
         if playlist and playlist.tracks:
             tl_tracks = self.core.tracklist.add(playlist.tracks).get()
-            self.core.playback.play(tl_tracks[0])
+            self.core.playback.play(tl_tracks[0]).get()
 
     @dbus.service.method(dbus_interface=PLAYLISTS_IFACE)
     def GetPlaylists(self, index, max_count, order, reverse):
