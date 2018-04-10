@@ -130,9 +130,9 @@ Now you can control Mopidy through the player object. Examples:
     props = player.GetAll('org.mpris.MediaPlayer2',
         dbus_interface='org.freedesktop.DBus.Properties')
 
-- To quit Mopidy through D-Bus, run::
+- To pause Mopidy's playback through D-Bus, run::
 
-    player.Quit(dbus_interface='org.mpris.MediaPlayer2')
+    player.Pause(dbus_interface='org.mpris.MediaPlayer2.Player')
 
 For details on the API, please refer to the `MPRIS specification
 <https://specifications.freedesktop.org/mpris-spec/latest/>`__.
