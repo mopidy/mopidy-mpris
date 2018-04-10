@@ -156,7 +156,7 @@ Credits
 Changelog
 =========
 
-v1.4.0 (UNRELEASED)
+v1.4.0 (2018-04-10)
 -------------------
 
 - Remove dependency on python-indicate and libindicate, as it is deprecated and
