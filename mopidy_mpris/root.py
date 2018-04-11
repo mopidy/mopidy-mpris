@@ -65,7 +65,7 @@ class Root(Interface):
 
     @property
     def SupportedUriSchemes(self):
-        return self.core.uri_schemes.get()
+        return self.core.get_uri_schemes().get()
 
     # NOTE Return MIME types supported by local backend if support for
     # reporting supported MIME types is added.

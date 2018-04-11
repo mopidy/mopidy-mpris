@@ -159,9 +159,13 @@ Changelog
 v2.0.0 (UNRELEASED)
 -------------------
 
+- Require Mopidy >= 1.1.
+
 - Replace dependency on python-dbus with python-pydbus.
 
 - Port tests to pytest.
+
+- Replace all usage of Mopidy APIs deprecated as of Mopidy 2.1.
 
 v1.4.0 (2018-04-10)
 -------------------

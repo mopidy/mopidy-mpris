@@ -92,7 +92,7 @@ class Player(Interface):
         if not self.CanPause:
             logger.debug('%s.PlayPause not allowed', self.INTERFACE)
             return
-        state = self.core.playback.state.get()
+        state = self.core.playback.get_state().get()
         if state == PlaybackState.PLAYING:
             self.core.playback.pause().get()
         elif state == PlaybackState.PAUSED:
@@ -112,7 +112,7 @@ class Player(Interface):
         if not self.CanPlay:
             logger.debug('%s.Play not allowed', self.INTERFACE)
             return
-        state = self.core.playback.state.get()
+        state = self.core.playback.get_state().get()
         if state == PlaybackState.PAUSED:
             self.core.playback.resume().get()
         else:
@@ -124,7 +124,7 @@ class Player(Interface):
             logger.debug('%s.Seek not allowed', self.INTERFACE)
             return
         offset_in_milliseconds = offset // 1000
-        current_position = self.core.playback.time_position.get()
+        current_position = self.core.playback.get_time_position().get()
         new_position = current_position + offset_in_milliseconds
         if new_position < 0:
             new_position = 0
@@ -136,10 +136,10 @@ class Player(Interface):
             logger.debug('%s.SetPosition not allowed', self.INTERFACE)
             return
         position = position // 1000
-        current_tl_track = self.core.playback.current_tl_track.get()
+        current_tl_track = self.core.playback.get_current_tl_track().get()
         if current_tl_track is None:
             return
-        if track_id != get_track_id(current_tl_track):
+        if track_id != get_track_id(current_tl_track.tlid):
             return
         if position < 0:
             return
@@ -158,7 +158,7 @@ class Player(Interface):
         # is added to the backend.
         tl_tracks = self.core.tracklist.add(uri=uri).get()
         if tl_tracks:
-            self.core.playback.play(tl_tracks[0]).get()
+            self.core.playback.play(tlid=tl_tracks[0].tlid).get()
         else:
             logger.debug('Track with URI "%s" not found in library.', uri)
 
@@ -166,7 +166,7 @@ class Player(Interface):
 
     @property
     def PlaybackStatus(self):
-        state = self.core.playback.state.get()
+        state = self.core.playback.get_state().get()
         if state == PlaybackState.PLAYING:
             return 'Playing'
         elif state == PlaybackState.PAUSED:
@@ -176,8 +176,8 @@ class Player(Interface):
 
     @property
     def LoopStatus(self):
-        repeat = self.core.tracklist.repeat.get()
-        single = self.core.tracklist.single.get()
+        repeat = self.core.tracklist.get_repeat().get()
+        single = self.core.tracklist.get_single().get()
         if not repeat:
             return 'None'
         else:
@@ -192,14 +192,14 @@ class Player(Interface):
             logger.debug('Setting %s.LoopStatus not allowed', self.INTERFACE)
             return
         if value == 'None':
-            self.core.tracklist.repeat = False
-            self.core.tracklist.single = False
+            self.core.tracklist.set_repeat(False)
+            self.core.tracklist.set_single(False)
         elif value == 'Track':
-            self.core.tracklist.repeat = True
-            self.core.tracklist.single = True
+            self.core.tracklist.set_repeat(True)
+            self.core.tracklist.set_single(True)
         elif value == 'Playlist':
-            self.core.tracklist.repeat = True
-            self.core.tracklist.single = False
+            self.core.tracklist.set_repeat(True)
+            self.core.tracklist.set_single(False)
 
     @property
     def Rate(self):
@@ -217,26 +217,23 @@ class Player(Interface):
 
     @property
     def Shuffle(self):
-        return self.core.tracklist.random.get()
+        return self.core.tracklist.get_random().get()
 
     @Shuffle.setter
     def Shuffle(self, value):
         if not self.CanControl:
             logger.debug('Setting %s.Shuffle not allowed', self.INTERFACE)
             return
-        if value:
-            self.core.tracklist.random = True
-        else:
-            self.core.tracklist.random = False
+        self.core.tracklist.set_random(bool(value))
 
     @property
     def Metadata(self):
-        current_tl_track = self.core.playback.current_tl_track.get()
+        current_tl_track = self.core.playback.get_current_tl_track().get()
         if current_tl_track is None:
             return {}
         else:
-            (_, track) = current_tl_track
-            track_id = get_track_id(current_tl_track)
+            (tlid, track) = current_tl_track
+            track_id = get_track_id(tlid)
             res = {'mpris:trackid': Variant('o', track_id)}
             if track.length:
                 res['mpris:length'] = Variant('x', track.length * 1000)
@@ -268,7 +265,7 @@ class Player(Interface):
 
     @property
     def Volume(self):
-        volume = self.core.playback.volume.get()
+        volume = self.core.mixer.get_volume().get()
         if volume is None:
             return 0
         return volume / 100.0
@@ -281,15 +278,15 @@ class Player(Interface):
         if value is None:
             return
         elif value < 0:
-            self.core.playback.volume = 0
+            self.core.mixer.set_volume(0)
         elif value > 1:
-            self.core.playback.volume = 100
+            self.core.mixer.set_volume(100)
         elif 0 <= value <= 1:
-            self.core.playback.volume = int(value * 100)
+            self.core.mixer.set_volume(int(value * 100))
 
     @property
     def Position(self):
-        return self.core.playback.time_position.get() * 1000
+        return self.core.playback.get_time_position().get() * 1000
 
     MinimumRate = 1.0
     MaximumRate = 1.0
@@ -298,26 +295,25 @@ class Player(Interface):
     def CanGoNext(self):
         if not self.CanControl:
             return False
-        current_tl_track = self.core.playback.current_tl_track.get()
-        next_tl_track = self.core.tracklist.next_track(current_tl_track).get()
-        return next_tl_track != current_tl_track
+        current_tlid = self.core.playback.get_current_tlid().get()
+        next_tlid = self.core.tracklist.get_next_tlid().get()
+        return next_tlid != current_tlid
 
     @property
     def CanGoPrevious(self):
         if not self.CanControl:
             return False
-        current_tl_track = self.core.playback.current_tl_track.get()
-        previous_tl_track = (
-            self.core.tracklist.previous_track(current_tl_track).get())
-        return previous_tl_track != current_tl_track
+        current_tlid = self.core.playback.get_current_tlid().get()
+        previous_tlid = self.core.tracklist.get_previous_tlid().get()
+        return previous_tlid != current_tlid
 
     @property
     def CanPlay(self):
         if not self.CanControl:
             return False
-        current_tl_track = self.core.playback.current_tl_track.get()
-        next_tl_track = self.core.tracklist.next_track(current_tl_track).get()
-        return current_tl_track is not None or next_tl_track is not None
+        current_tlid = self.core.playback.get_current_tlid().get()
+        next_tlid = self.core.tracklist.get_next_tlid().get()
+        return current_tlid is not None or next_tlid is not None
 
     @property
     def CanPause(self):
@@ -341,8 +337,8 @@ class Player(Interface):
         return self._CanControl
 
 
-def get_track_id(tl_track):
-    return '/com/mopidy/track/%d' % tl_track.tlid
+def get_track_id(tlid):
+    return '/com/mopidy/track/%d' % tlid
 
 
 def get_track_tlid(track_id):

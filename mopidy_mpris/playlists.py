@@ -49,13 +49,13 @@ class Playlists(Interface):
         playlist = self.core.playlists.lookup(playlist_uri).get()
         if playlist and playlist.tracks:
             tl_tracks = self.core.tracklist.add(playlist.tracks).get()
-            self.core.playback.play(tl_tracks[0]).get()
+            self.core.playback.play(tlid=tl_tracks[0].tlid).get()
 
     def GetPlaylists(self, index, max_count, order, reverse):
         logger.debug(
             '%s.GetPlaylists(%r, %r, %r, %r) called',
             self.INTERFACE, index, max_count, order, reverse)
-        playlists = self.core.playlists.playlists.get()
+        playlists = self.core.playlists.get_playlists().get()
         if order == 'Alphabetical':
             playlists.sort(key=lambda p: p.name, reverse=reverse)
         elif order == 'Modified':
@@ -73,7 +73,7 @@ class Playlists(Interface):
 
     @property
     def PlaylistCount(self):
-        return len(self.core.playlists.playlists.get())
+        return len(self.core.playlists.as_list().get())
 
     @property
     def Orderings(self):
