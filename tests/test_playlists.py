@@ -79,24 +79,6 @@ def test_get_playlists_in_reverse_alphabetical_order(playlists):
     assert result[2][1] == 'bar'
 
 
-def test_get_playlists_in_modified_order(playlists):
-    result = playlists.GetPlaylists(0, 100, 'Modified', False)
-
-    assert len(result) == 3
-    assert result[0][1] == 'baz'
-    assert result[1][1] == 'bar'
-    assert result[2][1] == 'foo'
-
-
-def test_get_playlists_in_reverse_modified_order(playlists):
-    result = playlists.GetPlaylists(0, 100, 'Modified', True)
-
-    assert len(result) == 3
-    assert result[0][1] == 'foo'
-    assert result[1][1] == 'bar'
-    assert result[2][1] == 'baz'
-
-
 def test_get_playlists_in_user_order(playlists):
     result = playlists.GetPlaylists(0, 100, 'User', False)
 
@@ -139,7 +121,7 @@ def test_get_orderings_includes_alpha_modified_and_user(playlists):
 
     assert 'Alphabetical' in result
     assert 'Created' not in result
-    assert 'Modified' in result
+    assert 'Modified' not in result
     assert 'Played' not in result
     assert 'User' in result
 

@@ -55,11 +55,9 @@ class Playlists(Interface):
         logger.debug(
             '%s.GetPlaylists(%r, %r, %r, %r) called',
             self.INTERFACE, index, max_count, order, reverse)
-        playlists = self.core.playlists.get_playlists().get()
+        playlists = self.core.playlists.as_list().get()
         if order == 'Alphabetical':
             playlists.sort(key=lambda p: p.name, reverse=reverse)
-        elif order == 'Modified':
-            playlists.sort(key=lambda p: p.last_modified, reverse=reverse)
         elif order == 'User' and reverse:
             playlists.reverse()
         slice_end = index + max_count
@@ -79,7 +77,6 @@ class Playlists(Interface):
     def Orderings(self):
         return [
             'Alphabetical',  # Order by playlist.name
-            'Modified',      # Order by playlist.last_modified
             'User',          # Don't change order
         ]
 

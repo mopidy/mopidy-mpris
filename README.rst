@@ -167,6 +167,8 @@ v2.0.0 (UNRELEASED)
 
 - Replace all usage of Mopidy APIs deprecated as of Mopidy 2.1.
 
+- Ordering of playlists by playlist modification time is no longer supported.
+
 v1.4.0 (2018-04-10)
 -------------------
 
