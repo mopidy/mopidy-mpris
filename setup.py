@@ -29,6 +29,7 @@ setup(
         'setuptools',
         'Mopidy >= 0.18',
         'Pykka >= 1.1',
+        'pydbus >= 0.6.0',
     ],
     entry_points={
         'mopidy.ext': [
