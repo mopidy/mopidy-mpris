@@ -36,9 +36,9 @@ class Server(object):
 
         self._publication_token = bus.publish(
             'org.mpris.MediaPlayer2.mopidy',
-            self.root,
-            self.player,
-            self.playlists,
+            ('/org/mpris/MediaPlayer2', self.root),
+            ('/org/mpris/MediaPlayer2', self.player),
+            ('/org/mpris/MediaPlayer2', self.playlists),
         )
 
     def unpublish(self):

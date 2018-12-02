@@ -122,7 +122,7 @@ Python shell::
 
     >>> import pydbus
     >>> bus = pydbus.SessionBus()
-    >>> player = bus.get('org.mpris.MediaPlayer2.mopidy')
+    >>> player = bus.get('org.mpris.MediaPlayer2.mopidy', '/org/mpris/MediaPlayer2')
 
 Now you can control Mopidy through the player object. Examples:
 
