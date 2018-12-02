@@ -71,10 +71,12 @@ class Playlists(Interface):
 
     @property
     def PlaylistCount(self):
+        logger.debug('Getting %s.PlaylistCount', self.INTERFACE)
         return len(self.core.playlists.as_list().get())
 
     @property
     def Orderings(self):
+        logger.debug('Getting %s.Orderings', self.INTERFACE)
         return [
             'Alphabetical',  # Order by playlist.name
             'User',          # Don't change order
@@ -82,6 +84,7 @@ class Playlists(Interface):
 
     @property
     def ActivePlaylist(self):
+        logger.debug('Getting %s.ActivePlaylist', self.INTERFACE)
         playlist_is_valid = False
         playlist = ('/', 'None', '')
         return (playlist_is_valid, playlist)

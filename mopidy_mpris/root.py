@@ -47,10 +47,12 @@ class Root(Interface):
 
     @property
     def Fullscreen(self):
+        logger.debug('Getting %s.Fullscreen', self.INTERFACE)
         return False
 
     @Fullscreen.setter
     def Fullscreen(self, value):
+        logger.debug('Setting %s.Fullscreen to %s', self.INTERFACE, value)
         pass
 
     CanSetFullscreen = False
@@ -60,21 +62,26 @@ class Root(Interface):
 
     @property
     def DesktopEntry(self):
+        logger.debug('Getting %s.DesktopEntry', self.INTERFACE)
         return os.path.splitext(os.path.basename(
             self.config['mpris']['desktop_file']))[0]
 
     @property
     def SupportedUriSchemes(self):
+        logger.debug('Getting %s.SupportedUriSchemes', self.INTERFACE)
         return self.core.get_uri_schemes().get()
 
-    # NOTE Return MIME types supported by local backend if support for
-    # reporting supported MIME types is added.
-    SupportedMimeTypes = [
-        'audio/mpeg',
-        'audio/x-ms-wma',
-        'audio/x-ms-asf',
-        'audio/x-flac',
-        'audio/flac',
-        'audio/l16;channels=2;rate=44100',
-        'audio/l16;rate=44100;channels=2',
-    ]
+    @property
+    def SupportedMimeTypes(self):
+        # NOTE Return MIME types supported by local backend if support for
+        # reporting supported MIME types is added.
+        logger.debug('Getting %s.SupportedMimeTypes', self.INTERFACE)
+        return [
+            'audio/mpeg',
+            'audio/x-ms-wma',
+            'audio/x-ms-asf',
+            'audio/x-flac',
+            'audio/flac',
+            'audio/l16;channels=2;rate=44100',
+            'audio/l16;rate=44100;channels=2',
+        ]

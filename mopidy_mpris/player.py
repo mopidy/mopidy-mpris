@@ -167,6 +167,7 @@ class Player(Interface):
 
     @property
     def PlaybackStatus(self):
+        logger.debug('Getting %s.PlaybackStatus', self.INTERFACE)
         state = self.core.playback.get_state().get()
         if state == PlaybackState.PLAYING:
             return 'Playing'
@@ -177,6 +178,7 @@ class Player(Interface):
 
     @property
     def LoopStatus(self):
+        logger.debug('Getting %s.LoopStatus', self.INTERFACE)
         repeat = self.core.tracklist.get_repeat().get()
         single = self.core.tracklist.get_single().get()
         if not repeat:
@@ -192,6 +194,7 @@ class Player(Interface):
         if not self.CanControl:
             logger.debug('Setting %s.LoopStatus not allowed', self.INTERFACE)
             return
+        logger.debug('Setting %s.LoopStatus to %s', self.INTERFACE, value)
         if value == 'None':
             self.core.tracklist.set_repeat(False)
             self.core.tracklist.set_single(False)
@@ -204,6 +207,7 @@ class Player(Interface):
 
     @property
     def Rate(self):
+        logger.debug('Getting %s.Rate', self.INTERFACE)
         return 1.0
 
     @Rate.setter
@@ -213,11 +217,13 @@ class Player(Interface):
             # added to be consistent with all the other property setters.
             logger.debug('Setting %s.Rate not allowed', self.INTERFACE)
             return
+        logger.debug('Setting %s.Rate to %s', self.INTERFACE, value)
         if value == 0:
             self.Pause()
 
     @property
     def Shuffle(self):
+        logger.debug('Getting %s.Shuffle', self.INTERFACE)
         return self.core.tracklist.get_random().get()
 
     @Shuffle.setter
@@ -225,10 +231,12 @@ class Player(Interface):
         if not self.CanControl:
             logger.debug('Setting %s.Shuffle not allowed', self.INTERFACE)
             return
+        logger.debug('Setting %s.Shuffle to %s', self.INTERFACE, value)
         self.core.tracklist.set_random(bool(value))
 
     @property
     def Metadata(self):
+        logger.debug('Getting %s.Metadata', self.INTERFACE)
         current_tl_track = self.core.playback.get_current_tl_track().get()
         if current_tl_track is None:
             return {}
@@ -266,6 +274,7 @@ class Player(Interface):
 
     @property
     def Volume(self):
+        logger.debug('Getting %s.Volume', self.INTERFACE)
         volume = self.core.mixer.get_volume().get()
         if volume is None:
             return 0
@@ -276,6 +285,7 @@ class Player(Interface):
         if not self.CanControl:
             logger.debug('Setting %s.Volume not allowed', self.INTERFACE)
             return
+        logger.debug('Setting %s.Volume to %s', self.INTERFACE, value)
         if value is None:
             return
         elif value < 0:
@@ -287,6 +297,7 @@ class Player(Interface):
 
     @property
     def Position(self):
+        logger.debug('Getting %s.Position', self.INTERFACE)
         return self.core.playback.get_time_position().get() * 1000
 
     MinimumRate = 1.0
@@ -294,6 +305,7 @@ class Player(Interface):
 
     @property
     def CanGoNext(self):
+        logger.debug('Getting %s.CanGoNext', self.INTERFACE)
         if not self.CanControl:
             return False
         current_tlid = self.core.playback.get_current_tlid().get()
@@ -302,6 +314,7 @@ class Player(Interface):
 
     @property
     def CanGoPrevious(self):
+        logger.debug('Getting %s.CanGoPrevious', self.INTERFACE)
         if not self.CanControl:
             return False
         current_tlid = self.core.playback.get_current_tlid().get()
@@ -310,6 +323,7 @@ class Player(Interface):
 
     @property
     def CanPlay(self):
+        logger.debug('Getting %s.CanPlay', self.INTERFACE)
         if not self.CanControl:
             return False
         current_tlid = self.core.playback.get_current_tlid().get()
@@ -318,6 +332,7 @@ class Player(Interface):
 
     @property
     def CanPause(self):
+        logger.debug('Getting %s.CanPause', self.INTERFACE)
         if not self.CanControl:
             return False
         # NOTE Should be changed to vary based on capabilities of the current
@@ -326,6 +341,7 @@ class Player(Interface):
 
     @property
     def CanSeek(self):
+        logger.debug('Getting %s.CanSeek', self.INTERFACE)
         if not self.CanControl:
             return False
         # NOTE Should be changed to vary based on capabilities of the current
@@ -334,6 +350,7 @@ class Player(Interface):
 
     @property
     def CanControl(self):
+        logger.debug('Getting %s.CanControl', self.INTERFACE)
         # NOTE This could be a setting for the end user to change.
         return self._CanControl
 
