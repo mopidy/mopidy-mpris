@@ -59,8 +59,10 @@ There's no configuration needed for the MPRIS extension to work.
 The following configuration values are available:
 
 - ``mpris/enabled``: If the MPRIS extension should be enabled or not.
+  Defaults to ``true``.
 
 - ``mpris/desktop_file``: Path to Mopidy's ``.desktop`` file.
+  Defaults to ``/usr/share/applications/mopidy.desktop``.
 
 - ``mpris/bus_type``: The type of D-Bus bus Mopidy-MPRIS should connect to.
   Choices include ``session`` (the default) and ``system``.
