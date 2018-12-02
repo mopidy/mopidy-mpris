@@ -95,7 +95,7 @@ def test_playlist_changed_event_causes_mpris_playlist_changed_event(frontend):
     frontend.playlist_changed(playlist=playlist)
 
     frontend.mpris.playlists.PlaylistChanged.assert_called_with(
-        ('/com/mopidy/playlist/MR2W23LZHJTG63Y_', 'foo', ''))
+        '/com/mopidy/playlist/MR2W23LZHJTG63Y_', 'foo', '')
 
 
 def test_playlist_deleted_event_changes_playlist_count(frontend):

@@ -67,8 +67,7 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def playlist_changed(self, playlist):
         playlist_id = get_playlist_id(playlist.uri)
-        playlist = (playlist_id, playlist.name, '')
-        self.mpris.playlists.PlaylistChanged(playlist)
+        self.mpris.playlists.PlaylistChanged(playlist_id, playlist.name, '')
 
     def playlist_deleted(self, uri):
         _emit_properties_changed(self.mpris.playlists, ['PlaylistCount'])
