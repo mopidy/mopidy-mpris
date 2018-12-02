@@ -87,7 +87,11 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def options_changed(self):
         logger.debug('Received options_changed event')
-        pass  # TODO
+        if self.mpris is None:
+            return
+        _emit_properties_changed(
+            self.mpris.player,
+            ['LoopStatus', 'Shuffle', 'CanGoPrevious', 'CanGoNext'])
 
     def volume_changed(self, volume):
         logger.debug('Received volume_changed event')

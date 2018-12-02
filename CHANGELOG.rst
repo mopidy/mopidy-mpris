@@ -15,6 +15,11 @@ v2.0.0 (UNRELEASED)
 
 - Ordering of playlists by playlist modification time is no longer supported.
 
+- Update UIs when playback options change:
+
+  - On the Mopidy event ``options_changed``, emit ``PropertiesChanged`` for
+    ``LoopStatus``, ``Shuffle``, ``CanGoPrevious``, and ``CanGoNext``.
+
 v1.4.0 (2018-04-10)
 ===================
 

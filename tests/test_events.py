@@ -67,21 +67,6 @@ def test_track_playback_ended_changes_playback_status_and_metadata(frontend):
         {'Metadata': '...', 'PlaybackStatus': 'Stopped'}, [])
 
 
-def test_volume_changed_event_changes_volume(frontend):
-    frontend.mpris.player.Volume = 1.0
-
-    frontend.volume_changed(volume=100)
-
-    frontend.mpris.player.PropertiesChanged.assert_called_with(
-        player.Player.INTERFACE, {'Volume': 1.0}, [])
-
-
-def test_seeked_event_causes_mpris_seeked_event(frontend):
-    frontend.seeked(time_position=31000)
-
-    frontend.mpris.player.Seeked.assert_called_with(31000000)
-
-
 def test_playlists_loaded_event_changes_playlist_count(frontend):
     frontend.mpris.playlists.PlaylistCount = 17
 
@@ -98,3 +83,38 @@ def test_playlist_changed_event_causes_mpris_playlist_changed_event(frontend):
 
     frontend.mpris.playlists.PlaylistChanged.assert_called_with(
         ('/com/mopidy/playlist/MR2W23LZHJTG63Y_', 'foo', ''))
+
+
+def test_options_changed_event_changes_loopstatus_and_shuffle(frontend):
+    frontend.mpris.player.CanGoPrevious = False
+    frontend.mpris.player.CanGoNext = True
+    frontend.mpris.player.LoopStatus = 'Track'
+    frontend.mpris.player.Shuffle = True
+
+    frontend.options_changed()
+
+    frontend.mpris.player.PropertiesChanged.assert_called_with(
+        player.Player.INTERFACE,
+        {
+             'LoopStatus': 'Track',
+             'Shuffle': True,
+             'CanGoPrevious': False,
+             'CanGoNext': True,
+        },
+        []
+    )
+
+
+def test_volume_changed_event_changes_volume(frontend):
+    frontend.mpris.player.Volume = 1.0
+
+    frontend.volume_changed(volume=100)
+
+    frontend.mpris.player.PropertiesChanged.assert_called_with(
+        player.Player.INTERFACE, {'Volume': 1.0}, [])
+
+
+def test_seeked_event_causes_mpris_seeked_event(frontend):
+    frontend.seeked(time_position=31000)
+
+    frontend.mpris.player.Seeked.assert_called_with(31000000)
