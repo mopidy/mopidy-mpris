@@ -38,6 +38,7 @@ class DummyLibraryProvider(backend.LibraryProvider):
         super(DummyLibraryProvider, self).__init__(*args, **kwargs)
         self.dummy_library = []
         self.dummy_get_distinct_result = {}
+        self.dummy_get_images_result = {}
         self.dummy_browse_result = {}
         self.dummy_find_exact_result = SearchResult()
         self.dummy_search_result = SearchResult()
@@ -47,6 +48,9 @@ class DummyLibraryProvider(backend.LibraryProvider):
 
     def get_distinct(self, field, query=None):
         return self.dummy_get_distinct_result.get(field, set())
+
+    def get_images(self, uris):
+        return self.dummy_get_images_result
 
     def lookup(self, uri):
         return [t for t in self.dummy_library if uri == t.uri]

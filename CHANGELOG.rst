@@ -48,6 +48,9 @@ v2.0.0 (UNRELEASED)
   - On the Mopidy event ``mute_changed``, emit ``PropertiesChanged`` for
     ``Volume``.
 
+- Fallback to get cover art from ``core.library.get_images()`` if
+ ``track.album.images`` is blank.
+
 v1.4.0 (2018-04-10)
 ===================
 

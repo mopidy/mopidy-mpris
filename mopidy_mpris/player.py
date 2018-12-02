@@ -263,15 +263,27 @@ class Player(Interface):
                 artists.sort(key=lambda a: a.name)
                 res['xesam:albumArtist'] = Variant(
                     'as', [a.name for a in artists if a.name])
-            if track.album and track.album.images:
-                url = sorted(track.album.images)[0]
-                if url:
-                    res['mpris:artUrl'] = Variant('s', url)
+            art_url = self._get_art_url(track)
+            if art_url:
+                res['mpris:artUrl'] = Variant('s', art_url)
             if track.disc_no:
                 res['xesam:discNumber'] = Variant('i', track.disc_no)
             if track.track_no:
                 res['xesam:trackNumber'] = Variant('i', track.track_no)
             return res
+
+    def _get_art_url(self, track):
+        if track.album and track.album.images:
+            url = sorted(track.album.images)[0]
+            if url:
+                return url
+
+        images = self.core.library.get_images([track.uri]).get()
+        if images[track.uri]:
+            largest_image = sorted(
+                images[track.uri], key=lambda i: i.width, reverse=True
+            )[0]
+            return largest_image.uri
 
     @property
     def Volume(self):

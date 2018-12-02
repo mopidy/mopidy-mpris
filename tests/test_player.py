@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from gi.repository import GLib
 
 from mopidy.core import PlaybackState
-from mopidy.models import Album, Artist, Track
+from mopidy.models import Album, Artist, Image, Track
 
 import pytest
 
@@ -192,6 +192,22 @@ def test_get_metadata_use_first_album_image_as_art_url(core, player):
 
     assert result['mpris:artUrl'] == GLib.Variant(
         's', 'http://example.com/bar.jpg')
+
+
+def test_get_metadata_use_library_image_as_art_url(backend, core, player):
+    backend.library.dummy_get_images_result = {
+        'dummy:a': [
+            Image(uri='http://example.com/small.jpg', width=100, height=100),
+            Image(uri='http://example.com/large.jpg', width=200, height=200),
+        ],
+    }
+    core.tracklist.add([Track(uri='dummy:a')])
+    core.playback.play().get()
+
+    result = player.Metadata
+
+    assert result['mpris:artUrl'] == GLib.Variant(
+        's', 'http://example.com/large.jpg')
 
 
 def test_get_metadata_has_no_art_url_if_no_album(core, player):
