@@ -98,6 +98,15 @@ def test_playlist_changed_event_causes_mpris_playlist_changed_event(frontend):
         ('/com/mopidy/playlist/MR2W23LZHJTG63Y_', 'foo', ''))
 
 
+def test_playlist_deleted_event_changes_playlist_count(frontend):
+    frontend.mpris.playlists.PlaylistCount = 17
+
+    frontend.playlist_deleted('dummy:foo')
+
+    frontend.mpris.playlists.PropertiesChanged.assert_called_with(
+        playlists.Playlists.INTERFACE, {'PlaylistCount': 17}, [])
+
+
 def test_options_changed_event_changes_loopstatus_and_shuffle(frontend):
     frontend.mpris.player.CanGoPrevious = False
     frontend.mpris.player.CanGoNext = True

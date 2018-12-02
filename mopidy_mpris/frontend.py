@@ -74,6 +74,8 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def playlists_loaded(self):
         logger.debug('Received playlists_loaded event')
+        if self.mpris is None:
+            return
         _emit_properties_changed(self.mpris.playlists, ['PlaylistCount'])
 
     def playlist_changed(self, playlist):
@@ -86,7 +88,9 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def playlist_deleted(self, uri):
         logger.debug('Received playlist_deleted event')
-        pass  # TODO
+        if self.mpris is None:
+            return
+        _emit_properties_changed(self.mpris.playlists, ['PlaylistCount'])
 
     def options_changed(self):
         logger.debug('Received options_changed event')

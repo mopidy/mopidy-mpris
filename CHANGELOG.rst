@@ -33,6 +33,11 @@ v2.0.0 (UNRELEASED)
   - On the Mopidy event ``stream_title_changed``, emit ``PropertiesChanged``
     for ``Metadata``.
 
+- Update UIs when playlists are deleted:
+
+  - On the Mopidy event ``playlist_deleted``, emit ``PropertiesChanged`` for
+    ``PlaylistCount``.
+
 - Control mixer mute through the volume control:
 
   - The ``Volume`` property is now ``0.0`` if the mixer is muted.
