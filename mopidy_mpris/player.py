@@ -276,8 +276,9 @@ class Player(Interface):
     @property
     def Volume(self):
         self.log_trace('Getting %s.Volume', self.INTERFACE)
+        mute = self.core.mixer.get_mute().get()
         volume = self.core.mixer.get_volume().get()
-        if volume is None:
+        if volume is None or mute is True:
             return 0
         return volume / 100.0
 
@@ -289,12 +290,13 @@ class Player(Interface):
         logger.debug('Setting %s.Volume to %s', self.INTERFACE, value)
         if value is None:
             return
-        elif value < 0:
-            self.core.mixer.set_volume(0)
+        if value < 0:
+            value = 0
         elif value > 1:
-            self.core.mixer.set_volume(100)
-        elif 0 <= value <= 1:
-            self.core.mixer.set_volume(int(value * 100))
+            value = 1
+        self.core.mixer.set_volume(int(value * 100))
+        if value > 0:
+            self.core.mixer.set_mute(False)
 
     @property
     def Position(self):

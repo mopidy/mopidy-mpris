@@ -236,6 +236,19 @@ def test_get_volume_should_return_volume_between_zero_and_one(core, player):
     assert player.Volume == 1
 
 
+def test_get_volume_should_return_0_if_muted(core, player):
+    assert player.Volume == 0
+
+    core.mixer.set_volume(100)
+    assert player.Volume == 1
+
+    core.mixer.set_mute(True)
+    assert player.Volume == 0
+
+    core.mixer.set_mute(False)
+    assert player.Volume == 1
+
+
 @pytest.mark.parametrize('volume, expected', [
     (-1.0, 0),
     (0, 0),
@@ -264,6 +277,26 @@ def test_set_volume_is_ignored_if_can_control_is_false(core, player):
     player.Volume = 1.0
 
     assert core.mixer.get_volume().get() == 0
+
+
+def test_set_volume_to_positive_value_unmutes_if_muted(core, player):
+    core.mixer.set_volume(10).get()
+    core.mixer.set_mute(True).get()
+
+    player.Volume = 1.0
+
+    assert core.mixer.get_volume().get() == 100
+    assert core.mixer.get_mute().get() is False
+
+
+def test_set_volume_to_zero_does_not_unmute_if_muted(core, player):
+    core.mixer.set_volume(10).get()
+    core.mixer.set_mute(True).get()
+
+    player.Volume = 0.0
+
+    assert core.mixer.get_volume().get() == 0
+    assert core.mixer.get_mute().get() is True
 
 
 def test_get_position_returns_time_position_in_microseconds(core, player):

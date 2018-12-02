@@ -104,7 +104,9 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def mute_changed(self, mute):
         logger.debug('Received mute_changed event')
-        pass  # TODO
+        if self.mpris is None:
+            return
+        _emit_properties_changed(self.mpris.player, ['Volume'])
 
     def seeked(self, time_position):
         logger.debug('Received seeked event')

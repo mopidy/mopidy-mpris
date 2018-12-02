@@ -33,6 +33,16 @@ v2.0.0 (UNRELEASED)
   - On the Mopidy event ``stream_title_changed``, emit ``PropertiesChanged``
     for ``Metadata``.
 
+- Control mixer mute through the volume control:
+
+  - The ``Volume`` property is now ``0.0`` if the mixer is muted.
+
+  - When setting the ``Volume`` property to a positive value, the mixer is
+    unmuted.
+
+  - On the Mopidy event ``mute_changed``, emit ``PropertiesChanged`` for
+    ``Volume``.
+
 v1.4.0 (2018-04-10)
 ===================
 

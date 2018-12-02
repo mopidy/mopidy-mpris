@@ -127,6 +127,15 @@ def test_volume_changed_event_changes_volume(frontend):
         player.Player.INTERFACE, {'Volume': 1.0}, [])
 
 
+def test_mute_changed_event_changes_volume(frontend):
+    frontend.mpris.player.Volume = 0.0
+
+    frontend.mute_changed(True)
+
+    frontend.mpris.player.PropertiesChanged.assert_called_with(
+        player.Player.INTERFACE, {'Volume': 0.0}, [])
+
+
 def test_seeked_event_causes_mpris_seeked_event(frontend):
     frontend.seeked(time_position=31000)
 
