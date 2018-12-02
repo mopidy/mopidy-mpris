@@ -49,7 +49,7 @@ v2.0.0 (UNRELEASED)
     ``Volume``.
 
 - Fallback to get cover art from ``core.library.get_images()`` if
- ``track.album.images`` is blank.
+  ``track.album.images`` is blank.
 
 v1.4.0 (2018-04-10)
 ===================
