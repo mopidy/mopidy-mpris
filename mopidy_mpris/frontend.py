@@ -63,7 +63,10 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def playback_state_changed(self, old_state, new_state):
         logger.debug('Received playback_state_changed event')
-        pass  # TODO
+        if self.mpris is None:
+            return
+        _emit_properties_changed(
+            self.mpris.player, ['PlaybackStatus', 'Metadata'])
 
     def tracklist_changed(self):
         logger.debug('Received tracklist_changed event')

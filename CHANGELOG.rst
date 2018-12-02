@@ -20,6 +20,11 @@ v2.0.0 (UNRELEASED)
   - On the Mopidy event ``options_changed``, emit ``PropertiesChanged`` for
     ``LoopStatus``, ``Shuffle``, ``CanGoPrevious``, and ``CanGoNext``.
 
+- Update UIs when playback is stopped:
+
+  - On the Mopidy event ``playback_state_changed``, emit ``PropertiesChanged``
+    for ``PlaybackStatus`` and ``Metadata``. (Fixes: #23)
+
 v1.4.0 (2018-04-10)
 ===================
 
