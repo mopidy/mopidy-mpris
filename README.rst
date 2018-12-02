@@ -24,7 +24,7 @@ An example of an MPRIS client is the Ubuntu Sound Menu.
 Dependencies
 ============
 
-- D-Bus Python bindings. The package is named ``python-dbus`` in
+- ``pydbus`` D-Bus Python bindings. The package is named ``python-pydbus`` in
   Ubuntu/Debian.
 
 - An ``.desktop`` file for Mopidy installed at the path set in the
