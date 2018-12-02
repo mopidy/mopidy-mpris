@@ -118,21 +118,19 @@ Testing the MPRIS API directly
 To use the MPRIS API directly, start Mopidy, and then run the following in a
 Python shell::
 
-    import dbus
-    bus = dbus.SessionBus()
-    player = bus.get_object('org.mpris.MediaPlayer2.mopidy',
-        '/org/mpris/MediaPlayer2')
+    import pydbus
+    bus = pydbus.SessionBus()
+    player = bus.get('org.mpris.MediaPlayer2.mopidy')
 
 Now you can control Mopidy through the player object. Examples:
 
-- To get some properties from Mopidy, run::
+- To get properties from Mopidy, run for example::
 
-    props = player.GetAll('org.mpris.MediaPlayer2',
-        dbus_interface='org.freedesktop.DBus.Properties')
+    player.PlaybackStatus
 
 - To pause Mopidy's playback through D-Bus, run::
 
-    player.Pause(dbus_interface='org.mpris.MediaPlayer2.Player')
+    player.Pause()
 
 For details on the API, please refer to the `MPRIS specification
 <https://specifications.freedesktop.org/mpris-spec/latest/>`__.
