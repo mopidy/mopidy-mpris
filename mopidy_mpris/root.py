@@ -47,7 +47,7 @@ class Root(Interface):
 
     @property
     def Fullscreen(self):
-        logger.debug('Getting %s.Fullscreen', self.INTERFACE)
+        self.log_trace('Getting %s.Fullscreen', self.INTERFACE)
         return False
 
     @Fullscreen.setter
@@ -62,20 +62,20 @@ class Root(Interface):
 
     @property
     def DesktopEntry(self):
-        logger.debug('Getting %s.DesktopEntry', self.INTERFACE)
+        self.log_trace('Getting %s.DesktopEntry', self.INTERFACE)
         return os.path.splitext(os.path.basename(
             self.config['mpris']['desktop_file']))[0]
 
     @property
     def SupportedUriSchemes(self):
-        logger.debug('Getting %s.SupportedUriSchemes', self.INTERFACE)
+        self.log_trace('Getting %s.SupportedUriSchemes', self.INTERFACE)
         return self.core.get_uri_schemes().get()
 
     @property
     def SupportedMimeTypes(self):
         # NOTE Return MIME types supported by local backend if support for
         # reporting supported MIME types is added.
-        logger.debug('Getting %s.SupportedMimeTypes', self.INTERFACE)
+        self.log_trace('Getting %s.SupportedMimeTypes', self.INTERFACE)
         return [
             'audio/mpeg',
             'audio/x-ms-wma',

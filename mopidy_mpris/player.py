@@ -167,7 +167,7 @@ class Player(Interface):
 
     @property
     def PlaybackStatus(self):
-        logger.debug('Getting %s.PlaybackStatus', self.INTERFACE)
+        self.log_trace('Getting %s.PlaybackStatus', self.INTERFACE)
         state = self.core.playback.get_state().get()
         if state == PlaybackState.PLAYING:
             return 'Playing'
@@ -178,7 +178,7 @@ class Player(Interface):
 
     @property
     def LoopStatus(self):
-        logger.debug('Getting %s.LoopStatus', self.INTERFACE)
+        self.log_trace('Getting %s.LoopStatus', self.INTERFACE)
         repeat = self.core.tracklist.get_repeat().get()
         single = self.core.tracklist.get_single().get()
         if not repeat:
@@ -207,7 +207,7 @@ class Player(Interface):
 
     @property
     def Rate(self):
-        logger.debug('Getting %s.Rate', self.INTERFACE)
+        self.log_trace('Getting %s.Rate', self.INTERFACE)
         return 1.0
 
     @Rate.setter
@@ -223,7 +223,7 @@ class Player(Interface):
 
     @property
     def Shuffle(self):
-        logger.debug('Getting %s.Shuffle', self.INTERFACE)
+        self.log_trace('Getting %s.Shuffle', self.INTERFACE)
         return self.core.tracklist.get_random().get()
 
     @Shuffle.setter
@@ -236,7 +236,7 @@ class Player(Interface):
 
     @property
     def Metadata(self):
-        logger.debug('Getting %s.Metadata', self.INTERFACE)
+        self.log_trace('Getting %s.Metadata', self.INTERFACE)
         current_tl_track = self.core.playback.get_current_tl_track().get()
         if current_tl_track is None:
             return {}
@@ -274,7 +274,7 @@ class Player(Interface):
 
     @property
     def Volume(self):
-        logger.debug('Getting %s.Volume', self.INTERFACE)
+        self.log_trace('Getting %s.Volume', self.INTERFACE)
         volume = self.core.mixer.get_volume().get()
         if volume is None:
             return 0
@@ -297,7 +297,7 @@ class Player(Interface):
 
     @property
     def Position(self):
-        logger.debug('Getting %s.Position', self.INTERFACE)
+        self.log_trace('Getting %s.Position', self.INTERFACE)
         return self.core.playback.get_time_position().get() * 1000
 
     MinimumRate = 1.0
@@ -305,7 +305,7 @@ class Player(Interface):
 
     @property
     def CanGoNext(self):
-        logger.debug('Getting %s.CanGoNext', self.INTERFACE)
+        self.log_trace('Getting %s.CanGoNext', self.INTERFACE)
         if not self.CanControl:
             return False
         current_tlid = self.core.playback.get_current_tlid().get()
@@ -314,7 +314,7 @@ class Player(Interface):
 
     @property
     def CanGoPrevious(self):
-        logger.debug('Getting %s.CanGoPrevious', self.INTERFACE)
+        self.log_trace('Getting %s.CanGoPrevious', self.INTERFACE)
         if not self.CanControl:
             return False
         current_tlid = self.core.playback.get_current_tlid().get()
@@ -323,7 +323,7 @@ class Player(Interface):
 
     @property
     def CanPlay(self):
-        logger.debug('Getting %s.CanPlay', self.INTERFACE)
+        self.log_trace('Getting %s.CanPlay', self.INTERFACE)
         if not self.CanControl:
             return False
         current_tlid = self.core.playback.get_current_tlid().get()
@@ -332,7 +332,7 @@ class Player(Interface):
 
     @property
     def CanPause(self):
-        logger.debug('Getting %s.CanPause', self.INTERFACE)
+        self.log_trace('Getting %s.CanPause', self.INTERFACE)
         if not self.CanControl:
             return False
         # NOTE Should be changed to vary based on capabilities of the current
@@ -341,7 +341,7 @@ class Player(Interface):
 
     @property
     def CanSeek(self):
-        logger.debug('Getting %s.CanSeek', self.INTERFACE)
+        self.log_trace('Getting %s.CanSeek', self.INTERFACE)
         if not self.CanControl:
             return False
         # NOTE Should be changed to vary based on capabilities of the current
@@ -350,7 +350,6 @@ class Player(Interface):
 
     @property
     def CanControl(self):
-        logger.debug('Getting %s.CanControl', self.INTERFACE)
         # NOTE This could be a setting for the end user to change.
         return self._CanControl
 
