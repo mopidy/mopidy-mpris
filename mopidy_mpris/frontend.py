@@ -115,7 +115,9 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def stream_title_changed(self, title):
         logger.debug('Received stream_title_changed event')
-        pass  # TODO
+        if self.mpris is None:
+            return
+        _emit_properties_changed(self.mpris.player, ['Metadata'])
 
 
 def _emit_properties_changed(interface, changed_properties):

@@ -238,6 +238,7 @@ class Player(Interface):
     def Metadata(self):
         self.log_trace('Getting %s.Metadata', self.INTERFACE)
         current_tl_track = self.core.playback.get_current_tl_track().get()
+        stream_title = self.core.playback.get_stream_title().get()
         if current_tl_track is None:
             return {}
         else:
@@ -248,8 +249,8 @@ class Player(Interface):
                 res['mpris:length'] = Variant('x', track.length * 1000)
             if track.uri:
                 res['xesam:url'] = Variant('s', track.uri)
-            if track.name:
-                res['xesam:title'] = Variant('s', track.name)
+            if stream_title or track.name:
+                res['xesam:title'] = Variant('s', stream_title or track.name)
             if track.artists:
                 artists = list(track.artists)
                 artists.sort(key=lambda a: a.name)

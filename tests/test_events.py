@@ -131,3 +131,12 @@ def test_seeked_event_causes_mpris_seeked_event(frontend):
     frontend.seeked(time_position=31000)
 
     frontend.mpris.player.Seeked.assert_called_with(31000000)
+
+
+def test_stream_title_changed_changes_metadata(frontend):
+    frontend.mpris.player.Metadata = '...'
+
+    frontend.stream_title_changed('a new title')
+
+    frontend.mpris.player.PropertiesChanged.assert_called_with(
+        player.Player.INTERFACE, {'Metadata': '...'}, [])

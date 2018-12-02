@@ -25,6 +25,14 @@ v2.0.0 (UNRELEASED)
   - On the Mopidy event ``playback_state_changed``, emit ``PropertiesChanged``
     for ``PlaybackStatus`` and ``Metadata``. (Fixes: #23)
 
+- Update track name when stream title changes:
+
+  - The ``Metadata`` property now uses ``core.playback.get_stream_title()``
+    as ``xesam:title`` if available.
+
+  - On the Mopidy event ``stream_title_changed``, emit ``PropertiesChanged``
+    for ``Metadata``.
+
 v1.4.0 (2018-04-10)
 ===================
 

@@ -39,7 +39,9 @@ def mixer():
 
 
 @pytest.fixture
-def core(config, backend, mixer):
-    actor = Core.start(config=config, backends=[backend], mixer=mixer).proxy()
+def core(config, backend, mixer, audio):
+    actor = Core.start(
+        config=config, backends=[backend], mixer=mixer, audio=audio
+    ).proxy()
     yield actor
     actor.stop()

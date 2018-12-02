@@ -154,6 +154,26 @@ def test_get_metadata(core, player):
     assert result['xesam:albumArtist'] == GLib.Variant('as', ['e'])
 
 
+def test_get_metadata_prefers_stream_title_over_track_name(
+        audio, core, player):
+    core.tracklist.add([Track(
+        uri='dummy:a',
+        name='Track name',
+    )])
+    core.playback.play().get()
+
+    result = player.Metadata
+    assert result['xesam:title'] == GLib.Variant('s', 'Track name')
+
+    audio.trigger_fake_tags_changed({
+        'organization': ['Required for Mopidy core to care about the title'],
+        'title': ['Stream title'],
+    }).get()
+
+    result = player.Metadata
+    assert result['xesam:title'] == GLib.Variant('s', 'Stream title')
+
+
 def test_get_metadata_use_first_album_image_as_art_url(core, player):
     # XXX Currently, the album image order isn't preserved because they
     # are stored as a frozenset(). We pick the first in the set, which is
