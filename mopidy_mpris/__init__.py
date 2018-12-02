@@ -26,9 +26,9 @@ class Extension(ext.Extension):
 
     def validate_environment(self):
         try:
-            import dbus  # noqa
+            import pydbus  # noqa
         except ImportError as e:
-            raise exceptions.ExtensionError('dbus library not found', e)
+            raise exceptions.ExtensionError('pydbus library not found', e)
 
     def setup(self, registry):
         from .frontend import MprisFrontend
