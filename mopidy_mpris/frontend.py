@@ -70,7 +70,7 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def tracklist_changed(self):
         logger.debug('Received tracklist_changed event')
-        pass  # TODO
+        pass  # TODO Implement if adding tracklist support
 
     def playlists_loaded(self):
         logger.debug('Received playlists_loaded event')
