@@ -92,7 +92,7 @@ through the Ubuntu Sound Menu without any additional setup.
 
 If you installed Mopidy in any other way and want to control Mopidy through the
 Ubuntu Sound Menu, you must install the ``mopidy.desktop`` file which can be
-found in the ``data/`` dir of the Mopidy source repo into the
+found in the ``extra/desktop/`` dir of the Mopidy source repo into the
 ``/usr/share/applications`` dir by hand::
 
     cd /path/to/mopidy/source
