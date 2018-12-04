@@ -26,36 +26,51 @@ is currently not supported.
 .. _TrackList interface: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
 
 
-Dependencies
-============
-
-- ``pydbus`` D-Bus Python bindings. The package is named ``python-pydbus`` in
-  Ubuntu/Debian.
-
-
 Installation
 ============
 
-Debian/Ubuntu/Raspbian: Install the ``mopidy-mpris`` package from
-`apt.mopidy.com <http://apt.mopidy.com/>`_::
+Debian/Ubuntu/Raspbian
+----------------------
 
-    sudo apt-get install mopidy-mpris
+Install the ``mopidy-mpris`` package::
 
-Arch Linux: Install the ``mopidy-mpris`` package from
-`AUR <https://aur.archlinux.org/packages/mopidy-mpris/>`_::
+    sudo apt install mopidy-mpris
+
+If you want the latest version of Mopidy-MPRIS, add `apt.mopidy.com`_ as an
+APT archive on your system.
+
+.. _apt.mopidy.com: https://apt.mopidy.com/
+
+Arch Linux
+----------
+
+Install the ``mopidy-mpris`` package from `AUR`_::
 
     yaourt -S mopidy-mpris
 
-Else: Install the dependencies listed above yourself, and then install the
-package from PyPI::
+.. _AUR: https://aur.archlinux.org/packages/mopidy-mpris/
+
+Other distributions
+-------------------
+
+If Mopidy-MPRIS isn't packaged for your Linux distribution yet, install the
+dependencies yourself:
+
+- `pydbus`_ D-Bus Python bindings, which again depends on ``python-gi``. Thus
+  it is usually easiest to install with your distribution's package manager.
+
+Then install the package from `PyPI`_::
 
     pip install Mopidy-MPRIS
+
+.. _pydbus: https://github.com/LEW21/pydbus
+.. _PyPI: https://pypi.org/project/Mopidy-MPRIS/
 
 
 Configuration
 =============
 
-There's no configuration needed for the MPRIS extension to work.
+No configuration is required for the MPRIS extension to work.
 
 The following configuration values are available:
 
