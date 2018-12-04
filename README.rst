@@ -14,11 +14,16 @@ Mopidy-MPRIS
    :target: https://coveralls.io/r/mopidy/mopidy-mpris
    :alt: Test coverage
 
-`Mopidy <http://www.mopidy.com/>`_ extension for controlling Mopidy through the
-`MPRIS D-Bus interface
-<https://specifications.freedesktop.org/mpris-spec/latest/>`_.
+`Mopidy <http://www.mopidy.com/>`_ extension for controlling Mopidy through
+D-Bus using the `MPRIS specification`_.
 
-An example of an MPRIS client is the Ubuntu Sound Menu.
+Mopidy-MPRIS supports the minimum requirements of the `MPRIS specification`_
+as well as the optional `Playlists interface`_. The `TrackList interface`_
+is currently not supported.
+
+.. _MPRIS specification: https://specifications.freedesktop.org/mpris-spec/latest/
+.. _Playlists interface: https://specifications.freedesktop.org/mpris-spec/latest/Playlists_Interface.html
+.. _TrackList interface: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
 
 
 Dependencies
