@@ -9,6 +9,9 @@ v2.0.0 (UNRELEASED)
 
 - Replace dependency on python-dbus with python-pydbus.
 
+- Remove config value ``mpris/desktop_file``. It is marked as deprecated in
+  the config schema, so it will be ignored if present in the config file.
+
 - Port tests to pytest.
 
 - Replace all usage of Mopidy APIs deprecated as of Mopidy 2.2.
@@ -50,6 +53,11 @@ v2.0.0 (UNRELEASED)
 
 - Fallback to get cover art from ``core.library.get_images()`` if
   ``track.album.images`` is blank.
+
+- Do not expose Mopidy's desktop file through the ``DesktopEntry`` property. If
+  we set this to "mopidy", the basename of "mopidy.desktop", some MPRIS clients
+  will start a new Mopidy instance in a terminal window if one clicks outside
+  the buttons of the UI. This is probably never what the user wants.
 
 v1.4.0 (2018-04-10)
 ===================

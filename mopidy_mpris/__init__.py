@@ -20,7 +20,7 @@ class Extension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(Extension, self).get_config_schema()
-        schema['desktop_file'] = config.Path()
+        schema['desktop_file'] = config.Deprecated()
         schema['bus_type'] = config.String(choices=['session', 'system'])
         return schema
 

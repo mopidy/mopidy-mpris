@@ -32,10 +32,6 @@ Dependencies
 - ``pydbus`` D-Bus Python bindings. The package is named ``python-pydbus`` in
   Ubuntu/Debian.
 
-- An ``.desktop`` file for Mopidy installed at the path set in the
-  ``mpris/desktop_file`` config value. Mopidy installs this by default.
-  See usage section below for details.
-
 
 Installation
 ============
@@ -65,9 +61,6 @@ The following configuration values are available:
 
 - ``mpris/enabled``: If the MPRIS extension should be enabled or not.
   Defaults to ``true``.
-
-- ``mpris/desktop_file``: Path to Mopidy's ``.desktop`` file.
-  Defaults to ``/usr/share/applications/mopidy.desktop``.
 
 - ``mpris/bus_type``: The type of D-Bus bus Mopidy-MPRIS should connect to.
   Choices include ``session`` (the default) and ``system``.

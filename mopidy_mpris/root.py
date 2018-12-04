@@ -63,8 +63,11 @@ class Root(Interface):
     @property
     def DesktopEntry(self):
         self.log_trace('Getting %s.DesktopEntry', self.INTERFACE)
-        return os.path.splitext(os.path.basename(
-            self.config['mpris']['desktop_file']))[0]
+        # This property is optional to expose. If we set this to "mopidy", the
+        # basename of "mopidy.desktop", some MPRIS clients will start a new
+        # Mopidy instance in a terminal window if one clicks outside the
+        # buttons of the UI. This is probably never what the user wants.
+        return ''
 
     @property
     def SupportedUriSchemes(self):

@@ -48,12 +48,8 @@ def test_identify_is_mopidy(root):
     assert root.Identity == 'Mopidy'
 
 
-def test_desktop_entry_is_based_on_DESKTOP_FILE_setting(root, config):
-    assert root.DesktopEntry == 'mopidy'
-
-    config['mpris']['desktop_file'] = '/tmp/foo.desktop'
-
-    assert root.DesktopEntry == 'foo'
+def test_desktop_entry_is_blank(root, config):
+    assert root.DesktopEntry == ''
 
 
 def test_supported_uri_schemes_includes_backend_uri_schemes(root):

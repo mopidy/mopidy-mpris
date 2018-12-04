@@ -11,9 +11,6 @@ def config():
         'core': {
             'max_tracklist_length': 10000,
         },
-        'mpris': {
-            'desktop_file': '/tmp/mopidy.desktop',
-        },
     }
 
 
