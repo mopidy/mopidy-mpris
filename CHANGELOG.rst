@@ -5,41 +5,44 @@ Changelog
 v2.0.0 (UNRELEASED)
 ===================
 
+Major feature release.
+
+Dependencies
+------------
+
 - Require Mopidy >= 1.1.
 
-- Replace dependency on python-dbus with python-pydbus.
+- Replace python-dbus with python-pydbus.
+
+Configuration
+-------------
 
 - Remove config value ``mpris/desktop_file``. It is marked as deprecated in
   the config schema, so it will be ignored if present in the config file.
 
-- Port tests to pytest.
-
-- Replace all usage of Mopidy APIs deprecated as of Mopidy 2.2.
+Functionality
+-------------
 
 - Ordering of playlists by playlist modification time is no longer supported.
 
-- Update UIs when playback options change:
+- Update UIs when playback options change: On the Mopidy event
+  ``options_changed``, emit ``PropertiesChanged`` for ``LoopStatus``,
+  ``Shuffle``, ``CanGoPrevious``, and ``CanGoNext``.
 
-  - On the Mopidy event ``options_changed``, emit ``PropertiesChanged`` for
-    ``LoopStatus``, ``Shuffle``, ``CanGoPrevious``, and ``CanGoNext``.
+- Update UIs when playback is stopped: On the Mopidy event
+  ``playback_state_changed``, emit ``PropertiesChanged`` for
+  ``PlaybackStatus`` and ``Metadata``. (Fixes: #23)
 
-- Update UIs when playback is stopped:
-
-  - On the Mopidy event ``playback_state_changed``, emit ``PropertiesChanged``
-    for ``PlaybackStatus`` and ``Metadata``. (Fixes: #23)
+- Update UIs when playlists are deleted: On the Mopidy event
+  ``playlist_deleted``, emit``PropertiesChanged`` for ``PlaylistCount``.
 
 - Update track name when stream title changes:
 
-  - The ``Metadata`` property now uses ``core.playback.get_stream_title()``
-    as ``xesam:title`` if available.
+  - The ``Metadata`` property now uses ``core.playback.get_stream_title()`` as
+    ``xesam:title`` if available.
 
   - On the Mopidy event ``stream_title_changed``, emit ``PropertiesChanged``
     for ``Metadata``.
-
-- Update UIs when playlists are deleted:
-
-  - On the Mopidy event ``playlist_deleted``, emit ``PropertiesChanged`` for
-    ``PlaylistCount``.
 
 - Control mixer mute through the volume control:
 
@@ -58,6 +61,14 @@ v2.0.0 (UNRELEASED)
   we set this to "mopidy", the basename of "mopidy.desktop", some MPRIS clients
   will start a new Mopidy instance in a terminal window if one clicks outside
   the buttons of the UI. This is probably never what the user wants.
+
+Internals
+---------
+
+- Port tests to pytest.
+
+- Replace all usage of Mopidy APIs deprecated as of Mopidy 2.2.
+
 
 v1.4.0 (2018-04-10)
 ===================
