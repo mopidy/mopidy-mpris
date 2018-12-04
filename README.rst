@@ -90,35 +90,6 @@ user's session bus. Note that few MPRIS clients will try to access MPRIS
 devices on the system bus, so this will give you limited functionality.
 
 
-Controlling Mopidy through the Ubuntu Sound Menu
-------------------------------------------------
-
-If you are running Ubuntu and installed Mopidy using the Debian package from
-APT you should be able to control Mopidy instances running as your own user
-through the Ubuntu Sound Menu without any additional setup.
-
-If you installed Mopidy in any other way and want to control Mopidy through the
-Ubuntu Sound Menu, you must install the ``mopidy.desktop`` file which can be
-found in the ``extra/desktop/`` dir of the Mopidy source repo into the
-``/usr/share/applications`` dir by hand::
-
-    cd /path/to/mopidy/source
-    sudo cp extra/desktop/mopidy.desktop /usr/share/applications/
-
-If the correct path to the installed ``mopidy.desktop`` file on your system
-isn't ``/usr/share/applications/mopidy.desktop``, you'll need to set the
-``mpris/desktop_file`` config value.
-
-After you have installed the file, start Mopidy in any way, and Mopidy should
-appear in the Ubuntu Sound Menu. When you quit Mopidy, it will still be listed
-in the Ubuntu Sound Menu, and may be restarted by selecting it there.
-
-The Ubuntu Sound Menu interacts with Mopidy's MPRIS frontend. The MPRIS
-frontend supports the minimum requirements of the `MPRIS specification
-<https://specifications.freedesktop.org/mpris-spec/latest/>`_. The
-``TrackList`` interface of the spec is not supported.
-
-
 Development tips
 ================
 
