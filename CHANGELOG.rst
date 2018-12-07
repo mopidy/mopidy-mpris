@@ -65,6 +65,8 @@ Functionality
 Internals
 ---------
 
+- Improved documentation.
+
 - Port tests to pytest.
 
 - Replace all usage of Mopidy APIs deprecated as of Mopidy 2.2.
