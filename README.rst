@@ -192,7 +192,7 @@ development. Since Ubuntu 18.04 replaced Unity with Gnome Shell, this is no
 longer the case. It is currently unknown to what degree Mopidy-MPRIS works
 with old Ubuntu setups.
 
-If you run an Ubuntu setup with Unity and have testedMopidy-MPRIS, please
+If you run an Ubuntu setup with Unity and have tested Mopidy-MPRIS, please
 open an issue to share your results.
 
 
