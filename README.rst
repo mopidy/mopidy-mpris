@@ -239,7 +239,7 @@ The setup process is approximately as follows:
 
        systemctl --user start rygel
 
-   To make Rygel start as the current user on boot:
+   To make Rygel start as the current user on boot::
 
        systemctl --user enable rygel
 
