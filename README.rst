@@ -207,8 +207,56 @@ If Mopidy is running as an user without an X display, e.g. as a system service,
 then Mopidy-MPRIS will fail with the default config. To fix this, you can set
 the ``mpris/bus_type`` config value to ``system``. This will lead to
 Mopidy-MPRIS making itself available on the system bus instead of the logged in
-user's session bus. Note that few MPRIS clients will try to access MPRIS
-devices on the system bus, so this will give you limited functionality.
+user's session bus.
+
+.. note::
+    Few MPRIS clients will try to access MPRIS devices on the system bus, so
+    this will give you limited functionality. For example, media keys in
+    GNOME Shell does not work with media players that expose their MPRIS
+    interface on the system bus instead of the user's session bus.
+
+The default setup will often not permit Mopidy to publish its service on the
+D-Bus system bus, causing a warning similar to this in Mopidy's log::
+
+    MPRIS frontend setup failed (g-dbus-error-quark:
+    GDBus.Error:org.freedesktop.DBus.Error.AccessDenied: Connection ":1.3071"
+    is not allowed to own the service "org.mpris.MediaPlayer2.mopidy" due to
+    security policies in the configuration file (9))
+
+To solve this, create the file
+``/etc/dbus-1/system.d/org.mpris.MediaPlayer2.mopidy.conf`` with the
+following contents:
+
+.. code:: xml
+
+    <!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+    "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+    <busconfig>
+      <!-- Allow mopidy user to publish the Mopidy-MPRIS service -->
+      <policy user="mopidy">
+        <allow own="org.mpris.MediaPlayer2.mopidy"/>
+      </policy>
+
+      <!-- Allow anyone to invoke methods on the Mopidy-MPRIS service -->
+      <policy context="default">
+        <allow send_destination="org.mpris.MediaPlayer2.mopidy"/>
+        <allow receive_sender="org.mpris.MediaPlayer2.mopidy"/>
+      </policy>
+    </busconfig>
+
+If you run Mopidy as another user than ``mopidy``, you must
+update``user="mopidy"`` in the above file accordingly.
+
+Once the file is in place, you must restart Mopidy for the change to take
+effect.
+
+To test the setup, you can run the following command as any user on the
+system to play/pause the music::
+
+    dbus-send --system --print-reply \
+      --dest=org.mpris.MediaPlayer2.mopidy \
+      /org/mpris/MediaPlayer2 \
+      org.mpris.MediaPlayer2.Player.PlayPause
 
 UPnP/DLNA with Rygel
 --------------------
