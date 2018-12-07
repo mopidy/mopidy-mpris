@@ -46,7 +46,8 @@ Table of contents
 
 - `Advanced setups`_
 
-  - `Running as a service and connecting to the system bus`_
+  - `Running as a service`_
+  - `MPRIS on the system bus`_
   - `UPnP/DLNA with Rygel`_
 
 - `Development tips`_
@@ -200,14 +201,20 @@ open an issue to share your results.
 Advanced setups
 ===============
 
-Running as a service and connecting to the system bus
------------------------------------------------------
+Running as a service
+--------------------
 
-If Mopidy is running as an user without an X display, e.g. as a system service,
-then Mopidy-MPRIS will fail with the default config. To fix this, you can set
-the ``mpris/bus_type`` config value to ``system``. This will lead to
-Mopidy-MPRIS making itself available on the system bus instead of the logged in
-user's session bus.
+If you have input on how to best configure Mopidy-MPRIS when Mopidy is
+running as a service, please add a comment to `issue #15`_.
+
+.. _issue #15: https://github.com/mopidy/mopidy-mpris/issues/15
+
+MPRIS on the system bus
+-----------------------
+
+You can set the ``mpris/bus_type`` config value to ``system``. This will lead
+to Mopidy-MPRIS making itself available on the system bus instead of the
+logged in user's session bus.
 
 .. note::
     Few MPRIS clients will try to access MPRIS devices on the system bus, so
@@ -245,7 +252,7 @@ following contents:
     </busconfig>
 
 If you run Mopidy as another user than ``mopidy``, you must
-update``user="mopidy"`` in the above file accordingly.
+update ``user="mopidy"`` in the above file accordingly.
 
 Once the file is in place, you must restart Mopidy for the change to take
 effect.
