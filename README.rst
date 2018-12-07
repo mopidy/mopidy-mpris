@@ -95,17 +95,17 @@ Clients
 
 The following clients have been tested with Mopidy-MPRIS.
 
-Gnome Shell builtin
+GNOME Shell builtin
 -------------------
 
 State:
     Not working
 Tested versions:
     Ubuntu 18.10,
-    Gnome Shell 3.30.1-2ubuntu1,
+    GNOME Shell 3.30.1-2ubuntu1,
     Mopidy-MPRIS 2.0.0
 
-Gnome Shell, which is the default desktop on Ubuntu 18.04 onwards, has a
+GNOME Shell, which is the default desktop on Ubuntu 18.04 onwards, has a
 builtin MPRIS client. This client seems to work well with Spotify's player,
 but Mopidy-MPRIS does not show up here.
 
