@@ -26,6 +26,37 @@ is currently not supported.
 .. _TrackList interface: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
 
 
+Table of contents
+=================
+
+- Installation_
+
+  - `Debian/Ubuntu/Raspbian`_
+  - `Arch Linux`_
+  - `Other distributions`_
+
+- Configuration_
+- Usage_
+- Clients_
+
+  - `GNOME Shell builtin`_
+  - `gnome-shell-extensions-mediaplayer`_
+  - `gnome-shell-extensions-mpris-indicator-button`_
+  - `Ubuntu Sound Menu`_
+
+- `Advanced setups`_
+
+  - `Running as a service and connecting to the system bus`_
+
+- `Development tips`_
+
+  - `Browsing the MPRIS API with D-Feet`_
+  - `Testing the MPRIS API with pydbus`_
+
+- `Project resources`_
+- Credits_
+
+
 Installation
 ============
 
@@ -122,12 +153,12 @@ Tested versions:
     GNOME Shell 3.30.1-2ubuntu1,
     gnome-shell-extension-mediaplayer 63,
     Mopidy-MPRIS 2.0.0
+Website:
+    https://github.com/JasonLG1979/gnome-shell-extensions-mediaplayer
 
-`gnome-shell-extensions-mediaplayer`_ is a quite feature rich MPRIS client
+gnome-shell-extensions-mediaplayer is a quite feature rich MPRIS client
 built as an extension to Gnome Shell. With the improvements to Mopidy-MPRIS
 in v2.0, this extension works very well with Mopidy.
-
-.. _gnome-shell-extensions-mediaplayer: https://github.com/JasonLG1979/gnome-shell-extensions-mediaplayer
 
 gnome-shell-extensions-mpris-indicator-button
 ---------------------------------------------
@@ -139,16 +170,16 @@ Tested versions:
     GNOME Shell 3.30.1-2ubuntu1,
     gnome-shell-extensions-mpris-indicator-button 5,
     Mopidy-MPRIS 2.0.0
+Website:
+    https://github.com/JasonLG1979/gnome-shell-extensions-mpris-indicator-button/
 
-`gnome-shell-extensions-mpris-indicator-button`_ is a minimalistic version of
+gnome-shell-extensions-mpris-indicator-button is a minimalistic version of
 gnome-shell-extensions-mediaplayer. It works with Mopidy-MPRIS, with the
 exception of the play/pause button not changing state when Mopidy starts
 playing.
 
 If you have any tips on what's missing to get the play/pause button display
 correctly, please open an issue.
-
-.. _gnome-shell-extensions-mpris-indicator-button: https://github.com/JasonLG1979/gnome-shell-extensions-mpris-indicator-button/
 
 Ubuntu Sound Menu
 -----------------
