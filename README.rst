@@ -84,8 +84,89 @@ The following configuration values are available:
 Usage
 =====
 
-The extension is enabled by default if all dependencies are available.
+Once Mopidy-MPRIS has been installed and your Mopidy server has been
+restarted, the Mopidy-MPRIS extension announces its presence on D-Bus so that
+any MPRIS compatible clients on your system can interact with it. Exactly how
+you control Mopidy through MPRIS depends on which MPRIS client you use.
 
+
+Clients
+=======
+
+The following clients have been tested with Mopidy-MPRIS.
+
+Gnome Shell builtin
+-------------------
+
+State:
+    Not working
+Tested versions:
+    Ubuntu 18.10,
+    Gnome Shell 3.30.1-2ubuntu1,
+    Mopidy-MPRIS 2.0.0
+
+Gnome Shell, which is the default desktop on Ubuntu 18.04 onwards, has a
+builtin MPRIS client. This client seems to work well with Spotify's player,
+but Mopidy-MPRIS does not show up here.
+
+If you have any tips on what's missing to get this working, please open an
+issue.
+
+gnome-shell-extensions-mediaplayer
+----------------------------------
+
+State:
+    Working
+Tested versions:
+    Ubuntu 18.10,
+    GNOME Shell 3.30.1-2ubuntu1,
+    gnome-shell-extension-mediaplayer 63,
+    Mopidy-MPRIS 2.0.0
+
+`gnome-shell-extensions-mediaplayer`_ is a quite feature rich MPRIS client
+built as an extension to Gnome Shell. With the improvements to Mopidy-MPRIS
+in v2.0, this extension works very well with Mopidy.
+
+.. _gnome-shell-extensions-mediaplayer: https://github.com/JasonLG1979/gnome-shell-extensions-mediaplayer
+
+gnome-shell-extensions-mpris-indicator-button
+---------------------------------------------
+
+State:
+    Working
+Tested versions:
+    Ubuntu 18.10,
+    GNOME Shell 3.30.1-2ubuntu1,
+    gnome-shell-extensions-mpris-indicator-button 5,
+    Mopidy-MPRIS 2.0.0
+
+`gnome-shell-extensions-mpris-indicator-button`_ is a minimalistic version of
+gnome-shell-extensions-mediaplayer. It works with Mopidy-MPRIS, with the
+exception of the play/pause button not changing state when Mopidy starts
+playing.
+
+If you have any tips on what's missing to get the play/pause button display
+correctly, please open an issue.
+
+.. _gnome-shell-extensions-mpris-indicator-button: https://github.com/JasonLG1979/gnome-shell-extensions-mpris-indicator-button/
+
+Ubuntu Sound Menu
+-----------------
+
+State:
+    Unknown
+
+Historically, Ubuntu Sound Menu was the primary target for Mopidy-MPRIS'
+development. Since Ubuntu 18.04 replaced Unity with Gnome Shell, this is no
+longer the case. It is currently unknown to what degree Mopidy-MPRIS works
+with old Ubuntu setups.
+
+If you run an Ubuntu setup with Unity and have testedMopidy-MPRIS, please
+open an issue to share your results.
+
+
+Advanced setups
+===============
 
 Running as a service and connecting to the system bus
 -----------------------------------------------------
