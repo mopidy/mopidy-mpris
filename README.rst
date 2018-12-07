@@ -47,6 +47,7 @@ Table of contents
 - `Advanced setups`_
 
   - `Running as a service and connecting to the system bus`_
+  - `UPnP/DLNA with Rygel`_
 
 - `Development tips`_
 
@@ -209,6 +210,61 @@ Mopidy-MPRIS making itself available on the system bus instead of the logged in
 user's session bus. Note that few MPRIS clients will try to access MPRIS
 devices on the system bus, so this will give you limited functionality.
 
+UPnP/DLNA with Rygel
+--------------------
+
+Rygel_ is an application that will translate between Mopidy's MPRIS interface
+and UPnP. Rygel must be run on the same machine as Mopidy, but will make
+Mopidy controllable by any device on the local network that can control a
+UPnP/DLNA MediaRenderer.
+
+.. _Rygel: https://wiki.gnome.org/Projects/Rygel
+
+The setup process is approximately as follows:
+
+1. Install Rygel.
+
+   On Debian/Ubuntu/Raspbian::
+
+       sudo apt install rygel
+
+2. Enable Rygel's MPRIS plugin.
+
+   On Debian/Ubuntu/Raspbian, edit ``/etc/rygel.conf``, find the ``[MPRIS]``
+   section, and change ``enabled=false`` to ``enabled=true``.
+
+3. Start Rygel.
+
+   To start it as the current user::
+
+       systemctl --user start rygel
+
+   To make Rygel start as the current user on boot:
+
+       systemctl --user enable rygel
+
+4. Configure your system's firewall to allow the local network to reach
+   Rygel. Exactly how is out of scope for this document.
+
+5. Start Mopidy with Mopidy-MPRIS enabled.
+
+6. If you view Rygel's log output with::
+
+       journalctl --user -feu rygel
+
+   You should see a log statement similar to::
+
+       New plugin "org.mpris.MediaPlayer2.mopidy" available
+
+6. If everything went well, you should now be able to control Mopidy from a
+   device on your local network that can control an UPnP/DLNA MediaRenderer,
+   for example the Android app BubbleUPnP.
+
+Alternatively, `upmpdcli combined with Mopidy-MPD`_ serves the same purpose as
+this setup.
+
+.. _upmpdcli combined with Mopidy-MPD: https://docs.mopidy.com/en/latest/clients/upnp/
+
 
 Development tips
 ================
@@ -225,7 +281,7 @@ Browsing the MPRIS API with D-Feet
 D-Feet is a graphical D-Bus browser. On Debian/Ubuntu systems it can be
 installed by running::
 
-    apt install d-feet
+    sudo apt install d-feet
 
 Then run the ``d-feet`` command. In the D-Feet window, select the tab
 corresponding to the bus you run Mopidy-MPRIS on, usually the session bus.
