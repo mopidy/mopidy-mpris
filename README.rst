@@ -14,13 +14,14 @@ Mopidy-MPRIS
    :target: https://coveralls.io/r/mopidy/mopidy-mpris
    :alt: Test coverage
 
-`Mopidy <http://www.mopidy.com/>`_ extension for controlling Mopidy through
-D-Bus using the `MPRIS specification`_.
+`Mopidy`_ extension for controlling Mopidy through D-Bus using the `MPRIS
+specification`_.
 
 Mopidy-MPRIS supports the minimum requirements of the `MPRIS specification`_
 as well as the optional `Playlists interface`_. The `TrackList interface`_
 is currently not supported.
 
+.. _Mopidy: https://www.mopidy.com/
 .. _MPRIS specification: https://specifications.freedesktop.org/mpris-spec/latest/
 .. _Playlists interface: https://specifications.freedesktop.org/mpris-spec/latest/Playlists_Interface.html
 .. _TrackList interface: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
