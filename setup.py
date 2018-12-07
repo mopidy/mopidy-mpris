@@ -26,10 +26,10 @@ setup(
     zip_safe=False,
     include_package_data=True,
     install_requires=[
-        'setuptools',
         'Mopidy >= 1.1',
         'Pykka >= 1.1',
         'pydbus >= 0.6.0',
+        'setuptools',
     ],
     entry_points={
         'mopidy.ext': [
@@ -37,11 +37,12 @@ setup(
         ],
     },
     classifiers=[
+        'Development Status :: 5 - Production/Stable',
         'Environment :: No Input/Output (Daemon)',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: Apache Software License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Multimedia :: Sound/Audio :: Players',
     ],
 )
