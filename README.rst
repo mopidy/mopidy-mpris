@@ -158,7 +158,7 @@ Website:
     https://github.com/JasonLG1979/gnome-shell-extensions-mediaplayer
 
 gnome-shell-extensions-mediaplayer is a quite feature rich MPRIS client
-built as an extension to Gnome Shell. With the improvements to Mopidy-MPRIS
+built as an extension to GNOME Shell. With the improvements to Mopidy-MPRIS
 in v2.0, this extension works very well with Mopidy.
 
 gnome-shell-extensions-mpris-indicator-button
@@ -189,7 +189,7 @@ State:
     Unknown
 
 Historically, Ubuntu Sound Menu was the primary target for Mopidy-MPRIS'
-development. Since Ubuntu 18.04 replaced Unity with Gnome Shell, this is no
+development. Since Ubuntu 18.04 replaced Unity with GNOME Shell, this is no
 longer the case. It is currently unknown to what degree Mopidy-MPRIS works
 with old Ubuntu setups.
 
@@ -290,7 +290,7 @@ Then search for "MediaPlayer2" to find all available MPRIS interfaces.
 To get the current value of a property, double-click it. To execute a method,
 double-click it, provide any required arguments, and click "Execute".
 
-For more information on D-Feet, see the `Gnome wiki
+For more information on D-Feet, see the `GNOME wiki
 <https://wiki.gnome.org/Apps/DFeet>`_.
 
 
