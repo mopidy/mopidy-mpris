@@ -80,7 +80,7 @@ Arch Linux
 
 Install the ``mopidy-mpris`` package from `AUR`_::
 
-    yaourt -S mopidy-mpris
+    yay -S mopidy-mpris
 
 .. _AUR: https://aur.archlinux.org/packages/mopidy-mpris/
 
