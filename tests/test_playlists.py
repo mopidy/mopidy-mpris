@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from mopidy.audio import PlaybackState
 from mopidy.models import Track
 

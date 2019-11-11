@@ -3,7 +3,6 @@
 https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
 """
 
-from __future__ import unicode_literals
 
 import logging
 

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 
 import pydbus
@@ -12,7 +10,7 @@ from mopidy_mpris.root import Root
 logger = logging.getLogger(__name__)
 
 
-class Server(object):
+class Server:
     def __init__(self, config, core):
         self.config = config
         self.core = core

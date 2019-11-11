@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 
 from mopidy.core import CoreListener
@@ -15,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class MprisFrontend(pykka.ThreadingActor, CoreListener):
     def __init__(self, config, core):
-        super(MprisFrontend, self).__init__()
+        super().__init__()
         self.config = config
         self.core = core
         self.mpris = None
@@ -39,7 +37,7 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
         logger.debug('Received %s event', event)
         if self.mpris is None:
             return
-        return super(MprisFrontend, self).on_event(event, **kwargs)
+        return super().on_event(event, **kwargs)
 
     def track_playback_paused(self, tl_track, time_position):
         _emit_properties_changed(self.mpris.player, ['PlaybackStatus'])

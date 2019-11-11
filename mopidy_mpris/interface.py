@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 
 from pydbus.generic import signal
@@ -11,7 +9,7 @@ logger = logging.getLogger(__name__)
 TRACE_LOG_LEVEL = 5
 
 
-class Interface(object):
+class Interface:
     def __init__(self, config, core):
         self.config = config
         self.core = core

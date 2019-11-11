@@ -3,7 +3,6 @@
 https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
 """
 
-from __future__ import unicode_literals
 
 import base64
 import logging

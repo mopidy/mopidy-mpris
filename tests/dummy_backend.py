@@ -4,7 +4,6 @@ This backend implements the backend API in the simplest way possible.  It is
 used in tests of the frontends.
 """
 
-from __future__ import absolute_import, unicode_literals
 
 from mopidy import backend
 from mopidy.models import Playlist, Ref, SearchResult
@@ -19,7 +18,7 @@ def create_proxy(config=None, audio=None):
 class DummyBackend(pykka.ThreadingActor, backend.Backend):
 
     def __init__(self, config, audio):
-        super(DummyBackend, self).__init__()
+        super().__init__()
 
         self.library = DummyLibraryProvider(backend=self)
         if audio:
@@ -35,7 +34,7 @@ class DummyLibraryProvider(backend.LibraryProvider):
     root_directory = Ref.directory(uri='dummy:/', name='dummy')
 
     def __init__(self, *args, **kwargs):
-        super(DummyLibraryProvider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.dummy_library = []
         self.dummy_get_distinct_result = {}
         self.dummy_get_images_result = {}
@@ -67,7 +66,7 @@ class DummyLibraryProvider(backend.LibraryProvider):
 class DummyPlaybackProvider(backend.PlaybackProvider):
 
     def __init__(self, *args, **kwargs):
-        super(DummyPlaybackProvider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._uri = None
         self._time_position = 0
 
@@ -104,7 +103,7 @@ class DummyPlaybackProvider(backend.PlaybackProvider):
 class DummyPlaylistsProvider(backend.PlaylistsProvider):
 
     def __init__(self, backend):
-        super(DummyPlaylistsProvider, self).__init__(backend)
+        super().__init__(backend)
         self._playlists = []
 
     def set_dummy_playlists(self, playlists):
