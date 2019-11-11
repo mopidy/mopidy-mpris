@@ -271,11 +271,6 @@ class Player(Interface):
             return res
 
     def _get_art_url(self, track):
-        if track.album and track.album.images:
-            url = sorted(track.album.images)[0]
-            if url:
-                return url
-
         images = self.core.library.get_images([track.uri]).get()
         if images[track.uri]:
             largest_image = sorted(

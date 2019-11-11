@@ -5,7 +5,9 @@ Changelog
 v3.0.0rc1 (UNRELEASED)
 ======================
 
-- Require Mopidy >= 3.0.0a4.
+- Require Mopidy >= 3.0.0a4, which required the following changes:
+
+  - Stop using removed ``Album.images`` field.
 
 - Require Python >= 3.7. No major changes required.
 

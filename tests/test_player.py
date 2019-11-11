@@ -175,33 +175,6 @@ def test_get_metadata_prefers_stream_title_over_track_name(audio, core, player):
     assert result["xesam:title"] == GLib.Variant("s", "Stream title")
 
 
-def test_get_metadata_use_first_album_image_as_art_url(core, player):
-    # XXX Currently, the album image order isn't preserved because they
-    # are stored as a frozenset(). We pick the first in the set, which is
-    # sorted alphabetically, thus we get 'bar.jpg', not 'foo.jpg', which
-    # would probably make more sense.
-    core.tracklist.add(
-        [
-            Track(
-                uri="dummy:a",
-                album=Album(
-                    images=[
-                        "http://example.com/foo.jpg",
-                        "http://example.com/bar.jpg",
-                    ]
-                ),
-            )
-        ]
-    )
-    core.playback.play().get()
-
-    result = player.Metadata
-
-    assert result["mpris:artUrl"] == GLib.Variant(
-        "s", "http://example.com/bar.jpg"
-    )
-
-
 def test_get_metadata_use_library_image_as_art_url(backend, core, player):
     backend.library.dummy_get_images_result = {
         "dummy:a": [
@@ -217,20 +190,6 @@ def test_get_metadata_use_library_image_as_art_url(backend, core, player):
     assert result["mpris:artUrl"] == GLib.Variant(
         "s", "http://example.com/large.jpg"
     )
-
-
-def test_get_metadata_has_no_art_url_if_no_album(core, player):
-    core.tracklist.add([Track(uri="dummy:a")])
-    core.playback.play().get()
-
-    assert "mpris:artUrl" not in player.Metadata
-
-
-def test_get_metadata_has_no_art_url_if_no_album_images(core, player):
-    core.tracklist.add([Track(uri="dummy:a", album=Album(images=[]))])
-    core.playback.play().get()
-
-    assert "mpris:artUrl" not in player.Metadata
 
 
 def test_get_metadata_has_disc_number_in_album(core, player):
