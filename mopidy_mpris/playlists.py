@@ -39,11 +39,12 @@ class Playlists(Interface):
     </node>
     """
 
-    INTERFACE = 'org.mpris.MediaPlayer2.Playlists'
+    INTERFACE = "org.mpris.MediaPlayer2.Playlists"
 
     def ActivatePlaylist(self, playlist_id):
         logger.debug(
-            '%s.ActivatePlaylist(%r) called', self.INTERFACE, playlist_id)
+            "%s.ActivatePlaylist(%r) called", self.INTERFACE, playlist_id
+        )
         playlist_uri = get_playlist_uri(playlist_id)
         playlist = self.core.playlists.lookup(playlist_uri).get()
         if playlist and playlist.tracks:
@@ -52,40 +53,43 @@ class Playlists(Interface):
 
     def GetPlaylists(self, index, max_count, order, reverse):
         logger.debug(
-            '%s.GetPlaylists(%r, %r, %r, %r) called',
-            self.INTERFACE, index, max_count, order, reverse)
+            "%s.GetPlaylists(%r, %r, %r, %r) called",
+            self.INTERFACE,
+            index,
+            max_count,
+            order,
+            reverse,
+        )
         playlists = self.core.playlists.as_list().get()
-        if order == 'Alphabetical':
+        if order == "Alphabetical":
             playlists.sort(key=lambda p: p.name, reverse=reverse)
-        elif order == 'User' and reverse:
+        elif order == "User" and reverse:
             playlists.reverse()
         slice_end = index + max_count
         playlists = playlists[index:slice_end]
-        results = [
-            (get_playlist_id(p.uri), p.name, '')
-            for p in playlists]
+        results = [(get_playlist_id(p.uri), p.name, "") for p in playlists]
         return results
 
     PlaylistChanged = signal()
 
     @property
     def PlaylistCount(self):
-        self.log_trace('Getting %s.PlaylistCount', self.INTERFACE)
+        self.log_trace("Getting %s.PlaylistCount", self.INTERFACE)
         return len(self.core.playlists.as_list().get())
 
     @property
     def Orderings(self):
-        self.log_trace('Getting %s.Orderings', self.INTERFACE)
+        self.log_trace("Getting %s.Orderings", self.INTERFACE)
         return [
-            'Alphabetical',  # Order by playlist.name
-            'User',          # Don't change order
+            "Alphabetical",  # Order by playlist.name
+            "User",  # Don't change order
         ]
 
     @property
     def ActivePlaylist(self):
-        self.log_trace('Getting %s.ActivePlaylist', self.INTERFACE)
+        self.log_trace("Getting %s.ActivePlaylist", self.INTERFACE)
         playlist_is_valid = False
-        playlist = ('/', 'None', '')
+        playlist = ("/", "None", "")
         return (playlist_is_valid, playlist)
 
 
@@ -94,10 +98,10 @@ def get_playlist_id(playlist_uri):
     # base64. Luckily, D-Bus does not limit the length of object paths.
     # Since base32 pads trailing bytes with "=" chars, we need to replace
     # them with an allowed character such as "_".
-    encoded_uri = base64.b32encode(playlist_uri).replace('=', '_')
-    return '/com/mopidy/playlist/%s' % encoded_uri
+    encoded_uri = base64.b32encode(playlist_uri).replace("=", "_")
+    return "/com/mopidy/playlist/%s" % encoded_uri
 
 
 def get_playlist_uri(playlist_id):
-    encoded_uri = playlist_id.split('/')[-1].replace('_', '=')
+    encoded_uri = playlist_id.split("/")[-1].replace("_", "=")
     return base64.b32decode(encoded_uri)

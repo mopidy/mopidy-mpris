@@ -16,7 +16,6 @@ def create_proxy(config=None, audio=None):
 
 
 class DummyBackend(pykka.ThreadingActor, backend.Backend):
-
     def __init__(self, config, audio):
         super().__init__()
 
@@ -27,11 +26,11 @@ class DummyBackend(pykka.ThreadingActor, backend.Backend):
             self.playback = DummyPlaybackProvider(audio=audio, backend=self)
         self.playlists = DummyPlaylistsProvider(backend=self)
 
-        self.uri_schemes = ['dummy']
+        self.uri_schemes = ["dummy"]
 
 
 class DummyLibraryProvider(backend.LibraryProvider):
-    root_directory = Ref.directory(uri='dummy:/', name='dummy')
+    root_directory = Ref.directory(uri="dummy:/", name="dummy")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -64,7 +63,6 @@ class DummyLibraryProvider(backend.LibraryProvider):
 
 
 class DummyPlaybackProvider(backend.PlaybackProvider):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._uri = None
@@ -74,7 +72,7 @@ class DummyPlaybackProvider(backend.PlaybackProvider):
         return True
 
     def play(self):
-        return self._uri and self._uri != 'dummy:error'
+        return self._uri and self._uri != "dummy:error"
 
     def change_track(self, track):
         """Pass a track with URI 'dummy:error' to force failure"""
@@ -101,7 +99,6 @@ class DummyPlaybackProvider(backend.PlaybackProvider):
 
 
 class DummyPlaylistsProvider(backend.PlaylistsProvider):
-
     def __init__(self, backend):
         super().__init__(backend)
         self._playlists = []
@@ -112,14 +109,14 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
 
     def as_list(self):
         return [
-            Ref.playlist(uri=pl.uri, name=pl.name) for pl in self._playlists]
+            Ref.playlist(uri=pl.uri, name=pl.name) for pl in self._playlists
+        ]
 
     def get_items(self, uri):
         playlist = self.lookup(uri)
         if playlist is None:
             return
-        return [
-            Ref.track(uri=t.uri, name=t.name) for t in playlist.tracks]
+        return [Ref.track(uri=t.uri, name=t.name) for t in playlist.tracks]
 
     def lookup(self, uri):
         for playlist in self._playlists:
@@ -130,7 +127,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         pass
 
     def create(self, name):
-        playlist = Playlist(name=name, uri='dummy:%s' % name)
+        playlist = Playlist(name=name, uri="dummy:%s" % name)
         self._playlists.append(playlist)
         return playlist
 

@@ -8,7 +8,6 @@ def create_proxy(config=None):
 
 
 class DummyMixer(pykka.ThreadingActor, mixer.Mixer):
-
     def __init__(self, config):
         super().__init__()
         self._volume = None
