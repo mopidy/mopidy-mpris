@@ -2,7 +2,6 @@ import logging
 
 from pydbus.generic import signal
 
-
 logger = logging.getLogger(__name__)
 
 # This should be kept in sync with mopidy.internal.log.TRACE_LOG_LEVEL

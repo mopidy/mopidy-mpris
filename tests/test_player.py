@@ -1,12 +1,9 @@
+import pytest
 from gi.repository import GLib
 
 from mopidy.core import PlaybackState
 from mopidy.models import Album, Artist, Image, Track
-
-import pytest
-
 from mopidy_mpris.player import Player
-
 
 PLAYING = PlaybackState.PLAYING
 PAUSED = PlaybackState.PAUSED

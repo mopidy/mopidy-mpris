@@ -2,7 +2,6 @@ import os
 
 from mopidy import config, exceptions, ext
 
-
 __version__ = "2.0.0"
 
 

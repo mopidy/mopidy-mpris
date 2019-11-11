@@ -1,17 +1,10 @@
 import mock
+import pytest
 
 from mopidy.core.playback import PlaybackState
 from mopidy.models import Playlist, TlTrack
-
-import pytest
-
-from mopidy_mpris import (
-    frontend as frontend_mod,
-    player,
-    playlists,
-    root,
-    server,
-)
+from mopidy_mpris import frontend as frontend_mod
+from mopidy_mpris import player, playlists, root, server
 
 
 @pytest.fixture

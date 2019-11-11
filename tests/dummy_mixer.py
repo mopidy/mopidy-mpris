@@ -1,6 +1,6 @@
-from mopidy import mixer
-
 import pykka
+
+from mopidy import mixer
 
 
 def create_proxy(config=None):

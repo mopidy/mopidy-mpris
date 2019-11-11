@@ -8,7 +8,6 @@ import logging
 
 from mopidy_mpris.interface import Interface
 
-
 logger = logging.getLogger(__name__)
 
 

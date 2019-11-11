@@ -5,10 +5,10 @@ used in tests of the frontends.
 """
 
 
+import pykka
+
 from mopidy import backend
 from mopidy.models import Playlist, Ref, SearchResult
-
-import pykka
 
 
 def create_proxy(config=None, audio=None):

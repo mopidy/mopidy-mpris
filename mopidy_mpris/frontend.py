@@ -1,12 +1,10 @@
 import logging
 
-from mopidy.core import CoreListener
-
 import pykka
 
+from mopidy.core import CoreListener
 from mopidy_mpris.playlists import get_playlist_id
 from mopidy_mpris.server import Server
-
 
 logger = logging.getLogger(__name__)
 

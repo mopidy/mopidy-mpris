@@ -1,8 +1,7 @@
-from mopidy.audio import PlaybackState
-from mopidy.models import Track
-
 import pytest
 
+from mopidy.audio import PlaybackState
+from mopidy.models import Track
 from mopidy_mpris.playlists import Playlists
 
 

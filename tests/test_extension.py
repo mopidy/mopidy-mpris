@@ -2,7 +2,8 @@ import unittest
 
 import mock
 
-from mopidy_mpris import Extension, frontend as frontend_lib
+from mopidy_mpris import Extension
+from mopidy_mpris import frontend as frontend_lib
 
 
 class ExtensionTest(unittest.TestCase):

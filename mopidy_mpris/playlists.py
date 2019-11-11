@@ -11,7 +11,6 @@ from pydbus.generic import signal
 
 from mopidy_mpris.interface import Interface
 
-
 logger = logging.getLogger(__name__)
 
 

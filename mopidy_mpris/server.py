@@ -6,7 +6,6 @@ from mopidy_mpris.player import Player
 from mopidy_mpris.playlists import Playlists
 from mopidy_mpris.root import Root
 
-
 logger = logging.getLogger(__name__)
 
 

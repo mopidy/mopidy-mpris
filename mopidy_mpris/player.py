@@ -7,13 +7,10 @@ https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
 import logging
 
 from gi.repository.GLib import Variant
-
-from mopidy.core import PlaybackState
-
 from pydbus.generic import signal
 
+from mopidy.core import PlaybackState
 from mopidy_mpris.interface import Interface
-
 
 logger = logging.getLogger(__name__)
 
