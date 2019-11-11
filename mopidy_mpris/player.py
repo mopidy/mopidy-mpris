@@ -153,7 +153,7 @@ class Player(Interface):
             return
         # NOTE Check if URI has MIME type known to the backend, if MIME support
         # is added to the backend.
-        tl_tracks = self.core.tracklist.add(uri=uri).get()
+        tl_tracks = self.core.tracklist.add(uris=[uri]).get()
         if tl_tracks:
             self.core.playback.play(tlid=tl_tracks[0].tlid).get()
         else:

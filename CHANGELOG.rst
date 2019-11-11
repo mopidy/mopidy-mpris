@@ -9,6 +9,8 @@ v3.0.0rc1 (UNRELEASED)
 
   - Stop using removed ``Album.images`` field.
 
+  - Use ``uris`` instead of ``uri`` when calling ``core.tracklist.add()``.
+
 - Require Python >= 3.7. No major changes required.
 
 - Update project setup.
