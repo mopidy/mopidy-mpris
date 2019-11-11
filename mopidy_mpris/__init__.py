@@ -1,8 +1,10 @@
 import pathlib
 
+import pkg_resources
+
 from mopidy import config, exceptions, ext
 
-__version__ = "2.0.0"
+__version__ = pkg_resources.get_distribution("Mopidy-MPRIS").version
 
 
 class Extension(ext.Extension):
