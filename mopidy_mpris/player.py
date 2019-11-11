@@ -249,7 +249,7 @@ class Player(Interface):
                 res["xesam:title"] = Variant("s", stream_title or track.name)
             if track.artists:
                 artists = list(track.artists)
-                artists.sort(key=lambda a: a.name)
+                artists.sort(key=lambda a: a.name or "")
                 res["xesam:artist"] = Variant(
                     "as", [a.name for a in artists if a.name]
                 )
@@ -257,7 +257,7 @@ class Player(Interface):
                 res["xesam:album"] = Variant("s", track.album.name)
             if track.album and track.album.artists:
                 artists = list(track.album.artists)
-                artists.sort(key=lambda a: a.name)
+                artists.sort(key=lambda a: a.name or "")
                 res["xesam:albumArtist"] = Variant(
                     "as", [a.name for a in artists if a.name]
                 )
