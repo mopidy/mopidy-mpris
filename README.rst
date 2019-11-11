@@ -2,17 +2,17 @@
 Mopidy-MPRIS
 ************
 
-.. image:: https://img.shields.io/pypi/v/Mopidy-MPRIS.svg?style=flat
-    :target: https://pypi.python.org/pypi/Mopidy-MPRIS/
+.. image:: https://img.shields.io/pypi/v/Mopidy-MPRIS.svg
+    :target: https://pypi.org/project/Mopidy-MPRIS/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/travis/mopidy/mopidy-mpris/master.svg?style=flat
-    :target: https://travis-ci.org/mopidy/mopidy-mpris
-    :alt: Travis CI build status
+.. image:: https://img.shields.io/circleci/project/mopidy/mopidy-mpris/master.svg
+    :target: https://circleci.com/gh/mopidy/mopidy-mpris
+    :alt: CircleCI build status
 
-.. image:: https://img.shields.io/coveralls/mopidy/mopidy-mpris/master.svg?style=flat
-   :target: https://coveralls.io/r/mopidy/mopidy-mpris
-   :alt: Test coverage
+.. image:: https://img.shields.io/codecov/c/github/mopidy/mopidy-mpris/master.svg
+    :target: https://codecov.io/gh/mopidy/mopidy-mpris
+    :alt: Test coverage
 
 `Mopidy`_ extension for controlling Mopidy through D-Bus using the `MPRIS
 specification`_.
@@ -95,7 +95,7 @@ dependencies yourself:
 
 Then install the package from `PyPI`_::
 
-    pip install Mopidy-MPRIS
+    python3 -m pip install Mopidy-MPRIS
 
 .. _pydbus: https://github.com/LEW21/pydbus
 .. _PyPI: https://pypi.org/project/Mopidy-MPRIS/
