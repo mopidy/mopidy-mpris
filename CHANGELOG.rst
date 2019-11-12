@@ -2,6 +2,19 @@
 Changelog
 *********
 
+v3.0.0rc1 (UNRELEASED)
+======================
+
+- Require Mopidy >= 3.0.0a4, which required the following changes:
+
+  - Stop using removed ``Album.images`` field.
+
+  - Use ``uris`` instead of ``uri`` when calling ``core.tracklist.add()``.
+
+- Require Python >= 3.7. No major changes required.
+
+- Update project setup.
+
 v2.0.0 (2018-12-07)
 ===================
 

@@ -1,9 +1,15 @@
+include *.py
 include *.rst
 include .mailmap
-include .travis.yml
 include LICENSE
 include MANIFEST.in
-include mopidy_mpris/ext.conf
+include pyproject.toml
 include tox.ini
 
+recursive-include .circleci *
+recursive-include .github *
+
+include mopidy_mpris/ext.conf
+
 recursive-include tests *.py
+recursive-include tests/data *

@@ -1,6 +1,6 @@
-from mopidy.core import Core
-
 import pytest
+
+from mopidy.core import Core
 
 from tests import dummy_audio, dummy_backend, dummy_mixer
 
@@ -8,9 +8,7 @@ from tests import dummy_audio, dummy_backend, dummy_mixer
 @pytest.fixture
 def config():
     return {
-        'core': {
-            'max_tracklist_length': 10000,
-        },
+        "core": {"max_tracklist_length": 10000},
     }
 
 

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import pytest
 
 from mopidy_mpris.root import Root
@@ -45,24 +43,24 @@ def test_has_track_list_returns_false(root):
 
 
 def test_identify_is_mopidy(root):
-    assert root.Identity == 'Mopidy'
+    assert root.Identity == "Mopidy"
 
 
 def test_desktop_entry_is_blank(root, config):
-    assert root.DesktopEntry == ''
+    assert root.DesktopEntry == ""
 
 
 def test_supported_uri_schemes_includes_backend_uri_schemes(root):
-    assert root.SupportedUriSchemes == ['dummy']
+    assert root.SupportedUriSchemes == ["dummy"]
 
 
 def test_supported_mime_types_has_hardcoded_entries(root):
     assert root.SupportedMimeTypes == [
-        'audio/mpeg',
-        'audio/x-ms-wma',
-        'audio/x-ms-asf',
-        'audio/x-flac',
-        'audio/flac',
-        'audio/l16;channels=2;rate=44100',
-        'audio/l16;rate=44100;channels=2',
+        "audio/mpeg",
+        "audio/x-ms-wma",
+        "audio/x-ms-asf",
+        "audio/x-flac",
+        "audio/flac",
+        "audio/l16;channels=2;rate=44100",
+        "audio/l16;rate=44100;channels=2",
     ]

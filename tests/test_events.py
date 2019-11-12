@@ -1,14 +1,11 @@
-from __future__ import unicode_literals
-
-import mock
-
-from mopidy.core.playback import PlaybackState
-from mopidy.models import Playlist, TlTrack
+from unittest import mock
 
 import pytest
 
-from mopidy_mpris import (
-    frontend as frontend_mod, player, playlists, root, server)
+from mopidy.core.playback import PlaybackState
+from mopidy.models import Playlist, TlTrack
+from mopidy_mpris import frontend as frontend_mod
+from mopidy_mpris import player, playlists, root, server
 
 
 @pytest.fixture
@@ -26,58 +23,64 @@ def frontend():
 
 
 def test_track_playback_paused_event_changes_playback_status(frontend):
-    frontend.mpris.player.PlaybackStatus = 'Paused'
+    frontend.mpris.player.PlaybackStatus = "Paused"
 
-    frontend.track_playback_paused(
-        tl_track=TlTrack(), time_position=0)
+    frontend.track_playback_paused(tl_track=TlTrack(), time_position=0)
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
-        player.Player.INTERFACE, {'PlaybackStatus': 'Paused'}, [])
+        player.Player.INTERFACE, {"PlaybackStatus": "Paused"}, []
+    )
 
 
 def test_track_playback_resumed_event_changes_playback_status(frontend):
-    frontend.mpris.player.PlaybackStatus = 'Playing'
+    frontend.mpris.player.PlaybackStatus = "Playing"
 
-    frontend.track_playback_resumed(
-        tl_track=TlTrack(), time_position=0)
+    frontend.track_playback_resumed(tl_track=TlTrack(), time_position=0)
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
-        player.Player.INTERFACE, {'PlaybackStatus': 'Playing'}, [])
+        player.Player.INTERFACE, {"PlaybackStatus": "Playing"}, []
+    )
 
 
 def test_track_playback_started_changes_playback_status_and_metadata(frontend):
-    frontend.mpris.player.Metadata = '...'
-    frontend.mpris.player.PlaybackStatus = 'Playing'
+    frontend.mpris.player.Metadata = "..."
+    frontend.mpris.player.PlaybackStatus = "Playing"
 
     frontend.track_playback_started(tl_track=TlTrack())
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
-        {'Metadata': '...', 'PlaybackStatus': 'Playing'}, [])
+        {"Metadata": "...", "PlaybackStatus": "Playing"},
+        [],
+    )
 
 
 def test_track_playback_ended_changes_playback_status_and_metadata(frontend):
-    frontend.mpris.player.Metadata = '...'
-    frontend.mpris.player.PlaybackStatus = 'Stopped'
+    frontend.mpris.player.Metadata = "..."
+    frontend.mpris.player.PlaybackStatus = "Stopped"
 
-    frontend.track_playback_ended(
-        tl_track=TlTrack(), time_position=0)
+    frontend.track_playback_ended(tl_track=TlTrack(), time_position=0)
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
-        {'Metadata': '...', 'PlaybackStatus': 'Stopped'}, [])
+        {"Metadata": "...", "PlaybackStatus": "Stopped"},
+        [],
+    )
 
 
 def test_playback_state_changed_changes_playback_status_and_metadata(frontend):
-    frontend.mpris.player.Metadata = '...'
-    frontend.mpris.player.PlaybackStatus = 'Stopped'
+    frontend.mpris.player.Metadata = "..."
+    frontend.mpris.player.PlaybackStatus = "Stopped"
 
     frontend.playback_state_changed(
-        PlaybackState.PLAYING, PlaybackState.STOPPED)
+        PlaybackState.PLAYING, PlaybackState.STOPPED
+    )
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
-        {'Metadata': '...', 'PlaybackStatus': 'Stopped'}, [])
+        {"Metadata": "...", "PlaybackStatus": "Stopped"},
+        [],
+    )
 
 
 def test_playlists_loaded_event_changes_playlist_count(frontend):
@@ -86,31 +89,34 @@ def test_playlists_loaded_event_changes_playlist_count(frontend):
     frontend.playlists_loaded()
 
     frontend.mpris.playlists.PropertiesChanged.assert_called_with(
-        playlists.Playlists.INTERFACE, {'PlaylistCount': 17}, [])
+        playlists.Playlists.INTERFACE, {"PlaylistCount": 17}, []
+    )
 
 
 def test_playlist_changed_event_causes_mpris_playlist_changed_event(frontend):
-    playlist = Playlist(uri='dummy:foo', name='foo')
+    playlist = Playlist(uri="dummy:foo", name="foo")
 
     frontend.playlist_changed(playlist=playlist)
 
     frontend.mpris.playlists.PlaylistChanged.assert_called_with(
-        '/com/mopidy/playlist/MR2W23LZHJTG63Y_', 'foo', '')
+        "/com/mopidy/playlist/MR2W23LZHJTG63Y_", "foo", ""
+    )
 
 
 def test_playlist_deleted_event_changes_playlist_count(frontend):
     frontend.mpris.playlists.PlaylistCount = 17
 
-    frontend.playlist_deleted('dummy:foo')
+    frontend.playlist_deleted("dummy:foo")
 
     frontend.mpris.playlists.PropertiesChanged.assert_called_with(
-        playlists.Playlists.INTERFACE, {'PlaylistCount': 17}, [])
+        playlists.Playlists.INTERFACE, {"PlaylistCount": 17}, []
+    )
 
 
 def test_options_changed_event_changes_loopstatus_and_shuffle(frontend):
     frontend.mpris.player.CanGoPrevious = False
     frontend.mpris.player.CanGoNext = True
-    frontend.mpris.player.LoopStatus = 'Track'
+    frontend.mpris.player.LoopStatus = "Track"
     frontend.mpris.player.Shuffle = True
 
     frontend.options_changed()
@@ -118,12 +124,12 @@ def test_options_changed_event_changes_loopstatus_and_shuffle(frontend):
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
         {
-             'LoopStatus': 'Track',
-             'Shuffle': True,
-             'CanGoPrevious': False,
-             'CanGoNext': True,
+            "LoopStatus": "Track",
+            "Shuffle": True,
+            "CanGoPrevious": False,
+            "CanGoNext": True,
         },
-        []
+        [],
     )
 
 
@@ -133,7 +139,8 @@ def test_volume_changed_event_changes_volume(frontend):
     frontend.volume_changed(volume=100)
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
-        player.Player.INTERFACE, {'Volume': 1.0}, [])
+        player.Player.INTERFACE, {"Volume": 1.0}, []
+    )
 
 
 def test_mute_changed_event_changes_volume(frontend):
@@ -142,7 +149,8 @@ def test_mute_changed_event_changes_volume(frontend):
     frontend.mute_changed(True)
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
-        player.Player.INTERFACE, {'Volume': 0.0}, [])
+        player.Player.INTERFACE, {"Volume": 0.0}, []
+    )
 
 
 def test_seeked_event_causes_mpris_seeked_event(frontend):
@@ -152,9 +160,10 @@ def test_seeked_event_causes_mpris_seeked_event(frontend):
 
 
 def test_stream_title_changed_changes_metadata(frontend):
-    frontend.mpris.player.Metadata = '...'
+    frontend.mpris.player.Metadata = "..."
 
-    frontend.stream_title_changed('a new title')
+    frontend.stream_title_changed("a new title")
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
-        player.Player.INTERFACE, {'Metadata': '...'}, [])
+        player.Player.INTERFACE, {"Metadata": "..."}, []
+    )
