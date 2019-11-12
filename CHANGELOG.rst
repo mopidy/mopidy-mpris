@@ -2,7 +2,7 @@
 Changelog
 *********
 
-v3.0.0rc1 (UNRELEASED)
+v3.0.0rc1 (2019-11-12)
 ======================
 
 - Require Mopidy >= 3.0.0a4, which required the following changes:
