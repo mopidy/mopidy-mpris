@@ -2,15 +2,15 @@
 Mopidy-MPRIS
 ************
 
-.. image:: https://img.shields.io/pypi/v/Mopidy-MPRIS.svg
+.. image:: https://img.shields.io/pypi/v/Mopidy-MPRIS
     :target: https://pypi.org/project/Mopidy-MPRIS/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/circleci/project/mopidy/mopidy-mpris/master.svg
+.. image:: https://img.shields.io/circleci/build/gh/mopidy/mopidy-mpris
     :target: https://circleci.com/gh/mopidy/mopidy-mpris
     :alt: CircleCI build status
 
-.. image:: https://img.shields.io/codecov/c/github/mopidy/mopidy-mpris/master.svg
+.. image:: https://img.shields.io/codecov/c/gh/mopidy/mopidy-mpris
     :target: https://codecov.io/gh/mopidy/mopidy-mpris
     :alt: Test coverage
 
