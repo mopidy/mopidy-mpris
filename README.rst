@@ -72,7 +72,7 @@ Install by running::
 
     sudo python3 -m pip install Mopidy-MPRIS
 
-See https://mopidy.com/ext/local/ for alternative installation methods.
+See https://mopidy.com/ext/mpris/ for alternative installation methods.
 
 
 Configuration
