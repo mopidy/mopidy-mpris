@@ -30,12 +30,8 @@ is currently not supported.
 Table of contents
 =================
 
+- Requirements_
 - Installation_
-
-  - `Debian/Ubuntu/Raspbian`_
-  - `Arch Linux`_
-  - `Other distributions`_
-
 - Configuration_
 - Usage_
 - Clients_
@@ -60,45 +56,23 @@ Table of contents
 - Credits_
 
 
-Installation
+Requirements
 ============
-
-Debian/Ubuntu/Raspbian
-----------------------
-
-Install the ``mopidy-mpris`` package::
-
-    sudo apt install mopidy-mpris
-
-If you want the latest version of Mopidy-MPRIS, add `apt.mopidy.com`_ as an
-APT archive on your system.
-
-.. _apt.mopidy.com: https://apt.mopidy.com/
-
-Arch Linux
-----------
-
-Install the ``mopidy-mpris`` package from `AUR`_::
-
-    yay -S mopidy-mpris
-
-.. _AUR: https://aur.archlinux.org/packages/mopidy-mpris/
-
-Other distributions
--------------------
-
-If Mopidy-MPRIS isn't packaged for your Linux distribution yet, install the
-dependencies yourself:
 
 - `pydbus`_ D-Bus Python bindings, which again depends on ``python-gi``. Thus
   it is usually easiest to install with your distribution's package manager.
 
-Then install the package from `PyPI`_::
-
-    python3 -m pip install Mopidy-MPRIS
-
 .. _pydbus: https://github.com/LEW21/pydbus
-.. _PyPI: https://pypi.org/project/Mopidy-MPRIS/
+
+
+Installation
+============
+
+Install by running::
+
+    sudo python3 -m pip install Mopidy-MPRIS
+
+See https://mopidy.com/ext/local/ for alternative installation methods.
 
 
 Configuration
