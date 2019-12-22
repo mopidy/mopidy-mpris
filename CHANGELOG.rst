@@ -2,6 +2,13 @@
 Changelog
 *********
 
+
+v3.0.0 (2019-12-22)
+===================
+
+- Depend on final release of Mopidy 3.0.0.
+
+
 v3.0.0rc1 (2019-11-12)
 ======================
 
@@ -14,6 +21,7 @@ v3.0.0rc1 (2019-11-12)
 - Require Python >= 3.7. No major changes required.
 
 - Update project setup.
+
 
 v2.0.0 (2018-12-07)
 ===================
@@ -94,16 +102,19 @@ v1.4.0 (2018-04-10)
 
 - Make tests pass with Mopidy >= 2.0.
 
+
 v1.3.1 (2015-08-18)
 ===================
 
 - Make tests pass with Mopidy >= 1.1.
+
 
 v1.3.0 (2015-08-11)
 ===================
 
 - No longer allow ``Quit()`` to shut down the Mopidy server process. Mopidy has
   no public API for Mopidy extensions to shut down the server.
+
 
 v1.2.0 (2015-05-05)
 ===================
@@ -130,15 +141,18 @@ v1.2.0 (2015-05-05)
 
 - Update tests to pass with Mopidy 1.0.
 
+
 v1.1.1 (2014-01-22)
 ===================
 
 - Fix: Make ``OpenUri()`` work even if the tracklist is empty.
 
+
 v1.1.0 (2014-01-20)
 ===================
 
 - Updated extension API to match Mopidy 0.18.
+
 
 v1.0.1 (2013-11-20)
 ===================
@@ -146,6 +160,7 @@ v1.0.1 (2013-11-20)
 - Update to work with Mopidy 0.16 which changed some APIs.
 
 - Remove redundant event loop setup already done by the ``mopidy`` process.
+
 
 v1.0.0 (2013-10-08)
 ===================
