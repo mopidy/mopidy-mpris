@@ -3,6 +3,14 @@ Changelog
 *********
 
 
+v3.0.1 (2019-12-22)
+===================
+
+- Fix link in README.
+
+- Fix tests by updating a mock.
+
+
 v3.0.0 (2019-12-22)
 ===================
 
