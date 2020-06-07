@@ -274,7 +274,7 @@ class Player(Interface):
         images = self.core.library.get_images([track.uri]).get()
         if images[track.uri]:
             largest_image = sorted(
-                images[track.uri], key=lambda i: i.width, reverse=True
+                images[track.uri], key=lambda i: i.width or 0, reverse=True
             )[0]
             return largest_image.uri
 

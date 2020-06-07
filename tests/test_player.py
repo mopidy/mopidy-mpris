@@ -180,6 +180,7 @@ def test_get_metadata_use_library_image_as_art_url(backend, core, player):
         "dummy:a": [
             Image(uri="http://example.com/small.jpg", width=100, height=100),
             Image(uri="http://example.com/large.jpg", width=200, height=200),
+            Image(uri="http://example.com/unsized.jpg"),
         ],
     }
     core.tracklist.add([Track(uri="dummy:a")])
