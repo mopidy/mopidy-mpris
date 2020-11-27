@@ -176,7 +176,7 @@ KDE Plasma "Media Player"
 -----------------
 
 State:
-    Not working as of Friday 27th 2020
+    Not working as of 2020-11-27
 Tested System: 
     KDE Plasma V 5.20.3
     KDE Frameworks V 5.76.0
