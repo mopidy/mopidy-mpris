@@ -184,9 +184,11 @@ Tested System:
     Kernel: 5.9.10-1-MANJARO
     **mopidy running as service**
 
-When mpris plugin is run with default session, it fails with an X11 error. 
+When mpris plugin is run with default session, it fails with the X11 error documented in issue https://github.com/mopidy/mopidy-mpris/issues/9. 
 
 When run as system via the instructions in README it is possible to control via the CLI (as a standard system user) but the client is not registered by KDE's default media player. 
+
+I also tested running as my user with MPRIS/DBUS set to session. This worked in a very minor fashion. If you play a track via the Iris frontend, it will display in the media controller and it can be paused. It cannot otherwise be resumed or prev_track/next_track.
 
 Advanced setups
 ===============
