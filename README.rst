@@ -366,7 +366,7 @@ Project resources
 
 - `Source code <https://github.com/mopidy/mopidy-mpris>`_
 - `Issue tracker <https://github.com/mopidy/mopidy-mpris/issues>`_
-- `Changelog <https://github.com/mopidy/mopidy-mpris/blob/master/CHANGELOG.rst>`_
+- `Changelog <https://github.com/mopidy/mopidy-mpris/releases>`_
 
 
 Credits
