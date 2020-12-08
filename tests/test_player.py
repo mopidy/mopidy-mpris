@@ -89,7 +89,7 @@ def test_set_rate_is_ignored_if_can_control_is_false(core, player):
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
-    player.Rate == 0
+    player.Rate = 0
 
     assert core.playback.get_state().get() == PLAYING
 
@@ -133,7 +133,7 @@ def test_get_metadata(core, player):
                 name="a",
                 artists=[Artist(name="b"), Artist(name="c"), Artist(name=None)],
                 album=Album(
-                    name="d", artists=[Artist(name="e"), Artist(name=None)],
+                    name="d", artists=[Artist(name="e"), Artist(name=None)]
                 ),
             )
         ]
@@ -156,7 +156,7 @@ def test_get_metadata(core, player):
 
 
 def test_get_metadata_prefers_stream_title_over_track_name(audio, core, player):
-    core.tracklist.add([Track(uri="dummy:a", name="Track name",)])
+    core.tracklist.add([Track(uri="dummy:a", name="Track name")])
     core.playback.play().get()
 
     result = player.Metadata
