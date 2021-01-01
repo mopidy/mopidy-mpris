@@ -6,9 +6,9 @@ Mopidy-MPRIS
     :target: https://pypi.org/project/Mopidy-MPRIS/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/circleci/build/gh/mopidy/mopidy-mpris
-    :target: https://circleci.com/gh/mopidy/mopidy-mpris
-    :alt: CircleCI build status
+.. image:: https://img.shields.io/github/workflow/status/mopidy/mopidy-mpris/CI
+    :target: https://github.com/mopidy/mopidy-mpris/actions
+    :alt: CI build status
 
 .. image:: https://img.shields.io/codecov/c/gh/mopidy/mopidy-mpris
     :target: https://codecov.io/gh/mopidy/mopidy-mpris
