@@ -45,21 +45,46 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def track_playback_started(self, tl_track):
         _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
+            self.mpris.player,
+            [
+                "PlaybackStatus",
+                "Metadata",
+                "CanGoNext",
+                "CanGoPrevious",
+                "CanPlay",
+            ],
         )
 
     def track_playback_ended(self, tl_track, time_position):
         _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
+            self.mpris.player,
+            [
+                "PlaybackStatus",
+                "Metadata",
+                "CanGoNext",
+                "CanGoPrevious",
+                "CanPlay",
+            ],
         )
 
     def playback_state_changed(self, old_state, new_state):
         _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
+            self.mpris.player,
+            [
+                "PlaybackStatus",
+                "Metadata",
+                "CanGoNext",
+                "CanGoPrevious",
+                "CanPlay",
+            ],
         )
 
     def tracklist_changed(self):
-        pass  # TODO Implement if adding tracklist support
+        # TODO Implement tracklist support
+        _emit_properties_changed(
+            self.mpris.player,
+            ["CanGoNext", "CanGoPrevious", "CanPlay"],
+        )
 
     def playlists_loaded(self):
         _emit_properties_changed(self.mpris.playlists, ["PlaylistCount"])

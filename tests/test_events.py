@@ -7,6 +7,8 @@ from mopidy.models import Playlist, TlTrack
 from mopidy_mpris import frontend as frontend_mod
 from mopidy_mpris import player, playlists, root, server
 
+from . import DictFields
+
 
 @pytest.fixture
 def frontend():
@@ -50,7 +52,7 @@ def test_track_playback_started_changes_playback_status_and_metadata(frontend):
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
-        {"Metadata": "...", "PlaybackStatus": "Playing"},
+        DictFields({"Metadata": "...", "PlaybackStatus": "Playing"}),
         [],
     )
 
@@ -63,7 +65,7 @@ def test_track_playback_ended_changes_playback_status_and_metadata(frontend):
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
-        {"Metadata": "...", "PlaybackStatus": "Stopped"},
+        DictFields({"Metadata": "...", "PlaybackStatus": "Stopped"}),
         [],
     )
 
@@ -78,7 +80,7 @@ def test_playback_state_changed_changes_playback_status_and_metadata(frontend):
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
-        {"Metadata": "...", "PlaybackStatus": "Stopped"},
+        DictFields({"Metadata": "...", "PlaybackStatus": "Stopped"}),
         [],
     )
 
