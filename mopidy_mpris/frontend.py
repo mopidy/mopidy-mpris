@@ -20,8 +20,8 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
         try:
             self.mpris = Server(self.config, self.core)
             self.mpris.publish()
-        except Exception as e:
-            logger.warning("MPRIS frontend setup failed (%s)", e)
+        except Exception:
+            logger.exception("MPRIS frontend setup failed")
             self.stop()
 
     def on_stop(self):
@@ -117,9 +117,7 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
 
 def _emit_properties_changed(interface, changed_properties):
-    props_with_new_values = [
-        (p, getattr(interface, p)) for p in changed_properties
-    ]
-    interface.PropertiesChanged(
-        interface.INTERFACE, dict(props_with_new_values), []
-    )
+    props_with_new_values = {
+        p: getattr(interface, p) for p in changed_properties
+    }
+    interface.PropertiesChanged(interface.INTERFACE, props_with_new_values, [])
