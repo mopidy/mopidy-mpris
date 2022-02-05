@@ -1,6 +1,13 @@
-import pytest
+from unittest.mock import Mock, PropertyMock
 
+import pytest
 from mopidy.core import Core
+
+from mopidy_mpris.frontend import MprisFrontend
+from mopidy_mpris.player import Player
+from mopidy_mpris.playlists import Playlists
+from mopidy_mpris.root import Root
+from mopidy_mpris.server import Server
 
 from tests import dummy_audio, dummy_backend, dummy_mixer
 
@@ -9,6 +16,7 @@ from tests import dummy_audio, dummy_backend, dummy_mixer
 def config():
     return {
         "core": {"max_tracklist_length": 10000},
+        "mpris": {"bus_type": "session"},
     }
 
 
@@ -40,3 +48,41 @@ def core(config, backend, mixer, audio):
     ).proxy()
     yield actor
     actor.stop()
+
+
+@pytest.fixture
+def root(config, core):
+    return Root(config, core)
+
+
+@pytest.fixture
+def player(config, core):
+    return Player(config, core)
+
+
+@pytest.fixture
+def playlists(config, core):
+    return Playlists(config, core)
+
+
+@pytest.fixture
+def server(monkeypatch, config, core, player, root, playlists):
+    with monkeypatch.context() as m:
+        m.setattr("mopidy_mpris.server.Player", lambda *_: player)
+        m.setattr("mopidy_mpris.server.Root", lambda *_: root)
+        m.setattr("mopidy_mpris.server.Playlists", lambda *_: playlists)
+        return Server(config, core)
+
+
+@pytest.fixture
+def frontend(monkeypatch, config, core, server):
+    monkeypatch.setattr("mopidy_mpris.frontend.Server.publish", Mock())
+    monkeypatch.setattr("mopidy_mpris.frontend.Server.unpublish", Mock())
+    monkeypatch.setattr(
+        "mopidy_mpris.interface.Interface.PropertiesChanged", PropertyMock()
+    )
+    with monkeypatch.context() as m:
+        m.setattr("mopidy_mpris.frontend.Server", lambda *_: server)
+        frontend = MprisFrontend.start(config, core).proxy()
+    yield frontend
+    frontend.stop()
