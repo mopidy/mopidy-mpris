@@ -75,14 +75,19 @@ def server(monkeypatch, config, core, player, root, playlists):
 
 
 @pytest.fixture
-def frontend(monkeypatch, config, core, server):
+def frontend(request, monkeypatch, config, core, server):
     monkeypatch.setattr("mopidy_mpris.frontend.Server.publish", Mock())
     monkeypatch.setattr("mopidy_mpris.frontend.Server.unpublish", Mock())
     monkeypatch.setattr(
         "mopidy_mpris.interface.Interface.PropertiesChanged", PropertyMock()
     )
+    server_dep = (
+        Mock(side_effect=Exception)
+        if getattr(request, "param", None) == "fail"
+        else lambda *_: server
+    )
     with monkeypatch.context() as m:
-        m.setattr("mopidy_mpris.frontend.Server", lambda *_: server)
+        m.setattr("mopidy_mpris.frontend.Server", server_dep)
         frontend = MprisFrontend.start(config, core).proxy()
     yield frontend
     frontend.stop()

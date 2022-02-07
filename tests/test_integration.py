@@ -1,6 +1,7 @@
 from time import sleep
 from unittest.mock import call
 
+import pytest
 from mopidy.models import Track
 
 import mopidy_mpris
@@ -50,3 +51,9 @@ def test_tracklist_changed_empty_while_playing(frontend, core, player):
     assert_called(True, True, True)
     core.tracklist.clear().get()
     assert_called(False, False, False)
+
+
+@pytest.mark.parametrize("frontend", ["fail"], indirect=True)
+def test_frontend_fail_stops_actor(frontend):
+    sleep(0.1)
+    assert not frontend.actor_ref.is_alive()
