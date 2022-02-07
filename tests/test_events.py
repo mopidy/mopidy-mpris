@@ -85,6 +85,22 @@ def test_playback_state_changed_changes_playback_status_and_metadata(frontend):
     )
 
 
+def test_tracklist_changed_enabled_actions(frontend):
+    frontend.mpris.player.CanGoNext = True
+    frontend.mpris.player.CanGoPrevious = False
+    frontend.mpris.player.CanPlay = True
+
+    frontend.tracklist_changed()
+
+    frontend.mpris.player.PropertiesChanged.assert_called_with(
+        player.Player.INTERFACE,
+        DictFields(
+            {"CanGoNext": True, "CanGoPrevious": False, "CanPlay": True}
+        ),
+        [],
+    )
+
+
 def test_playlists_loaded_event_changes_playlist_count(frontend):
     frontend.mpris.playlists.PlaylistCount = 17
 
