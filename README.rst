@@ -27,6 +27,27 @@ is currently not supported.
 .. _TrackList interface: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
 
 
+Maintainer wanted
+=================
+
+Mopidy-MPRIS is currently kept on life support by the Mopidy core developers.
+It is in need of a more dedicated maintainer.
+
+If you want to be the maintainer of Mopidy-MPRIS, please:
+
+1. Make 2-3 good pull requests improving any part of the project.
+
+2. Read and get familiar with all of the project's open issues.
+
+3. Send a pull request removing this section and adding yourself as the
+   "Current maintainer" in the "Credits" section below. In the pull request
+   description, please refer to the previous pull requests and state that
+   you've familiarized yourself with the open issues.
+
+   As a maintainer, you'll be given push access to the repo and the authority
+   to make releases to PyPI when you see fit.
+
+
 Table of contents
 =================
 
@@ -373,5 +394,5 @@ Credits
 =======
 
 - Original author: `Stein Magnus Jodal <https://github.com/jodal>`__
-- Current maintainer: `Stein Magnus Jodal <https://github.com/jodal>`__
+- Current maintainer: None. Maintainer wanted, see section above.
 - `Contributors <https://github.com/mopidy/mopidy-mpris/graphs/contributors>`_
