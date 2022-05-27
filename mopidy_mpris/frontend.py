@@ -20,8 +20,8 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
         try:
             self.mpris = Server(self.config, self.core)
             self.mpris.publish()
-        except Exception as e:
-            logger.warning("MPRIS frontend setup failed (%s)", e)
+        except Exception:
+            logger.exception("MPRIS frontend setup failed")
             self.stop()
 
     def on_stop(self):
@@ -45,21 +45,46 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
     def track_playback_started(self, tl_track):
         _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
+            self.mpris.player,
+            [
+                "PlaybackStatus",
+                "Metadata",
+                "CanGoNext",
+                "CanGoPrevious",
+                "CanPlay",
+            ],
         )
 
     def track_playback_ended(self, tl_track, time_position):
         _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
+            self.mpris.player,
+            [
+                "PlaybackStatus",
+                "Metadata",
+                "CanGoNext",
+                "CanGoPrevious",
+                "CanPlay",
+            ],
         )
 
     def playback_state_changed(self, old_state, new_state):
         _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
+            self.mpris.player,
+            [
+                "PlaybackStatus",
+                "Metadata",
+                "CanGoNext",
+                "CanGoPrevious",
+                "CanPlay",
+            ],
         )
 
     def tracklist_changed(self):
-        pass  # TODO Implement if adding tracklist support
+        # TODO Implement tracklist support
+        _emit_properties_changed(
+            self.mpris.player,
+            ["CanGoNext", "CanGoPrevious", "CanPlay"],
+        )
 
     def playlists_loaded(self):
         _emit_properties_changed(self.mpris.playlists, ["PlaylistCount"])
@@ -92,9 +117,7 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
 
 def _emit_properties_changed(interface, changed_properties):
-    props_with_new_values = [
-        (p, getattr(interface, p)) for p in changed_properties
-    ]
-    interface.PropertiesChanged(
-        interface.INTERFACE, dict(props_with_new_values), []
-    )
+    props_with_new_values = {
+        p: getattr(interface, p) for p in changed_properties
+    }
+    interface.PropertiesChanged(interface.INTERFACE, props_with_new_values, [])

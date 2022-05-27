@@ -91,9 +91,7 @@ class Player(Interface):
         state = self.core.playback.get_state().get()
         if state == PlaybackState.PLAYING:
             self.core.playback.pause().get()
-        elif state == PlaybackState.PAUSED:
-            self.core.playback.resume().get()
-        elif state == PlaybackState.STOPPED:
+        else:
             self.core.playback.play().get()
 
     def Stop(self):
@@ -108,11 +106,7 @@ class Player(Interface):
         if not self.CanPlay:
             logger.debug("%s.Play not allowed", self.INTERFACE)
             return
-        state = self.core.playback.get_state().get()
-        if state == PlaybackState.PAUSED:
-            self.core.playback.resume().get()
-        else:
-            self.core.playback.play().get()
+        self.core.playback.play().get()
 
     def Seek(self, offset):
         logger.debug("%s.Seek called", self.INTERFACE)
