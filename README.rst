@@ -193,6 +193,23 @@ with old Ubuntu setups.
 If you run an Ubuntu setup with Unity and have tested Mopidy-MPRIS, please
 open an issue to share your results.
 
+KDE Plasma "Media Player"
+-----------------
+
+State:
+    Not working as of 2020-11-27
+Tested System: 
+    KDE Plasma V 5.20.3
+    KDE Frameworks V 5.76.0
+    QT 5.15.1
+    Kernel: 5.9.10-1-MANJARO
+    **mopidy running as service**
+
+When mpris plugin is run with default session, it fails with the X11 error documented in issue https://github.com/mopidy/mopidy-mpris/issues/9. 
+
+When run as system via the instructions in README it is possible to control via the CLI (as a standard system user) but the client is not registered by KDE's default media player. 
+
+I also tested running as my user with MPRIS/DBUS set to session. This worked in a very minor fashion. If you play a track via the Iris frontend, it will display in the media controller and it can be paused. It cannot otherwise be resumed or prev_track/next_track.
 
 Advanced setups
 ===============
