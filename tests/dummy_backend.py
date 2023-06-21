@@ -6,7 +6,6 @@ used in tests of the frontends.
 
 
 import pykka
-
 from mopidy import backend
 from mopidy.models import Playlist, Ref, SearchResult
 
@@ -51,6 +50,7 @@ class DummyLibraryProvider(backend.LibraryProvider):
         return self.dummy_get_images_result
 
     def lookup(self, uri):
+        uri = Ref.track(uri=uri).uri
         return [t for t in self.dummy_library if uri == t.uri]
 
     def refresh(self, uri=None):
@@ -102,10 +102,14 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
     def __init__(self, backend):
         super().__init__(backend)
         self._playlists = []
+        self._allow_save = True
 
     def set_dummy_playlists(self, playlists):
         """For tests using the dummy provider through an actor proxy."""
         self._playlists = playlists
+
+    def set_allow_save(self, enabled):
+        self._allow_save = enabled
 
     def as_list(self):
         return [
@@ -119,6 +123,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         return [Ref.track(uri=t.uri, name=t.name) for t in playlist.tracks]
 
     def lookup(self, uri):
+        uri = Ref.playlist(uri=uri).uri
         for playlist in self._playlists:
             if playlist.uri == uri:
                 return playlist
@@ -127,7 +132,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         pass
 
     def create(self, name):
-        playlist = Playlist(name=name, uri="dummy:%s" % name)
+        playlist = Playlist(name=name, uri=f"dummy:{name}")
         self._playlists.append(playlist)
         return playlist
 
@@ -137,6 +142,9 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
             self._playlists.remove(playlist)
 
     def save(self, playlist):
+        if not self._allow_save:
+            return None
+
         old_playlist = self.lookup(playlist.uri)
 
         if old_playlist is not None:
