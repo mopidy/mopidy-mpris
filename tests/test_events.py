@@ -2,8 +2,8 @@ from unittest import mock
 
 import pytest
 from mopidy.core.playback import PlaybackState
-from mopidy.models import Playlist, TlTrack
-
+from mopidy.models import Playlist, TlTrack, Track
+from mopidy.types import TracklistId
 from mopidy_mpris import frontend as frontend_mod
 from mopidy_mpris import player, playlists, root, server
 
@@ -25,7 +25,10 @@ def frontend():
 def test_track_playback_paused_event_changes_playback_status(frontend):
     frontend.mpris.player.PlaybackStatus = "Paused"
 
-    frontend.track_playback_paused(tl_track=TlTrack(), time_position=0)
+    frontend.track_playback_paused(
+        tl_track=TlTrack(tlid=TracklistId(1), track=Track()),
+        time_position=0,
+    )
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE, {"PlaybackStatus": "Paused"}, []
@@ -35,7 +38,10 @@ def test_track_playback_paused_event_changes_playback_status(frontend):
 def test_track_playback_resumed_event_changes_playback_status(frontend):
     frontend.mpris.player.PlaybackStatus = "Playing"
 
-    frontend.track_playback_resumed(tl_track=TlTrack(), time_position=0)
+    frontend.track_playback_resumed(
+        tl_track=TlTrack(tlid=TracklistId(1), track=Track()),
+        time_position=0,
+    )
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE, {"PlaybackStatus": "Playing"}, []
@@ -46,7 +52,9 @@ def test_track_playback_started_changes_playback_status_and_metadata(frontend):
     frontend.mpris.player.Metadata = "..."
     frontend.mpris.player.PlaybackStatus = "Playing"
 
-    frontend.track_playback_started(tl_track=TlTrack())
+    frontend.track_playback_started(
+        tl_track=TlTrack(tlid=TracklistId(1), track=Track())
+    )
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
@@ -59,7 +67,10 @@ def test_track_playback_ended_changes_playback_status_and_metadata(frontend):
     frontend.mpris.player.Metadata = "..."
     frontend.mpris.player.PlaybackStatus = "Stopped"
 
-    frontend.track_playback_ended(tl_track=TlTrack(), time_position=0)
+    frontend.track_playback_ended(
+        tl_track=TlTrack(tlid=TracklistId(1), track=Track()),
+        time_position=0,
+    )
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,
