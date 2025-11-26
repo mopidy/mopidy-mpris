@@ -3,7 +3,6 @@
 https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
 """
 
-
 import logging
 
 from mopidy_mpris.interface import Interface
@@ -32,25 +31,24 @@ class Root(Interface):
 
     INTERFACE = "org.mpris.MediaPlayer2"
 
-    def Raise(self):
+    def Raise(self):  # noqa: N802
         logger.debug("%s.Raise called", self.INTERFACE)
         # Do nothing, as we do not have a GUI
 
-    def Quit(self):
+    def Quit(self):  # noqa: N802
         logger.debug("%s.Quit called", self.INTERFACE)
         # Do nothing, as we do not allow MPRIS clients to shut down Mopidy
 
     CanQuit = False
 
     @property
-    def Fullscreen(self):
+    def Fullscreen(self):  # noqa: N802
         self.log_trace("Getting %s.Fullscreen", self.INTERFACE)
         return False
 
     @Fullscreen.setter
-    def Fullscreen(self, value):
+    def Fullscreen(self, value):  # noqa: N802
         logger.debug("Setting %s.Fullscreen to %s", self.INTERFACE, value)
-        pass
 
     CanSetFullscreen = False
     CanRaise = False
@@ -58,7 +56,7 @@ class Root(Interface):
     Identity = "Mopidy"
 
     @property
-    def DesktopEntry(self):
+    def DesktopEntry(self):  # noqa: N802
         self.log_trace("Getting %s.DesktopEntry", self.INTERFACE)
         # This property is optional to expose. If we set this to "mopidy", the
         # basename of "mopidy.desktop", some MPRIS clients will start a new
@@ -67,12 +65,12 @@ class Root(Interface):
         return ""
 
     @property
-    def SupportedUriSchemes(self):
+    def SupportedUriSchemes(self):  # noqa: N802
         self.log_trace("Getting %s.SupportedUriSchemes", self.INTERFACE)
         return self.core.get_uri_schemes().get()
 
     @property
-    def SupportedMimeTypes(self):
+    def SupportedMimeTypes(self):  # noqa: N802
         # NOTE Return MIME types supported by local backend if support for
         # reporting supported MIME types is added.
         self.log_trace("Getting %s.SupportedMimeTypes", self.INTERFACE)
