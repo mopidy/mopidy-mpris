@@ -41,9 +41,7 @@ class Playlists(Interface):
     INTERFACE = "org.mpris.MediaPlayer2.Playlists"
 
     def ActivatePlaylist(self, playlist_id):
-        logger.debug(
-            "%s.ActivatePlaylist(%r) called", self.INTERFACE, playlist_id
-        )
+        logger.debug("%s.ActivatePlaylist(%r) called", self.INTERFACE, playlist_id)
         playlist_uri = get_playlist_uri(playlist_id)
         playlist = self.core.playlists.lookup(playlist_uri).get()
         if playlist and playlist.tracks:

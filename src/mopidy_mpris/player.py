@@ -3,7 +3,6 @@
 https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
 """
 
-
 import logging
 
 from gi.repository.GLib import Variant
@@ -250,9 +249,7 @@ class Player(Interface):
             if track.artists:
                 artists = list(track.artists)
                 artists.sort(key=lambda a: a.name or "")
-                res["xesam:artist"] = Variant(
-                    "as", [a.name for a in artists if a.name]
-                )
+                res["xesam:artist"] = Variant("as", [a.name for a in artists if a.name])
             if track.album and track.album.name:
                 res["xesam:album"] = Variant("s", track.album.name)
             if track.album and track.album.artists:

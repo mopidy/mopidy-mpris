@@ -44,19 +44,13 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
         _emit_properties_changed(self.mpris.player, ["PlaybackStatus"])
 
     def track_playback_started(self, tl_track):
-        _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
-        )
+        _emit_properties_changed(self.mpris.player, ["PlaybackStatus", "Metadata"])
 
     def track_playback_ended(self, tl_track, time_position):
-        _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
-        )
+        _emit_properties_changed(self.mpris.player, ["PlaybackStatus", "Metadata"])
 
     def playback_state_changed(self, old_state, new_state):
-        _emit_properties_changed(
-            self.mpris.player, ["PlaybackStatus", "Metadata"]
-        )
+        _emit_properties_changed(self.mpris.player, ["PlaybackStatus", "Metadata"])
 
     def tracklist_changed(self):
         pass  # TODO Implement if adding tracklist support
@@ -92,9 +86,5 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
 
 
 def _emit_properties_changed(interface, changed_properties):
-    props_with_new_values = [
-        (p, getattr(interface, p)) for p in changed_properties
-    ]
-    interface.PropertiesChanged(
-        interface.INTERFACE, dict(props_with_new_values), []
-    )
+    props_with_new_values = [(p, getattr(interface, p)) for p in changed_properties]
+    interface.PropertiesChanged(interface.INTERFACE, dict(props_with_new_values), [])

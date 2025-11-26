@@ -3,7 +3,6 @@
 https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
 """
 
-
 import logging
 
 from mopidy_mpris.interface import Interface

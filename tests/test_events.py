@@ -72,9 +72,7 @@ def test_playback_state_changed_changes_playback_status_and_metadata(frontend):
     frontend.mpris.player.Metadata = "..."
     frontend.mpris.player.PlaybackStatus = "Stopped"
 
-    frontend.playback_state_changed(
-        PlaybackState.PLAYING, PlaybackState.STOPPED
-    )
+    frontend.playback_state_changed(PlaybackState.PLAYING, PlaybackState.STOPPED)
 
     frontend.mpris.player.PropertiesChanged.assert_called_with(
         player.Player.INTERFACE,

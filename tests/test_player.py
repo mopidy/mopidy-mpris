@@ -45,9 +45,7 @@ def test_get_loop_status(core, player, repeat, single, expected):
     "status, expected_repeat, expected_single",
     [("None", False, False), ("Track", True, True), ("Playlist", True, False)],
 )
-def test_set_loop_status(
-    core, player, status, expected_repeat, expected_single
-):
+def test_set_loop_status(core, player, status, expected_repeat, expected_single):
     player.LoopStatus = status
 
     assert core.tracklist.get_repeat().get() is expected_repeat
@@ -132,9 +130,7 @@ def test_get_metadata(core, player):
                 length=3600000,
                 name="a",
                 artists=[Artist(name="b"), Artist(name="c"), Artist(name=None)],
-                album=Album(
-                    name="d", artists=[Artist(name="e"), Artist(name=None)]
-                ),
+                album=Album(name="d", artists=[Artist(name="e"), Artist(name=None)]),
             )
         ]
     )
@@ -144,9 +140,7 @@ def test_get_metadata(core, player):
 
     result = player.Metadata
 
-    assert result["mpris:trackid"] == GLib.Variant(
-        "o", "/com/mopidy/track/%d" % tlid
-    )
+    assert result["mpris:trackid"] == GLib.Variant("o", "/com/mopidy/track/%d" % tlid)
     assert result["mpris:length"] == GLib.Variant("x", 3600000000)
     assert result["xesam:url"] == GLib.Variant("s", "dummy:a")
     assert result["xesam:title"] == GLib.Variant("s", "a")
@@ -164,9 +158,7 @@ def test_get_metadata_prefers_stream_title_over_track_name(audio, core, player):
 
     audio.trigger_fake_tags_changed(
         {
-            "organization": [
-                "Required for Mopidy core to care about the title"
-            ],
+            "organization": ["Required for Mopidy core to care about the title"],
             "title": ["Stream title"],
         }
     ).get()
@@ -188,9 +180,7 @@ def test_get_metadata_use_library_image_as_art_url(backend, core, player):
 
     result = player.Metadata
 
-    assert result["mpris:artUrl"] == GLib.Variant(
-        "s", "http://example.com/large.jpg"
-    )
+    assert result["mpris:artUrl"] == GLib.Variant("s", "http://example.com/large.jpg")
 
 
 def test_get_metadata_has_disc_number_in_album(core, player):
@@ -331,9 +321,7 @@ def test_can_go_next_is_false_if_can_control_is_false(core, player):
     assert not player.CanGoNext
 
 
-def test_can_go_previous_is_true_if_can_control_and_previous_track(
-    core, player
-):
+def test_can_go_previous_is_true_if_can_control_and_previous_track(core, player):
     player._CanControl = True
     core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
     core.playback.play().get()
@@ -445,9 +433,7 @@ def test_next_when_at_end_of_list_should_stop_playback(core, player):
     assert core.playback.get_state().get() == STOPPED
 
 
-def test_next_when_paused_should_skip_to_next_track_and_stay_paused(
-    core, player
-):
+def test_next_when_paused_should_skip_to_next_track_and_stay_paused(core, player):
     core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
     core.playback.play().get()
     core.playback.pause().get()
@@ -482,9 +468,7 @@ def test_previous_is_ignored_if_can_go_previous_is_false(core, player):
     assert core.playback.get_current_track().get().uri == "dummy:b"
 
 
-def test_previous_when_playing_skips_to_prev_track_and_keep_playing(
-    core, player
-):
+def test_previous_when_playing_skips_to_prev_track_and_keep_playing(core, player):
     core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
     core.playback.play().get()
     core.playback.next().get()
@@ -716,9 +700,7 @@ def test_seek_is_ignored_if_can_seek_is_false(core, player):
     assert after_seek < before_seek + milliseconds_to_seek
 
 
-def test_seek_seeks_given_microseconds_forward_in_the_current_track(
-    core, player
-):
+def test_seek_seeks_given_microseconds_forward_in_the_current_track(core, player):
     core.tracklist.add([Track(uri="dummy:a", length=40000)])
     core.playback.play().get()
 
@@ -778,9 +760,7 @@ def test_seek_seeks_to_start_of_track_if_new_position_is_negative(core, player):
 
 
 def test_seek_skips_to_next_track_if_new_position_gt_track_length(core, player):
-    core.tracklist.add(
-        [Track(uri="dummy:a", length=40000), Track(uri="dummy:b")]
-    )
+    core.tracklist.add([Track(uri="dummy:a", length=40000), Track(uri="dummy:b")])
     core.playback.play().get()
     core.playback.seek(20000).get()
 
@@ -822,9 +802,7 @@ def test_set_position_is_ignored_if_can_seek_is_false(core, player):
     assert after_set_position < position_to_set_in_millisec
 
 
-def test_set_position_sets_the_current_track_position_in_microsecs(
-    core, player
-):
+def test_set_position_sets_the_current_track_position_in_microsecs(core, player):
     core.tracklist.add([Track(uri="dummy:a", length=40000)])
     core.playback.play().get()
 
@@ -944,9 +922,7 @@ def test_open_uri_adds_uri_to_tracklist(backend, core, player):
     assert core.tracklist.get_tracks().get()[0].uri == "dummy:/test/uri"
 
 
-def test_open_uri_starts_playback_of_new_track_if_stopped(
-    backend, core, player
-):
+def test_open_uri_starts_playback_of_new_track_if_stopped(backend, core, player):
     backend.library.dummy_library = [Track(uri="dummy:/test/uri")]
     core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
     assert core.playback.get_state().get() == STOPPED
@@ -971,9 +947,7 @@ def test_open_uri_starts_playback_of_new_track_if_paused(backend, core, player):
     assert core.playback.get_current_track().get().uri == "dummy:/test/uri"
 
 
-def test_open_uri_starts_playback_of_new_track_if_playing(
-    backend, core, player
-):
+def test_open_uri_starts_playback_of_new_track_if_playing(backend, core, player):
     backend.library.dummy_library = [Track(uri="dummy:/test/uri")]
     core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
     core.playback.play().get()
