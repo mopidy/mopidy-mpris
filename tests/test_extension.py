@@ -29,6 +29,4 @@ class ExtensionTest(unittest.TestCase):
 
         ext.setup(registry)
 
-        registry.add.assert_called_once_with(
-            "frontend", frontend_lib.MprisFrontend
-        )
+        registry.add.assert_called_once_with("frontend", frontend_lib.MprisFrontend)

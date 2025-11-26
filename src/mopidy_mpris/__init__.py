@@ -1,14 +1,13 @@
 import pathlib
+from importlib.metadata import version
 
-import pkg_resources
+from mopidy import config, ext
 
-from mopidy import config, exceptions, ext
-
-__version__ = pkg_resources.get_distribution("Mopidy-MPRIS").version
+__version__ = version("mopidy-mpris")
 
 
 class Extension(ext.Extension):
-    dist_name = "Mopidy-MPRIS"
+    dist_name = "mopidy-mpris"
     ext_name = "mpris"
     version = __version__
 
@@ -28,6 +27,6 @@ class Extension(ext.Extension):
             raise exceptions.ExtensionError("pydbus library not found", e)
 
     def setup(self, registry):
-        from .frontend import MprisFrontend
+        from mopidy_mpris.frontend import MprisFrontend
 
         registry.add("frontend", MprisFrontend)
