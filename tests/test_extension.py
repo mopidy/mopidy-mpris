@@ -11,17 +11,17 @@ class ExtensionTest(unittest.TestCase):
 
         config = ext.get_default_config()
 
-        self.assertIn("[mpris]", config)
-        self.assertIn("enabled = true", config)
-        self.assertIn("bus_type = session", config)
+        assert "[mpris]" in config
+        assert "enabled = true" in config
+        assert "bus_type = session" in config
 
     def test_get_config_schema(self):
         ext = Extension()
 
         schema = ext.get_config_schema()
 
-        self.assertIn("desktop_file", schema)
-        self.assertIn("bus_type", schema)
+        assert "desktop_file" in schema
+        assert "bus_type" in schema
 
     def test_get_frontend_classes(self):
         ext = Extension()
