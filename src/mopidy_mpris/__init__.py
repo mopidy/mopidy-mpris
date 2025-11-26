@@ -1,7 +1,7 @@
 import pathlib
 from importlib.metadata import version
 
-from mopidy import config, ext
+from mopidy import config, exceptions, ext
 
 __version__ = version("mopidy-mpris")
 
@@ -22,11 +22,12 @@ class Extension(ext.Extension):
 
     def validate_environment(self):
         try:
-            import pydbus  # noqa
-        except ImportError as e:
-            raise exceptions.ExtensionError("pydbus library not found", e)
+            import pydbus  # noqa: F401, PLC0415
+        except ImportError as exc:
+            msg = "pydbus library not found"
+            raise exceptions.ExtensionError(msg, exc) from exc
 
     def setup(self, registry):
-        from mopidy_mpris.frontend import MprisFrontend
+        from mopidy_mpris.frontend import MprisFrontend  # noqa: PLC0415
 
         registry.add("frontend", MprisFrontend)

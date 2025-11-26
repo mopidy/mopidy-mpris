@@ -16,7 +16,7 @@ def player(config, core):
 
 
 @pytest.mark.parametrize(
-    "state, expected",
+    ("state", "expected"),
     [(PLAYING, "Playing"), (PAUSED, "Paused"), (STOPPED, "Stopped")],
 )
 def test_get_playback_status(core, player, state, expected):
@@ -26,7 +26,7 @@ def test_get_playback_status(core, player, state, expected):
 
 
 @pytest.mark.parametrize(
-    "repeat, single, expected",
+    ("repeat", "single", "expected"),
     [
         (False, False, "None"),
         (False, True, "None"),
@@ -42,7 +42,7 @@ def test_get_loop_status(core, player, repeat, single, expected):
 
 
 @pytest.mark.parametrize(
-    "status, expected_repeat, expected_single",
+    ("status", "expected_repeat", "expected_single"),
     [("None", False, False), ("Track", True, True), ("Playlist", True, False)],
 )
 def test_set_loop_status(core, player, status, expected_repeat, expected_single):
@@ -136,11 +136,11 @@ def test_get_metadata(core, player):
     )
     core.playback.play().get()
 
-    (tlid, track) = core.playback.get_current_tl_track().get()
+    (tlid, _track) = core.playback.get_current_tl_track().get()
 
     result = player.Metadata
 
-    assert result["mpris:trackid"] == GLib.Variant("o", "/com/mopidy/track/%d" % tlid)
+    assert result["mpris:trackid"] == GLib.Variant("o", f"/com/mopidy/track/{tlid}")
     assert result["mpris:length"] == GLib.Variant("x", 3600000000)
     assert result["xesam:url"] == GLib.Variant("s", "dummy:a")
     assert result["xesam:title"] == GLib.Variant("s", "a")
@@ -225,7 +225,8 @@ def test_get_volume_should_return_0_if_muted(core, player):
 
 
 @pytest.mark.parametrize(
-    "volume, expected", [(-1.0, 0), (0, 0), (0.5, 50), (1.0, 100), (2.0, 100)]
+    ("volume", "expected"),
+    [(-1.0, 0), (0, 0), (0.5, 50), (1.0, 100), (2.0, 100)],
 )
 def test_set_volume(core, player, volume, expected):
     player.Volume = volume

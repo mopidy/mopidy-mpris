@@ -24,10 +24,7 @@ class Server:
         bus_type = self.config["mpris"]["bus_type"]
         logger.debug("Connecting to D-Bus %s bus...", bus_type)
 
-        if bus_type == "system":
-            bus = pydbus.SystemBus()
-        else:
-            bus = pydbus.SessionBus()
+        bus = pydbus.SystemBus() if bus_type == "system" else pydbus.SessionBus()
 
         logger.info("MPRIS server connected to D-Bus %s bus", bus_type)
 

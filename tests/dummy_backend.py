@@ -55,7 +55,7 @@ class DummyLibraryProvider(backend.LibraryProvider):
     def refresh(self, uri=None):
         pass
 
-    def search(self, query=None, uris=None, exact=False):
+    def search(self, query=None, uris=None, exact=False):  # noqa: FBT002
         if exact:  # TODO: remove uses of dummy_find_exact_result
             return self.dummy_find_exact_result
         return self.dummy_search_result
@@ -124,6 +124,7 @@ class DummyPlaylistsProvider(backend.PlaylistsProvider):
         for playlist in self._playlists:
             if playlist.uri == uri:
                 return playlist
+        return None
 
     def refresh(self):
         pass
