@@ -1,8 +1,8 @@
 import logging
 
 import pykka
-
 from mopidy.core import CoreListener
+
 from mopidy_mpris.playlists import get_playlist_id
 from mopidy_mpris.server import Server
 
@@ -34,7 +34,7 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
     def on_event(self, event, **kwargs):
         logger.debug("Received %s event", event)
         if self.mpris is None:
-            return
+            return None
         return super().on_event(event, **kwargs)
 
     def track_playback_paused(self, tl_track, time_position):

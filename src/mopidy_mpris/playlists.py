@@ -5,7 +5,6 @@ https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
 
 import base64
 import logging
-from typing import Union
 
 from pydbus.generic import signal
 
@@ -90,7 +89,7 @@ class Playlists(Interface):
         return (playlist_is_valid, playlist)
 
 
-def get_playlist_id(playlist_uri: Union[str, bytes]) -> str:
+def get_playlist_id(playlist_uri: str | bytes) -> str:
     # Only A-Za-z0-9_ is allowed, which is 63 chars, so we can't use
     # base64. Luckily, D-Bus does not limit the length of object paths.
     # Since base32 pads trailing bytes with "=" chars, we need to replace
@@ -101,7 +100,7 @@ def get_playlist_id(playlist_uri: Union[str, bytes]) -> str:
     return "/com/mopidy/playlist/%s" % encoded_uri
 
 
-def get_playlist_uri(playlist_id: Union[str, bytes]) -> str:
+def get_playlist_uri(playlist_id: str | bytes) -> str:
     if isinstance(playlist_id, bytes):
         playlist_id = playlist_id.decode()
     encoded_uri = playlist_id.split("/")[-1].replace("_", "=").encode()

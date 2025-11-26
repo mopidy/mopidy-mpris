@@ -1,9 +1,9 @@
 from unittest import mock
 
 import pytest
-
 from mopidy.core.playback import PlaybackState
 from mopidy.models import Playlist, TlTrack
+
 from mopidy_mpris import frontend as frontend_mod
 from mopidy_mpris import player, playlists, root, server
 

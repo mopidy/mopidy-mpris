@@ -6,9 +6,9 @@ https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
 import logging
 
 from gi.repository.GLib import Variant
+from mopidy.core import PlaybackState
 from pydbus.generic import signal
 
-from mopidy.core import PlaybackState
 from mopidy_mpris.interface import Interface
 
 logger = logging.getLogger(__name__)
@@ -121,8 +121,7 @@ class Player(Interface):
         offset_in_milliseconds = offset // 1000
         current_position = self.core.playback.get_time_position().get()
         new_position = current_position + offset_in_milliseconds
-        if new_position < 0:
-            new_position = 0
+        new_position = max(new_position, 0)
         self.core.playback.seek(new_position).get()
 
     def SetPosition(self, track_id, position):
@@ -166,9 +165,9 @@ class Player(Interface):
         state = self.core.playback.get_state().get()
         if state == PlaybackState.PLAYING:
             return "Playing"
-        elif state == PlaybackState.PAUSED:
+        if state == PlaybackState.PAUSED:
             return "Paused"
-        elif state == PlaybackState.STOPPED:
+        if state == PlaybackState.STOPPED:
             return "Stopped"
 
     @property
@@ -178,11 +177,9 @@ class Player(Interface):
         single = self.core.tracklist.get_single().get()
         if not repeat:
             return "None"
-        else:
-            if single:
-                return "Track"
-            else:
-                return "Playlist"
+        if single:
+            return "Track"
+        return "Playlist"
 
     @LoopStatus.setter
     def LoopStatus(self, value):
@@ -236,36 +233,35 @@ class Player(Interface):
         stream_title = self.core.playback.get_stream_title().get()
         if current_tl_track is None:
             return {}
-        else:
-            (tlid, track) = current_tl_track
-            track_id = get_track_id(tlid)
-            res = {"mpris:trackid": Variant("o", track_id)}
-            if track.length:
-                res["mpris:length"] = Variant("x", track.length * 1000)
-            if track.uri:
-                res["xesam:url"] = Variant("s", track.uri)
-            if stream_title or track.name:
-                res["xesam:title"] = Variant("s", stream_title or track.name)
-            if track.artists:
-                artists = list(track.artists)
-                artists.sort(key=lambda a: a.name or "")
-                res["xesam:artist"] = Variant("as", [a.name for a in artists if a.name])
-            if track.album and track.album.name:
-                res["xesam:album"] = Variant("s", track.album.name)
-            if track.album and track.album.artists:
-                artists = list(track.album.artists)
-                artists.sort(key=lambda a: a.name or "")
-                res["xesam:albumArtist"] = Variant(
-                    "as", [a.name for a in artists if a.name]
-                )
-            art_url = self._get_art_url(track)
-            if art_url:
-                res["mpris:artUrl"] = Variant("s", art_url)
-            if track.disc_no:
-                res["xesam:discNumber"] = Variant("i", track.disc_no)
-            if track.track_no:
-                res["xesam:trackNumber"] = Variant("i", track.track_no)
-            return res
+        (tlid, track) = current_tl_track
+        track_id = get_track_id(tlid)
+        res = {"mpris:trackid": Variant("o", track_id)}
+        if track.length:
+            res["mpris:length"] = Variant("x", track.length * 1000)
+        if track.uri:
+            res["xesam:url"] = Variant("s", track.uri)
+        if stream_title or track.name:
+            res["xesam:title"] = Variant("s", stream_title or track.name)
+        if track.artists:
+            artists = list(track.artists)
+            artists.sort(key=lambda a: a.name or "")
+            res["xesam:artist"] = Variant("as", [a.name for a in artists if a.name])
+        if track.album and track.album.name:
+            res["xesam:album"] = Variant("s", track.album.name)
+        if track.album and track.album.artists:
+            artists = list(track.album.artists)
+            artists.sort(key=lambda a: a.name or "")
+            res["xesam:albumArtist"] = Variant(
+                "as", [a.name for a in artists if a.name]
+            )
+        art_url = self._get_art_url(track)
+        if art_url:
+            res["mpris:artUrl"] = Variant("s", art_url)
+        if track.disc_no:
+            res["xesam:discNumber"] = Variant("i", track.disc_no)
+        if track.track_no:
+            res["xesam:trackNumber"] = Variant("i", track.track_no)
+        return res
 
     def _get_art_url(self, track):
         images = self.core.library.get_images([track.uri]).get()

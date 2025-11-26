@@ -49,7 +49,6 @@ class Root(Interface):
     @Fullscreen.setter
     def Fullscreen(self, value):
         logger.debug("Setting %s.Fullscreen to %s", self.INTERFACE, value)
-        pass
 
     CanSetFullscreen = False
     CanRaise = False
