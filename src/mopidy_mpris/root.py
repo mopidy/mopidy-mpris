@@ -1,7 +1,9 @@
 """Implementation of org.mpris.MediaPlayer2 interface.
 
-https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
+https://specifications.freedesktop.org/mpris/latest/Media_Player.html
 """
+
+# ruff: noqa: N802
 
 import logging
 
@@ -31,23 +33,23 @@ class Root(Interface):
 
     INTERFACE = "org.mpris.MediaPlayer2"
 
-    def Raise(self):  # noqa: N802
+    def Raise(self) -> None:
         logger.debug("%s.Raise called", self.INTERFACE)
         # Do nothing, as we do not have a GUI
 
-    def Quit(self):  # noqa: N802
+    def Quit(self) -> None:
         logger.debug("%s.Quit called", self.INTERFACE)
         # Do nothing, as we do not allow MPRIS clients to shut down Mopidy
 
     CanQuit = False
 
     @property
-    def Fullscreen(self):  # noqa: N802
+    def Fullscreen(self) -> bool:
         self.log_trace("Getting %s.Fullscreen", self.INTERFACE)
         return False
 
     @Fullscreen.setter
-    def Fullscreen(self, value):  # noqa: N802
+    def Fullscreen(self, value: bool) -> None:
         logger.debug("Setting %s.Fullscreen to %s", self.INTERFACE, value)
 
     CanSetFullscreen = False
@@ -56,7 +58,7 @@ class Root(Interface):
     Identity = "Mopidy"
 
     @property
-    def DesktopEntry(self):  # noqa: N802
+    def DesktopEntry(self) -> str:
         self.log_trace("Getting %s.DesktopEntry", self.INTERFACE)
         # This property is optional to expose. If we set this to "mopidy", the
         # basename of "mopidy.desktop", some MPRIS clients will start a new
@@ -65,12 +67,12 @@ class Root(Interface):
         return ""
 
     @property
-    def SupportedUriSchemes(self):  # noqa: N802
+    def SupportedUriSchemes(self) -> list[str]:
         self.log_trace("Getting %s.SupportedUriSchemes", self.INTERFACE)
-        return self.core.get_uri_schemes().get()
+        return [str(uri_scheme) for uri_scheme in self.core.get_uri_schemes().get()]
 
     @property
-    def SupportedMimeTypes(self):  # noqa: N802
+    def SupportedMimeTypes(self) -> list[str]:
         # NOTE Return MIME types supported by local backend if support for
         # reporting supported MIME types is added.
         self.log_trace("Getting %s.SupportedMimeTypes", self.INTERFACE)

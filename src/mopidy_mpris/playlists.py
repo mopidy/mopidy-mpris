@@ -1,7 +1,9 @@
 """Implementation of org.mpris.MediaPlayer2.Playlists interface.
 
-https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
+https://specifications.freedesktop.org/mpris/latest/Playlists_Interface.html
 """
+
+# ruff: noqa: N802
 
 import base64
 import logging
@@ -40,7 +42,7 @@ class Playlists(Interface):
 
     INTERFACE = "org.mpris.MediaPlayer2.Playlists"
 
-    def ActivatePlaylist(self, playlist_id):  # noqa: N802
+    def ActivatePlaylist(self, playlist_id: str) -> None:
         logger.debug("%s.ActivatePlaylist(%r) called", self.INTERFACE, playlist_id)
         playlist_uri = get_playlist_uri(playlist_id)
         playlist = self.core.playlists.lookup(playlist_uri).get()
@@ -48,7 +50,13 @@ class Playlists(Interface):
             tl_tracks = self.core.tracklist.add(playlist.tracks).get()
             self.core.playback.play(tlid=tl_tracks[0].tlid).get()
 
-    def GetPlaylists(self, index, max_count, order, reverse):  # noqa: N802
+    def GetPlaylists(
+        self,
+        index: int,
+        max_count: int,
+        order: str,
+        reverse: bool,  # noqa: FBT001
+    ) -> list[tuple[str, str, str]]:
         logger.debug(
             "%s.GetPlaylists(%r, %r, %r, %r) called",
             self.INTERFACE,
@@ -64,17 +72,17 @@ class Playlists(Interface):
             playlists.reverse()
         slice_end = index + max_count
         playlists = playlists[index:slice_end]
-        return [(get_playlist_id(p.uri), p.name, "") for p in playlists]
+        return [(get_playlist_id(p.uri), p.name or "", "") for p in playlists]
 
     PlaylistChanged = signal()
 
     @property
-    def PlaylistCount(self):  # noqa: N802
+    def PlaylistCount(self) -> int:
         self.log_trace("Getting %s.PlaylistCount", self.INTERFACE)
         return len(self.core.playlists.as_list().get())
 
     @property
-    def Orderings(self):  # noqa: N802
+    def Orderings(self) -> list[str]:
         self.log_trace("Getting %s.Orderings", self.INTERFACE)
         return [
             "Alphabetical",  # Order by playlist.name
@@ -82,7 +90,7 @@ class Playlists(Interface):
         ]
 
     @property
-    def ActivePlaylist(self):  # noqa: N802
+    def ActivePlaylist(self) -> tuple[bool, tuple[str, str, str]]:
         self.log_trace("Getting %s.ActivePlaylist", self.INTERFACE)
         playlist_is_valid = False
         playlist = ("/", "None", "")
