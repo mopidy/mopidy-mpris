@@ -1,12 +1,18 @@
 """Implementation of org.mpris.MediaPlayer2.Player interface.
 
-https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
+https://specifications.freedesktop.org/mpris/latest/Player_Interface.html
 """
 
-import logging
+# ruff: noqa: N802
 
-from gi.repository.GLib import Variant
-from mopidy.types import PlaybackState
+import logging
+from typing import Literal
+
+from gi.repository.GLib import (  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
+    Variant,
+)
+from mopidy.models import Track
+from mopidy.types import DurationMs, Percentage, PlaybackState, TracklistId, Uri
 from pydbus.generic import signal
 
 from mopidy_mpris.interface import Interface
@@ -61,28 +67,28 @@ class Player(Interface):
     # To override from tests.
     _CanControl = True
 
-    def Next(self):  # noqa: N802
+    def Next(self) -> None:
         logger.debug("%s.Next called", self.INTERFACE)
         if not self.CanGoNext:
             logger.debug("%s.Next not allowed", self.INTERFACE)
             return
         self.core.playback.next().get()
 
-    def Previous(self):  # noqa: N802
+    def Previous(self) -> None:
         logger.debug("%s.Previous called", self.INTERFACE)
         if not self.CanGoPrevious:
             logger.debug("%s.Previous not allowed", self.INTERFACE)
             return
         self.core.playback.previous().get()
 
-    def Pause(self):  # noqa: N802
+    def Pause(self) -> None:
         logger.debug("%s.Pause called", self.INTERFACE)
         if not self.CanPause:
             logger.debug("%s.Pause not allowed", self.INTERFACE)
             return
         self.core.playback.pause().get()
 
-    def PlayPause(self):  # noqa: N802
+    def PlayPause(self) -> None:
         logger.debug("%s.PlayPause called", self.INTERFACE)
         if not self.CanPause:
             logger.debug("%s.PlayPause not allowed", self.INTERFACE)
@@ -95,14 +101,14 @@ class Player(Interface):
         elif state == PlaybackState.STOPPED:
             self.core.playback.play().get()
 
-    def Stop(self):  # noqa: N802
+    def Stop(self) -> None:
         logger.debug("%s.Stop called", self.INTERFACE)
         if not self.CanControl:
             logger.debug("%s.Stop not allowed", self.INTERFACE)
             return
         self.core.playback.stop().get()
 
-    def Play(self):  # noqa: N802
+    def Play(self) -> None:
         logger.debug("%s.Play called", self.INTERFACE)
         if not self.CanPlay:
             logger.debug("%s.Play not allowed", self.INTERFACE)
@@ -113,35 +119,38 @@ class Player(Interface):
         else:
             self.core.playback.play().get()
 
-    def Seek(self, offset):  # noqa: N802
+    def Seek(self, offset: int) -> None:
         logger.debug("%s.Seek called", self.INTERFACE)
         if not self.CanSeek:
             logger.debug("%s.Seek not allowed", self.INTERFACE)
             return
-        offset_in_milliseconds = offset // 1000
+        offset_ms = offset // 1000
         current_position = self.core.playback.get_time_position().get()
-        new_position = current_position + offset_in_milliseconds
-        new_position = max(new_position, 0)
+        new_position = current_position + offset_ms
+        new_position = DurationMs(max(new_position, 0))
         self.core.playback.seek(new_position).get()
 
-    def SetPosition(self, track_id, position):  # noqa: N802
+    def SetPosition(self, track_id: str, position: int) -> None:
         logger.debug("%s.SetPosition called", self.INTERFACE)
         if not self.CanSeek:
             logger.debug("%s.SetPosition not allowed", self.INTERFACE)
             return
-        position = position // 1000
+        position_ms = DurationMs(position // 1000)
         current_tl_track = self.core.playback.get_current_tl_track().get()
         if current_tl_track is None:
             return
         if track_id != get_track_id(current_tl_track.tlid):
             return
-        if position < 0:
+        if position_ms < 0:
             return
-        if current_tl_track.track.length < position:
+        if (
+            current_tl_track.track.length is None
+            or current_tl_track.track.length < position_ms
+        ):
             return
-        self.core.playback.seek(position).get()
+        self.core.playback.seek(position_ms).get()
 
-    def OpenUri(self, uri):  # noqa: N802
+    def OpenUri(self, uri: str) -> None:
         logger.debug("%s.OpenUri called", self.INTERFACE)
         if not self.CanControl:
             # NOTE The spec does not explicitly require this check, but
@@ -151,7 +160,7 @@ class Player(Interface):
             return
         # NOTE Check if URI has MIME type known to the backend, if MIME support
         # is added to the backend.
-        tl_tracks = self.core.tracklist.add(uris=[uri]).get()
+        tl_tracks = self.core.tracklist.add(uris=[Uri(uri)]).get()
         if tl_tracks:
             self.core.playback.play(tlid=tl_tracks[0].tlid).get()
         else:
@@ -160,7 +169,7 @@ class Player(Interface):
     Seeked = signal()
 
     @property
-    def PlaybackStatus(self):  # noqa: N802
+    def PlaybackStatus(self) -> Literal["Playing", "Paused", "Stopped"]:
         self.log_trace("Getting %s.PlaybackStatus", self.INTERFACE)
         state = self.core.playback.get_state().get()
         match state:
@@ -172,7 +181,7 @@ class Player(Interface):
                 return "Stopped"
 
     @property
-    def LoopStatus(self):  # noqa: N802
+    def LoopStatus(self) -> Literal["None", "Track", "Playlist"]:
         self.log_trace("Getting %s.LoopStatus", self.INTERFACE)
         repeat = self.core.tracklist.get_repeat().get()
         single = self.core.tracklist.get_single().get()
@@ -185,28 +194,29 @@ class Player(Interface):
                 return "Playlist"
 
     @LoopStatus.setter
-    def LoopStatus(self, value):  # noqa: N802
+    def LoopStatus(self, value: Literal["None", "Track", "Playlist"]) -> None:
         if not self.CanControl:
             logger.debug("Setting %s.LoopStatus not allowed", self.INTERFACE)
             return
         logger.debug("Setting %s.LoopStatus to %s", self.INTERFACE, value)
-        if value == "None":
-            self.core.tracklist.set_repeat(False)
-            self.core.tracklist.set_single(False)
-        elif value == "Track":
-            self.core.tracklist.set_repeat(True)
-            self.core.tracklist.set_single(True)
-        elif value == "Playlist":
-            self.core.tracklist.set_repeat(True)
-            self.core.tracklist.set_single(False)
+        match value:
+            case "None":
+                self.core.tracklist.set_repeat(False)
+                self.core.tracklist.set_single(False)
+            case "Track":
+                self.core.tracklist.set_repeat(True)
+                self.core.tracklist.set_single(True)
+            case "Playlist":
+                self.core.tracklist.set_repeat(True)
+                self.core.tracklist.set_single(False)
 
     @property
-    def Rate(self):  # noqa: N802
+    def Rate(self) -> float:
         self.log_trace("Getting %s.Rate", self.INTERFACE)
         return 1.0
 
     @Rate.setter
-    def Rate(self, value):  # noqa: N802
+    def Rate(self, value: float) -> None:
         if not self.CanControl:
             # NOTE The spec does not explicitly require this check, but it was
             # added to be consistent with all the other property setters.
@@ -217,12 +227,12 @@ class Player(Interface):
             self.Pause()
 
     @property
-    def Shuffle(self):  # noqa: N802
+    def Shuffle(self) -> bool:
         self.log_trace("Getting %s.Shuffle", self.INTERFACE)
         return self.core.tracklist.get_random().get()
 
     @Shuffle.setter
-    def Shuffle(self, value):  # noqa: N802
+    def Shuffle(self, value: bool) -> None:
         if not self.CanControl:
             logger.debug("Setting %s.Shuffle not allowed", self.INTERFACE)
             return
@@ -230,7 +240,7 @@ class Player(Interface):
         self.core.tracklist.set_random(bool(value))
 
     @property
-    def Metadata(self):  # noqa: C901, N802
+    def Metadata(self) -> dict[str, Variant]:  # noqa: C901
         self.log_trace("Getting %s.Metadata", self.INTERFACE)
         current_tl_track = self.core.playback.get_current_tl_track().get()
         stream_title = self.core.playback.get_stream_title().get()
@@ -266,7 +276,9 @@ class Player(Interface):
             res["xesam:trackNumber"] = Variant("i", track.track_no)
         return res
 
-    def _get_art_url(self, track):
+    def _get_art_url(self, track: Track) -> Uri | None:
+        if track.uri is None:
+            return None
         images = self.core.library.get_images([track.uri]).get()
         if images[track.uri]:
             largest_image = sorted(
@@ -276,7 +288,7 @@ class Player(Interface):
         return None
 
     @property
-    def Volume(self):  # noqa: N802
+    def Volume(self) -> float:
         self.log_trace("Getting %s.Volume", self.INTERFACE)
         mute = self.core.mixer.get_mute().get()
         volume = self.core.mixer.get_volume().get()
@@ -285,31 +297,28 @@ class Player(Interface):
         return volume / 100.0
 
     @Volume.setter
-    def Volume(self, value):  # noqa: N802
+    def Volume(self, value: float | None) -> None:
         if not self.CanControl:
             logger.debug("Setting %s.Volume not allowed", self.INTERFACE)
             return
         logger.debug("Setting %s.Volume to %s", self.INTERFACE, value)
         if value is None:
             return
-        if value < 0:
-            value = 0
-        elif value > 1:
-            value = 1
-        self.core.mixer.set_volume(int(value * 100))
-        if value > 0:
+        percentage = Percentage(max(0, min(100, round(value * 100))))
+        self.core.mixer.set_volume(percentage)
+        if percentage > 0:
             self.core.mixer.set_mute(False)
 
     @property
-    def Position(self):  # noqa: N802
+    def Position(self) -> int:
         self.log_trace("Getting %s.Position", self.INTERFACE)
         return self.core.playback.get_time_position().get() * 1000
 
-    MinimumRate = 1.0
-    MaximumRate = 1.0
+    MinimumRate: float = 1.0
+    MaximumRate: float = 1.0
 
     @property
-    def CanGoNext(self):  # noqa: N802
+    def CanGoNext(self) -> bool:
         self.log_trace("Getting %s.CanGoNext", self.INTERFACE)
         if not self.CanControl:
             return False
@@ -318,7 +327,7 @@ class Player(Interface):
         return next_tlid != current_tlid
 
     @property
-    def CanGoPrevious(self):  # noqa: N802
+    def CanGoPrevious(self) -> bool:
         self.log_trace("Getting %s.CanGoPrevious", self.INTERFACE)
         if not self.CanControl:
             return False
@@ -327,7 +336,7 @@ class Player(Interface):
         return previous_tlid != current_tlid
 
     @property
-    def CanPlay(self):  # noqa: N802
+    def CanPlay(self) -> bool:
         self.log_trace("Getting %s.CanPlay", self.INTERFACE)
         if not self.CanControl:
             return False
@@ -336,7 +345,7 @@ class Player(Interface):
         return current_tlid is not None or next_tlid is not None
 
     @property
-    def CanPause(self):  # noqa: N802
+    def CanPause(self) -> bool:
         self.log_trace("Getting %s.CanPause", self.INTERFACE)
         if not self.CanControl:  # noqa: SIM103
             return False
@@ -345,7 +354,7 @@ class Player(Interface):
         return True
 
     @property
-    def CanSeek(self):  # noqa: N802
+    def CanSeek(self) -> bool:
         self.log_trace("Getting %s.CanSeek", self.INTERFACE)
         if not self.CanControl:  # noqa: SIM103
             return False
@@ -354,17 +363,17 @@ class Player(Interface):
         return True
 
     @property
-    def CanControl(self):  # noqa: N802
+    def CanControl(self) -> bool:
         # NOTE This could be a setting for the end user to change.
         return self._CanControl
 
 
-def get_track_id(tlid):
+def get_track_id(tlid: TracklistId) -> str:
     return f"/com/mopidy/track/{tlid}"
 
 
-def get_track_tlid(track_id):
+def get_track_tlid(track_id: str) -> TracklistId:
     if not track_id.startswith("/com/mopidy/track/"):
         msg = f"Cannot extract track ID from {track_id!r}"
         raise ValueError(msg)
-    return track_id.split("/")[-1]
+    return TracklistId(int(track_id.split("/")[-1]))

@@ -1,8 +1,13 @@
-import logging
-from typing import Any
+from __future__ import annotations
 
-from mopidy.core import CoreProxy
+import logging
+from typing import TYPE_CHECKING, Any, ClassVar
+
 from pydbus.generic import signal
+
+if TYPE_CHECKING:
+    from mopidy.config import Config
+    from mopidy.core import CoreProxy
 
 logger = logging.getLogger(__name__)
 
@@ -11,11 +16,13 @@ TRACE_LOG_LEVEL = 5
 
 
 class Interface:
-    def __init__(self, config: dict[str, dict[str, Any]], core: CoreProxy):
+    INTERFACE: ClassVar[str]
+
+    def __init__(self, config: Config, core: CoreProxy) -> None:
         self.config = config
         self.core = core
 
     PropertiesChanged = signal()
 
-    def log_trace(self, *args, **kwargs):
+    def log_trace(self, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         logger.log(TRACE_LOG_LEVEL, *args, **kwargs)

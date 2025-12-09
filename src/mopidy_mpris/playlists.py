@@ -1,11 +1,14 @@
 """Implementation of org.mpris.MediaPlayer2.Playlists interface.
 
-https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
+https://specifications.freedesktop.org/mpris/latest/Playlists_Interface.html
 """
+
+# ruff: noqa: N802
 
 import base64
 import logging
 
+from mopidy.types import Uri
 from pydbus.generic import signal
 
 from mopidy_mpris.interface import Interface
@@ -39,7 +42,7 @@ class Playlists(Interface):
 
     INTERFACE = "org.mpris.MediaPlayer2.Playlists"
 
-    def ActivatePlaylist(self, playlist_id):  # noqa: N802
+    def ActivatePlaylist(self, playlist_id: str) -> None:
         logger.debug("%s.ActivatePlaylist(%r) called", self.INTERFACE, playlist_id)
         playlist_uri = get_playlist_uri(playlist_id)
         playlist = self.core.playlists.lookup(playlist_uri).get()
@@ -47,7 +50,13 @@ class Playlists(Interface):
             tl_tracks = self.core.tracklist.add(playlist.tracks).get()
             self.core.playback.play(tlid=tl_tracks[0].tlid).get()
 
-    def GetPlaylists(self, index, max_count, order, reverse):  # noqa: N802
+    def GetPlaylists(
+        self,
+        index: int,
+        max_count: int,
+        order: str,
+        reverse: bool,  # noqa: FBT001
+    ) -> list[tuple[str, str, str]]:
         logger.debug(
             "%s.GetPlaylists(%r, %r, %r, %r) called",
             self.INTERFACE,
@@ -58,22 +67,22 @@ class Playlists(Interface):
         )
         playlists = self.core.playlists.as_list().get()
         if order == "Alphabetical":
-            playlists.sort(key=lambda p: p.name, reverse=reverse)
+            playlists.sort(key=lambda p: p.name or "", reverse=reverse)
         elif order == "User" and reverse:
             playlists.reverse()
         slice_end = index + max_count
         playlists = playlists[index:slice_end]
-        return [(get_playlist_id(p.uri), p.name, "") for p in playlists]
+        return [(get_playlist_id(p.uri), p.name or "", "") for p in playlists]
 
     PlaylistChanged = signal()
 
     @property
-    def PlaylistCount(self):  # noqa: N802
+    def PlaylistCount(self) -> int:
         self.log_trace("Getting %s.PlaylistCount", self.INTERFACE)
         return len(self.core.playlists.as_list().get())
 
     @property
-    def Orderings(self):  # noqa: N802
+    def Orderings(self) -> list[str]:
         self.log_trace("Getting %s.Orderings", self.INTERFACE)
         return [
             "Alphabetical",  # Order by playlist.name
@@ -81,26 +90,25 @@ class Playlists(Interface):
         ]
 
     @property
-    def ActivePlaylist(self):  # noqa: N802
+    def ActivePlaylist(self) -> tuple[bool, tuple[str, str, str]]:
         self.log_trace("Getting %s.ActivePlaylist", self.INTERFACE)
         playlist_is_valid = False
         playlist = ("/", "None", "")
         return (playlist_is_valid, playlist)
 
 
-def get_playlist_id(playlist_uri: str | bytes) -> str:
+def get_playlist_id(playlist_uri: Uri) -> str:
     # Only A-Za-z0-9_ is allowed, which is 63 chars, so we can't use
     # base64. Luckily, D-Bus does not limit the length of object paths.
     # Since base32 pads trailing bytes with "=" chars, we need to replace
     # them with an allowed character such as "_".
-    if isinstance(playlist_uri, str):
-        playlist_uri = playlist_uri.encode()
-    encoded_uri = base64.b32encode(playlist_uri).decode().replace("=", "_")
+    uri_bytes = str(playlist_uri).encode()
+    encoded_uri = base64.b32encode(uri_bytes).decode().replace("=", "_")
     return f"/com/mopidy/playlist/{encoded_uri}"
 
 
-def get_playlist_uri(playlist_id: str | bytes) -> str:
+def get_playlist_uri(playlist_id: str | bytes) -> Uri:
     if isinstance(playlist_id, bytes):
         playlist_id = playlist_id.decode()
     encoded_uri = playlist_id.split("/")[-1].replace("_", "=").encode()
-    return base64.b32decode(encoded_uri).decode()
+    return Uri(base64.b32decode(encoded_uri).decode())

@@ -14,8 +14,9 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "mopidy >= 4.0.0a8",
+    "mopidy >= 4.0.0a9",
     "pydbus >= 0.6.0",
+    "pygobject >= 3.50",
     "pykka >= 4.1",
 ]
 
@@ -78,7 +79,6 @@ target-version = "py313"
 select = ["ALL"]
 ignore = [
     # Add rules you want to ignore here
-    "ANN",    # flake8-annotations -- TODO
     "D",      # pydocstyle
     "D203",   # one-blank-line-before-class
     "D213",   # multi-line-summary-second-line
