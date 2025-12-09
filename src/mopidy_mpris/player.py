@@ -5,8 +5,8 @@ https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
 
 import logging
 
-from gi.repository.GLib import Variant
-from mopidy.types import PlaybackState
+from gi.repository.GLib import Variant  # pyright: ignore[reportMissingModuleSource]
+from mopidy.types import DurationMs, Percentage, PlaybackState
 from pydbus.generic import signal
 
 from mopidy_mpris.interface import Interface
@@ -118,10 +118,10 @@ class Player(Interface):
         if not self.CanSeek:
             logger.debug("%s.Seek not allowed", self.INTERFACE)
             return
-        offset_in_milliseconds = offset // 1000
+        offset_ms = offset // 1000
         current_position = self.core.playback.get_time_position().get()
-        new_position = current_position + offset_in_milliseconds
-        new_position = max(new_position, 0)
+        new_position = current_position + offset_ms
+        new_position = DurationMs(max(new_position, 0))
         self.core.playback.seek(new_position).get()
 
     def SetPosition(self, track_id, position):  # noqa: N802
@@ -285,19 +285,16 @@ class Player(Interface):
         return volume / 100.0
 
     @Volume.setter
-    def Volume(self, value):  # noqa: N802
+    def Volume(self, value: float | None):  # noqa: N802
         if not self.CanControl:
             logger.debug("Setting %s.Volume not allowed", self.INTERFACE)
             return
         logger.debug("Setting %s.Volume to %s", self.INTERFACE, value)
         if value is None:
             return
-        if value < 0:
-            value = 0
-        elif value > 1:
-            value = 1
-        self.core.mixer.set_volume(int(value * 100))
-        if value > 0:
+        percentage = Percentage(max(0, min(100, round(value * 100))))
+        self.core.mixer.set_volume(percentage)
+        if percentage > 0:
             self.core.mixer.set_mute(False)
 
     @property

@@ -79,8 +79,10 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
     @override
     def playlist_changed(self, playlist):
         assert self.mpris
+        if playlist.uri is None:
+            return
         playlist_id = get_playlist_id(playlist.uri)
-        self.mpris.playlists.PlaylistChanged(playlist_id, playlist.name, "")
+        self.mpris.playlists.PlaylistChanged(playlist_id, playlist.name, "")  # pyright: ignore[reportCallIssue]
 
     @override
     def playlist_deleted(self, uri):
@@ -109,7 +111,7 @@ class MprisFrontend(pykka.ThreadingActor, CoreListener):
     def seeked(self, time_position):
         assert self.mpris
         time_position_in_microseconds = time_position * 1000
-        self.mpris.player.Seeked(time_position_in_microseconds)
+        self.mpris.player.Seeked(time_position_in_microseconds)  # pyright: ignore[reportCallIssue]
 
     @override
     def stream_title_changed(self, title):

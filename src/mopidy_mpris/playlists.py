@@ -6,6 +6,7 @@ https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
 import base64
 import logging
 
+from mopidy.types import Uri
 from pydbus.generic import signal
 
 from mopidy_mpris.interface import Interface
@@ -58,7 +59,7 @@ class Playlists(Interface):
         )
         playlists = self.core.playlists.as_list().get()
         if order == "Alphabetical":
-            playlists.sort(key=lambda p: p.name, reverse=reverse)
+            playlists.sort(key=lambda p: p.name or "", reverse=reverse)
         elif order == "User" and reverse:
             playlists.reverse()
         slice_end = index + max_count
@@ -88,19 +89,18 @@ class Playlists(Interface):
         return (playlist_is_valid, playlist)
 
 
-def get_playlist_id(playlist_uri: str | bytes) -> str:
+def get_playlist_id(playlist_uri: Uri) -> str:
     # Only A-Za-z0-9_ is allowed, which is 63 chars, so we can't use
     # base64. Luckily, D-Bus does not limit the length of object paths.
     # Since base32 pads trailing bytes with "=" chars, we need to replace
     # them with an allowed character such as "_".
-    if isinstance(playlist_uri, str):
-        playlist_uri = playlist_uri.encode()
-    encoded_uri = base64.b32encode(playlist_uri).decode().replace("=", "_")
+    uri_bytes = str(playlist_uri).encode()
+    encoded_uri = base64.b32encode(uri_bytes).decode().replace("=", "_")
     return f"/com/mopidy/playlist/{encoded_uri}"
 
 
-def get_playlist_uri(playlist_id: str | bytes) -> str:
+def get_playlist_uri(playlist_id: str | bytes) -> Uri:
     if isinstance(playlist_id, bytes):
         playlist_id = playlist_id.decode()
     encoded_uri = playlist_id.split("/")[-1].replace("_", "=").encode()
-    return base64.b32decode(encoded_uri).decode()
+    return Uri(base64.b32decode(encoded_uri).decode())
