@@ -4,14 +4,14 @@ import pytest
 from mopidy.models import Playlist, TlTrack, Track
 from mopidy.types import PlaybackState, TracklistId
 
-from mopidy_mpris import frontend as frontend_mod
 from mopidy_mpris import player, playlists, root, server
+from mopidy_mpris.frontend import MprisFrontend
 
 
 @pytest.fixture
-def frontend():
+def frontend() -> MprisFrontend:
     # As a plain class, not an actor:
-    result = frontend_mod.MprisFrontend(config=None, core=None)
+    result = MprisFrontend(config=None, core=None)
     result.mpris = mock.Mock(spec=server.Server)
     result.mpris.root = mock.Mock(spec=root.Root)
     result.mpris.root.INTERFACE = root.Root.INTERFACE
@@ -22,7 +22,7 @@ def frontend():
     return result
 
 
-def test_track_playback_paused_event_changes_playback_status(frontend):
+def test_track_playback_paused_event_changes_playback_status(frontend: MprisFrontend):
     frontend.mpris.player.PlaybackStatus = "Paused"
 
     frontend.track_playback_paused(
@@ -35,7 +35,7 @@ def test_track_playback_paused_event_changes_playback_status(frontend):
     )
 
 
-def test_track_playback_resumed_event_changes_playback_status(frontend):
+def test_track_playback_resumed_event_changes_playback_status(frontend: MprisFrontend):
     frontend.mpris.player.PlaybackStatus = "Playing"
 
     frontend.track_playback_resumed(
@@ -48,7 +48,9 @@ def test_track_playback_resumed_event_changes_playback_status(frontend):
     )
 
 
-def test_track_playback_started_changes_playback_status_and_metadata(frontend):
+def test_track_playback_started_changes_playback_status_and_metadata(
+    frontend: MprisFrontend,
+):
     frontend.mpris.player.Metadata = "..."
     frontend.mpris.player.PlaybackStatus = "Playing"
 
@@ -63,7 +65,9 @@ def test_track_playback_started_changes_playback_status_and_metadata(frontend):
     )
 
 
-def test_track_playback_ended_changes_playback_status_and_metadata(frontend):
+def test_track_playback_ended_changes_playback_status_and_metadata(
+    frontend: MprisFrontend,
+):
     frontend.mpris.player.Metadata = "..."
     frontend.mpris.player.PlaybackStatus = "Stopped"
 
@@ -79,7 +83,9 @@ def test_track_playback_ended_changes_playback_status_and_metadata(frontend):
     )
 
 
-def test_playback_state_changed_changes_playback_status_and_metadata(frontend):
+def test_playback_state_changed_changes_playback_status_and_metadata(
+    frontend: MprisFrontend,
+):
     frontend.mpris.player.Metadata = "..."
     frontend.mpris.player.PlaybackStatus = "Stopped"
 
@@ -92,7 +98,7 @@ def test_playback_state_changed_changes_playback_status_and_metadata(frontend):
     )
 
 
-def test_playlists_loaded_event_changes_playlist_count(frontend):
+def test_playlists_loaded_event_changes_playlist_count(frontend: MprisFrontend):
     frontend.mpris.playlists.PlaylistCount = 17
 
     frontend.playlists_loaded()
@@ -102,7 +108,9 @@ def test_playlists_loaded_event_changes_playlist_count(frontend):
     )
 
 
-def test_playlist_changed_event_causes_mpris_playlist_changed_event(frontend):
+def test_playlist_changed_event_causes_mpris_playlist_changed_event(
+    frontend: MprisFrontend,
+):
     playlist = Playlist(uri="dummy:foo", name="foo")
 
     frontend.playlist_changed(playlist=playlist)
@@ -112,7 +120,7 @@ def test_playlist_changed_event_causes_mpris_playlist_changed_event(frontend):
     )
 
 
-def test_playlist_deleted_event_changes_playlist_count(frontend):
+def test_playlist_deleted_event_changes_playlist_count(frontend: MprisFrontend):
     frontend.mpris.playlists.PlaylistCount = 17
 
     frontend.playlist_deleted("dummy:foo")
@@ -122,7 +130,7 @@ def test_playlist_deleted_event_changes_playlist_count(frontend):
     )
 
 
-def test_options_changed_event_changes_loopstatus_and_shuffle(frontend):
+def test_options_changed_event_changes_loopstatus_and_shuffle(frontend: MprisFrontend):
     frontend.mpris.player.CanGoPrevious = False
     frontend.mpris.player.CanGoNext = True
     frontend.mpris.player.LoopStatus = "Track"
@@ -142,7 +150,7 @@ def test_options_changed_event_changes_loopstatus_and_shuffle(frontend):
     )
 
 
-def test_volume_changed_event_changes_volume(frontend):
+def test_volume_changed_event_changes_volume(frontend: MprisFrontend):
     frontend.mpris.player.Volume = 1.0
 
     frontend.volume_changed(volume=100)
@@ -152,7 +160,7 @@ def test_volume_changed_event_changes_volume(frontend):
     )
 
 
-def test_mute_changed_event_changes_volume(frontend):
+def test_mute_changed_event_changes_volume(frontend: MprisFrontend):
     frontend.mpris.player.Volume = 0.0
 
     frontend.mute_changed(True)
@@ -162,13 +170,13 @@ def test_mute_changed_event_changes_volume(frontend):
     )
 
 
-def test_seeked_event_causes_mpris_seeked_event(frontend):
+def test_seeked_event_causes_mpris_seeked_event(frontend: MprisFrontend):
     frontend.seeked(time_position=31000)
 
     frontend.mpris.player.Seeked.assert_called_with(31000000)
 
 
-def test_stream_title_changed_changes_metadata(frontend):
+def test_stream_title_changed_changes_metadata(frontend: MprisFrontend):
     frontend.mpris.player.Metadata = "..."
 
     frontend.stream_title_changed("a new title")

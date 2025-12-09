@@ -1,16 +1,25 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import pytest
-from mopidy.models import Track
+from mopidy.models import Playlist, Track
 from mopidy.types import PlaybackState
 
 from mopidy_mpris.playlists import Playlists
 
+if TYPE_CHECKING:
+    from mopidy.config import Config
+    from mopidy.core import CoreProxy
+
 
 @pytest.fixture
-def dummy_playlists(core):
+def dummy_playlists(core: CoreProxy) -> dict[str, Playlist]:
     result = {}
 
     for name, lm in [("foo", 3000000), ("bar", 2000000), ("baz", 1000000)]:
         pl = core.playlists.create(name).get()
+        assert pl
         pl = pl.replace(last_modified=lm)
         result[name] = core.playlists.save(pl).get()
 
@@ -18,12 +27,18 @@ def dummy_playlists(core):
 
 
 @pytest.fixture
-def playlists(config, core, dummy_playlists):
+def playlists(
+    config: Config,
+    core: CoreProxy,
+    dummy_playlists: dict[str, Playlist],
+) -> Playlists:
     return Playlists(config, core)
 
 
 def test_activate_playlist_appends_tracks_to_tracklist(
-    core, playlists, dummy_playlists
+    core: CoreProxy,
+    playlists: Playlists,
+    dummy_playlists: dict[str, Playlist],
 ):
     core.tracklist.add([Track(uri="dummy:old-a"), Track(uri="dummy:old-b")])
     assert core.tracklist.get_length().get() == 2
@@ -46,7 +61,7 @@ def test_activate_playlist_appends_tracks_to_tracklist(
     assert core.playback.get_current_track().get() == pl.tracks[0]
 
 
-def test_activate_empty_playlist_is_harmless(core, playlists):
+def test_activate_empty_playlist_is_harmless(core: CoreProxy, playlists: Playlists):
     assert core.tracklist.get_length().get() == 0
     playlist_id = playlists.GetPlaylists(0, 100, "User", False)[2][0]
 
@@ -57,7 +72,7 @@ def test_activate_empty_playlist_is_harmless(core, playlists):
     assert core.playback.get_current_track().get() is None
 
 
-def test_get_playlists_in_alphabetical_order(playlists):
+def test_get_playlists_in_alphabetical_order(playlists: Playlists):
     result = playlists.GetPlaylists(0, 100, "Alphabetical", False)
 
     assert result == [
@@ -67,7 +82,7 @@ def test_get_playlists_in_alphabetical_order(playlists):
     ]
 
 
-def test_get_playlists_in_reverse_alphabetical_order(playlists):
+def test_get_playlists_in_reverse_alphabetical_order(playlists: Playlists):
     result = playlists.GetPlaylists(0, 100, "Alphabetical", True)
 
     assert len(result) == 3
@@ -76,7 +91,7 @@ def test_get_playlists_in_reverse_alphabetical_order(playlists):
     assert result[2][1] == "bar"
 
 
-def test_get_playlists_in_user_order(playlists):
+def test_get_playlists_in_user_order(playlists: Playlists):
     result = playlists.GetPlaylists(0, 100, "User", False)
 
     assert len(result) == 3
@@ -85,7 +100,7 @@ def test_get_playlists_in_user_order(playlists):
     assert result[2][1] == "baz"
 
 
-def test_get_playlists_in_reverse_user_order(playlists):
+def test_get_playlists_in_reverse_user_order(playlists: Playlists):
     result = playlists.GetPlaylists(0, 100, "User", True)
 
     assert len(result) == 3
@@ -94,7 +109,7 @@ def test_get_playlists_in_reverse_user_order(playlists):
     assert result[2][1] == "foo"
 
 
-def test_get_playlists_slice_on_start_of_list(playlists):
+def test_get_playlists_slice_on_start_of_list(playlists: Playlists):
     result = playlists.GetPlaylists(0, 2, "User", False)
 
     assert len(result) == 2
@@ -102,18 +117,18 @@ def test_get_playlists_slice_on_start_of_list(playlists):
     assert result[1][1] == "bar"
 
 
-def test_get_playlists_slice_later_in_list(playlists):
+def test_get_playlists_slice_later_in_list(playlists: Playlists):
     result = playlists.GetPlaylists(2, 2, "User", False)
 
     assert len(result) == 1
     assert result[0][1] == "baz"
 
 
-def test_get_playlist_count_returns_number_of_playlists(playlists):
+def test_get_playlist_count_returns_number_of_playlists(playlists: Playlists):
     assert playlists.PlaylistCount == 3
 
 
-def test_get_orderings_includes_alpha_modified_and_user(playlists):
+def test_get_orderings_includes_alpha_modified_and_user(playlists: Playlists):
     result = playlists.Orderings
 
     assert "Alphabetical" in result
@@ -123,7 +138,7 @@ def test_get_orderings_includes_alpha_modified_and_user(playlists):
     assert "User" in result
 
 
-def test_get_active_playlist_does_not_return_a_playlist(playlists):
+def test_get_active_playlist_does_not_return_a_playlist(playlists: Playlists):
     result = playlists.ActivePlaylist
 
     valid, playlist = result
