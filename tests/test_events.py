@@ -3,6 +3,7 @@ from unittest import mock
 import pytest
 from mopidy.models import Playlist, TlTrack, Track
 from mopidy.types import DurationMs, PlaybackState, TracklistId, Uri
+
 from mopidy_mpris import player, playlists, root, server
 from mopidy_mpris.frontend import MprisFrontend
 

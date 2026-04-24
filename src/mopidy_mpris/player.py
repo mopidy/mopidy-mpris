@@ -376,4 +376,4 @@ def get_track_tlid(track_id: str) -> TracklistId:
     if not track_id.startswith("/com/mopidy/track/"):
         msg = f"Cannot extract track ID from {track_id!r}"
         raise ValueError(msg)
-    return TracklistId(int(track_id.split("/")[-1]))
+    return TracklistId(int(track_id.rsplit("/", maxsplit=1)[-1]))
