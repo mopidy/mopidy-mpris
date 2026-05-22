@@ -31,7 +31,7 @@ class Playlists(Interface):
           <arg name="Playlists" type="a(oss)" direction="out"/>
         </method>
         <signal name="PlaylistChanged">
-          <arg name="Playlist" type="oss"/>
+          <arg name="Playlist" type="(oss)"/>
         </signal>
         <property name="PlaylistCount" type="u" access="read"/>
         <property name="Orderings" type="as" access="read"/>
