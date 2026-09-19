@@ -354,7 +354,7 @@ Python shell to use `pydbus` as an MPRIS client:
 ```pycon
 >>> import pydbus
 >>> bus = pydbus.SessionBus()
->>> player = bus.get('org.mpris.MediaPlayer2.mopidy', '/org/mpris/MediaPlayer2')
+>>> player = bus.get("org.mpris.MediaPlayer2.mopidy", "/org/mpris/MediaPlayer2")
 ```
 
 Now you can control Mopidy through the player object. To get properties from
