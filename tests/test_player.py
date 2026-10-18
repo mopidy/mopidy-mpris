@@ -27,7 +27,11 @@ def player(config, core) -> Player:
     [(PLAYING, "Playing"), (PAUSED, "Paused"), (STOPPED, "Stopped")],
 )
 def test_get_playback_status(core: CoreProxy, player: Player, state, expected):
-    core.playback.set_state(state)
+    core.tracklist.add([Track(uri="dummy:a")])
+    if state != STOPPED:
+        core.playback.play().get()
+    if state == PAUSED:
+        core.playback.pause().get()
 
     assert player.PlaybackStatus == expected
 
