@@ -9,8 +9,11 @@ from mopidy.types import PlaybackState
 from mopidy_mpris.playlists import Playlists
 
 if TYPE_CHECKING:
+    from mopidy.backend import BackendProxy
     from mopidy.config import Config
     from mopidy.core import CoreProxy
+
+    from tests import AddToTracklist
 
 
 @pytest.fixture
@@ -36,11 +39,13 @@ def playlists(
 
 
 def test_activate_playlist_appends_tracks_to_tracklist(
+    add_to_tracklist: AddToTracklist,
+    backend: BackendProxy,
     core: CoreProxy,
     playlists: Playlists,
     dummy_playlists: dict[str, Playlist],
 ):
-    core.tracklist.add([Track(uri="dummy:old-a"), Track(uri="dummy:old-b")])
+    add_to_tracklist(Track(uri="dummy:old-a"), Track(uri="dummy:old-b"))
     assert core.tracklist.get_length().get() == 2
 
     pl = dummy_playlists["baz"]
@@ -52,6 +57,10 @@ def test_activate_playlist_appends_tracks_to_tracklist(
         ]
     )
     pl = core.playlists.save(pl).get()
+    backend.library.dummy_library = [
+        *backend.library.dummy_library.get(),
+        *pl.tracks,
+    ]
     playlist_id = playlists.GetPlaylists(0, 100, "User", False)[2][0]
 
     playlists.ActivatePlaylist(playlist_id)
@@ -59,6 +68,22 @@ def test_activate_playlist_appends_tracks_to_tracklist(
     assert core.tracklist.get_length().get() == 5
     assert core.playback.get_state().get() == PlaybackState.PLAYING
     assert core.playback.get_current_track().get() == pl.tracks[0]
+
+
+def test_activate_playlist_with_tracks_not_in_library_is_harmless(
+    core: CoreProxy,
+    playlists: Playlists,
+    dummy_playlists: dict[str, Playlist],
+):
+    pl = dummy_playlists["baz"]
+    pl = pl.replace(tracks=[Track(uri="dummy:baz-a")])
+    core.playlists.save(pl).get()
+    playlist_id = playlists.GetPlaylists(0, 100, "User", False)[2][0]
+
+    playlists.ActivatePlaylist(playlist_id)
+
+    assert core.tracklist.get_length().get() == 0
+    assert core.playback.get_state().get() == PlaybackState.STOPPED
 
 
 def test_activate_empty_playlist_is_harmless(core: CoreProxy, playlists: Playlists):

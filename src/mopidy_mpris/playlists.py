@@ -45,10 +45,11 @@ class Playlists(Interface):
     def ActivatePlaylist(self, playlist_id: str) -> None:
         logger.debug("%s.ActivatePlaylist(%r) called", self.INTERFACE, playlist_id)
         playlist_uri = get_playlist_uri(playlist_id)
-        playlist = self.core.playlists.lookup(playlist_uri).get()
-        if playlist and playlist.tracks:
-            tl_tracks = self.core.tracklist.add(playlist.tracks).get()
-            self.core.playback.play(tlid=tl_tracks[0].tlid).get()
+        items = self.core.playlists.get_items(playlist_uri).get()
+        if items:
+            tl_tracks = self.core.tracklist.add(uris=[ref.uri for ref in items]).get()
+            if tl_tracks:
+                self.core.playback.play(tlid=tl_tracks[0].tlid).get()
 
     def GetPlaylists(
         self,

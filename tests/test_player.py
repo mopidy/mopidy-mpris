@@ -12,6 +12,8 @@ from mopidy_mpris.player import Player
 if TYPE_CHECKING:
     from mopidy.core import CoreProxy
 
+    from tests import AddToTracklist
+
 PLAYING = PlaybackState.PLAYING
 PAUSED = PlaybackState.PAUSED
 STOPPED = PlaybackState.STOPPED
@@ -26,8 +28,10 @@ def player(config, core) -> Player:
     ("state", "expected"),
     [(PLAYING, "Playing"), (PAUSED, "Paused"), (STOPPED, "Stopped")],
 )
-def test_get_playback_status(core: CoreProxy, player: Player, state, expected):
-    core.tracklist.add([Track(uri="dummy:a")])
+def test_get_playback_status(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player, state, expected
+):
+    add_to_tracklist(Track(uri="dummy:a"))
     if state != STOPPED:
         core.playback.play().get()
     if state == PAUSED:
@@ -86,8 +90,10 @@ def test_get_rate_is_less_or_equal_than_maximum_rate(player: Player):
     assert player.Rate <= player.MaximumRate
 
 
-def test_set_rate_to_zero_pauses_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_set_rate_to_zero_pauses_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -96,9 +102,11 @@ def test_set_rate_to_zero_pauses_playback(core: CoreProxy, player: Player):
     assert core.playback.get_state().get() == PAUSED
 
 
-def test_set_rate_is_ignored_if_can_control_is_false(core: CoreProxy, player: Player):
+def test_set_rate_is_ignored_if_can_control_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -139,17 +147,17 @@ def test_get_metadata_is_empty_when_no_current_track(player: Player):
     assert player.Metadata == {}
 
 
-def test_get_metadata(core: CoreProxy, player: Player):
-    core.tracklist.add(
-        [
-            Track(
-                uri="dummy:a",
-                length=3600000,
-                name="a",
-                artists=[Artist(name="b"), Artist(name="c"), Artist(name=None)],
-                album=Album(name="d", artists=[Artist(name="e"), Artist(name=None)]),
-            )
-        ]
+def test_get_metadata(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(
+        Track(
+            uri="dummy:a",
+            length=3600000,
+            name="a",
+            artists=[Artist(name="b"), Artist(name="c"), Artist(name=None)],
+            album=Album(name="d", artists=[Artist(name="e"), Artist(name=None)]),
+        )
     )
     core.playback.play().get()
 
@@ -167,9 +175,9 @@ def test_get_metadata(core: CoreProxy, player: Player):
 
 
 def test_get_metadata_prefers_stream_title_over_track_name(
-    audio, core: CoreProxy, player
+    add_to_tracklist: AddToTracklist, audio, core: CoreProxy, player
 ):
-    core.tracklist.add([Track(uri="dummy:a", name="Track name")])
+    add_to_tracklist(Track(uri="dummy:a", name="Track name"))
     core.playback.play().get()
 
     result = player.Metadata
@@ -187,7 +195,7 @@ def test_get_metadata_prefers_stream_title_over_track_name(
 
 
 def test_get_metadata_use_library_image_as_art_url(
-    backend, core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, backend, core: CoreProxy, player: Player
 ):
     backend.library.dummy_get_images_result = {
         "dummy:a": [
@@ -196,7 +204,7 @@ def test_get_metadata_use_library_image_as_art_url(
             Image(uri="http://example.com/unsized.jpg"),
         ],
     }
-    core.tracklist.add([Track(uri="dummy:a")])
+    add_to_tracklist(Track(uri="dummy:a"))
     core.playback.play().get()
 
     result = player.Metadata
@@ -204,15 +212,19 @@ def test_get_metadata_use_library_image_as_art_url(
     assert result["mpris:artUrl"] == GLib.Variant("s", "http://example.com/large.jpg")
 
 
-def test_get_metadata_has_disc_number_in_album(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a", disc_no=2)])
+def test_get_metadata_has_disc_number_in_album(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a", disc_no=2))
     core.playback.play().get()
 
     assert player.Metadata["xesam:discNumber"] == GLib.Variant("i", 2)
 
 
-def test_get_metadata_has_track_number_in_album(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a", track_no=7)])
+def test_get_metadata_has_track_number_in_album(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a", track_no=7))
     core.playback.play().get()
 
     assert player.Metadata["xesam:trackNumber"] == GLib.Variant("i", 7)
@@ -297,9 +309,9 @@ def test_set_volume_to_zero_does_not_unmute_if_muted(core: CoreProxy, player: Pl
 
 
 def test_get_position_returns_time_position_in_microseconds(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
     core.playback.seek(10000).get()
 
@@ -325,39 +337,41 @@ def test_get_maximum_rate_is_one_or_more(player: Player):
 
 
 def test_can_go_next_is_true_if_can_control_and_other_next_track(
-    core: CoreProxy, player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player
 ):
     player._CanControl = True
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
 
     assert player.CanGoNext
 
 
 def test_can_go_next_is_false_if_next_track_is_the_same(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
     player._CanControl = True
-    core.tracklist.add([Track(uri="dummy:a")])
+    add_to_tracklist(Track(uri="dummy:a"))
     core.tracklist.set_repeat(True)
     core.playback.play().get()
 
     assert not player.CanGoNext
 
 
-def test_can_go_next_is_false_if_can_control_is_false(core: CoreProxy, player: Player):
+def test_can_go_next_is_false_if_can_control_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
 
     assert not player.CanGoNext
 
 
 def test_can_go_previous_is_true_if_can_control_and_previous_track(
-    core: CoreProxy, player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player
 ):
     player._CanControl = True
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.next().get()
 
@@ -365,10 +379,10 @@ def test_can_go_previous_is_true_if_can_control_and_previous_track(
 
 
 def test_can_go_previous_is_false_if_previous_track_is_the_same(
-    core: CoreProxy, player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player
 ):
     player._CanControl = True
-    core.tracklist.add([Track(uri="dummy:a")])
+    add_to_tracklist(Track(uri="dummy:a"))
     core.tracklist.set_repeat(True)
     core.playback.play().get()
 
@@ -376,10 +390,10 @@ def test_can_go_previous_is_false_if_previous_track_is_the_same(
 
 
 def test_can_go_previous_is_false_if_can_control_is_false(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
     player._CanControl = False
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.next().get()
 
@@ -387,10 +401,10 @@ def test_can_go_previous_is_false_if_can_control_is_false(
 
 
 def test_can_play_is_true_if_can_control_and_current_track(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
     player._CanControl = True
-    core.tracklist.add([Track(uri="dummy:a")])
+    add_to_tracklist(Track(uri="dummy:a"))
     core.playback.play().get()
     assert core.playback.get_current_track().get()
 
@@ -441,10 +455,12 @@ def test_can_control_is_true(core: CoreProxy, player: Player):
     assert result
 
 
-def test_next_is_ignored_if_can_go_next_is_false(core: CoreProxy, player: Player):
+def test_next_is_ignored_if_can_go_next_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
     assert not player.CanGoNext
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_current_track().get().uri == "dummy:a"
 
@@ -454,9 +470,9 @@ def test_next_is_ignored_if_can_go_next_is_false(core: CoreProxy, player: Player
 
 
 def test_next_when_playing_skips_to_next_track_and_keep_playing(
-    core: CoreProxy, player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player
 ):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_current_track().get().uri == "dummy:a"
     assert core.playback.get_state().get() == PLAYING
@@ -467,8 +483,10 @@ def test_next_when_playing_skips_to_next_track_and_keep_playing(
     assert core.playback.get_state().get() == PLAYING
 
 
-def test_next_when_at_end_of_list_should_stop_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_next_when_at_end_of_list_should_stop_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.next().get()
     assert core.playback.get_current_track().get().uri == "dummy:b"
@@ -478,9 +496,9 @@ def test_next_when_at_end_of_list_should_stop_playback(core: CoreProxy, player: 
 
 
 def test_next_when_paused_should_skip_to_next_track_and_stay_paused(
-    core: CoreProxy, player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player
 ):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.pause().get()
     assert core.playback.get_current_track().get().uri == "dummy:a"
@@ -491,9 +509,9 @@ def test_next_when_paused_should_skip_to_next_track_and_stay_paused(
 
 
 def test_next_when_stopped_skips_to_next_track_and_stay_stopped(
-    core: CoreProxy, player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player
 ):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.stop()
     assert core.playback.get_current_track().get().uri == "dummy:a"
@@ -504,11 +522,11 @@ def test_next_when_stopped_skips_to_next_track_and_stay_stopped(
 
 
 def test_previous_is_ignored_if_can_go_previous_is_false(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
     player._CanControl = False
     assert not player.CanGoPrevious
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.next().get()
     assert core.playback.get_current_track().get().uri == "dummy:b"
@@ -519,9 +537,9 @@ def test_previous_is_ignored_if_can_go_previous_is_false(
 
 
 def test_previous_when_playing_skips_to_prev_track_and_keep_playing(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.next().get()
     assert core.playback.get_current_track().get().uri == "dummy:b"
@@ -534,9 +552,9 @@ def test_previous_when_playing_skips_to_prev_track_and_keep_playing(
 
 
 def test_previous_when_at_start_of_list_should_stop_playback(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_current_track().get().uri == "dummy:a"
     assert core.playback.get_state().get() == PLAYING
@@ -547,9 +565,9 @@ def test_previous_when_at_start_of_list_should_stop_playback(
 
 
 def test_previous_when_paused_skips_to_previous_track_and_pause(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.next().get()
     core.playback.pause().get()
@@ -563,9 +581,9 @@ def test_previous_when_paused_skips_to_previous_track_and_pause(
 
 
 def test_previous_when_stopped_skips_to_previous_track_and_stops(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.next().get()
     core.playback.stop()
@@ -578,10 +596,12 @@ def test_previous_when_stopped_skips_to_previous_track_and_stops(
     assert core.playback.get_state().get() == STOPPED
 
 
-def test_pause_is_ignored_if_can_pause_is_false(core: CoreProxy, player: Player):
+def test_pause_is_ignored_if_can_pause_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
     assert not player.CanPause
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -590,8 +610,10 @@ def test_pause_is_ignored_if_can_pause_is_false(core: CoreProxy, player: Player)
     assert core.playback.get_state().get() == PLAYING
 
 
-def test_pause_when_playing_should_pause_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_pause_when_playing_should_pause_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -600,8 +622,10 @@ def test_pause_when_playing_should_pause_playback(core: CoreProxy, player: Playe
     assert core.playback.get_state().get() == PAUSED
 
 
-def test_pause_when_paused_has_no_effect(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_pause_when_paused_has_no_effect(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.pause().get()
     assert core.playback.get_state().get() == PAUSED
@@ -611,10 +635,12 @@ def test_pause_when_paused_has_no_effect(core: CoreProxy, player: Player):
     assert core.playback.get_state().get() == PAUSED
 
 
-def test_playpause_is_ignored_if_can_pause_is_false(core: CoreProxy, player: Player):
+def test_playpause_is_ignored_if_can_pause_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
     assert not player.CanPause
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -623,8 +649,10 @@ def test_playpause_is_ignored_if_can_pause_is_false(core: CoreProxy, player: Pla
     assert core.playback.get_state().get() == PLAYING
 
 
-def test_playpause_when_playing_should_pause_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_playpause_when_playing_should_pause_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -633,8 +661,10 @@ def test_playpause_when_playing_should_pause_playback(core: CoreProxy, player: P
     assert core.playback.get_state().get() == PAUSED
 
 
-def test_playpause_when_paused_should_resume_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_playpause_when_paused_should_resume_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.pause().get()
 
@@ -649,8 +679,10 @@ def test_playpause_when_paused_should_resume_playback(core: CoreProxy, player: P
     assert after_pause >= at_pause
 
 
-def test_playpause_when_stopped_should_start_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_playpause_when_stopped_should_start_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     assert core.playback.get_state().get() == STOPPED
 
     player.PlayPause()
@@ -658,9 +690,11 @@ def test_playpause_when_stopped_should_start_playback(core: CoreProxy, player: P
     assert core.playback.get_state().get() == PLAYING
 
 
-def test_stop_is_ignored_if_can_control_is_false(core: CoreProxy, player: Player):
+def test_stop_is_ignored_if_can_control_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -669,8 +703,10 @@ def test_stop_is_ignored_if_can_control_is_false(core: CoreProxy, player: Player
     assert core.playback.get_state().get() == PLAYING
 
 
-def test_stop_when_playing_should_stop_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_stop_when_playing_should_stop_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
 
@@ -679,8 +715,10 @@ def test_stop_when_playing_should_stop_playback(core: CoreProxy, player: Player)
     assert core.playback.get_state().get() == STOPPED
 
 
-def test_stop_when_paused_should_stop_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_stop_when_paused_should_stop_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.pause().get()
     assert core.playback.get_state().get() == PAUSED
@@ -690,10 +728,12 @@ def test_stop_when_paused_should_stop_playback(core: CoreProxy, player: Player):
     assert core.playback.get_state().get() == STOPPED
 
 
-def test_play_is_ignored_if_can_play_is_false(core: CoreProxy, player: Player):
+def test_play_is_ignored_if_can_play_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
     assert not player.CanPlay
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     assert core.playback.get_state().get() == STOPPED
 
     player.Play()
@@ -701,8 +741,10 @@ def test_play_is_ignored_if_can_play_is_false(core: CoreProxy, player: Player):
     assert core.playback.get_state().get() == STOPPED
 
 
-def test_play_when_stopped_starts_playback(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+def test_play_when_stopped_starts_playback(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     assert core.playback.get_state().get() == STOPPED
 
     player.Play()
@@ -710,8 +752,10 @@ def test_play_when_stopped_starts_playback(core: CoreProxy, player: Player):
     assert core.playback.get_state().get() == PLAYING
 
 
-def test_play_after_pause_resumes_from_same_position(core: CoreProxy, player: Player):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+def test_play_after_pause_resumes_from_same_position(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
 
     before_pause = core.playback.get_time_position().get()
@@ -739,10 +783,12 @@ def test_play_when_there_is_no_track_has_no_effect(core: CoreProxy, player: Play
     assert core.playback.get_state().get() == STOPPED
 
 
-def test_seek_is_ignored_if_can_seek_is_false(core: CoreProxy, player: Player):
+def test_seek_is_ignored_if_can_seek_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player._CanControl = False
     assert not player.CanSeek
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
 
     before_seek = core.playback.get_time_position().get()
@@ -759,9 +805,9 @@ def test_seek_is_ignored_if_can_seek_is_false(core: CoreProxy, player: Player):
 
 
 def test_seek_seeks_given_microseconds_forward_in_the_current_track(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
 
     before_seek = core.playback.get_time_position().get()
@@ -779,9 +825,9 @@ def test_seek_seeks_given_microseconds_forward_in_the_current_track(
 
 
 def test_seek_seeks_given_microseconds_backward_if_negative(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
     core.playback.seek(20000).get()
 
@@ -801,9 +847,9 @@ def test_seek_seeks_given_microseconds_backward_if_negative(
 
 
 def test_seek_seeks_to_start_of_track_if_new_position_is_negative(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
     core.playback.seek(20000).get()
 
@@ -824,9 +870,9 @@ def test_seek_seeks_to_start_of_track_if_new_position_is_negative(
 
 
 def test_seek_skips_to_next_track_if_new_position_gt_track_length(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a", length=40000), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.seek(20000).get()
 
@@ -848,9 +894,11 @@ def test_seek_skips_to_next_track_if_new_position_gt_track_length(
     assert after_seek < before_seek
 
 
-def test_set_position_is_ignored_if_can_seek_is_false(core: CoreProxy, player: Player):
+def test_set_position_is_ignored_if_can_seek_is_false(
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
+):
     player.get_CanSeek = lambda *_: False
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
 
     before_set_position = core.playback.get_time_position().get()
@@ -869,9 +917,9 @@ def test_set_position_is_ignored_if_can_seek_is_false(core: CoreProxy, player: P
 
 
 def test_set_position_sets_the_current_track_position_in_microsecs(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
 
     before_set_position = core.playback.get_time_position().get()
@@ -892,9 +940,9 @@ def test_set_position_sets_the_current_track_position_in_microsecs(
 
 
 def test_set_position_does_nothing_if_the_position_is_negative(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
     core.playback.seek(20000)
 
@@ -918,9 +966,9 @@ def test_set_position_does_nothing_if_the_position_is_negative(
 
 
 def test_set_position_does_nothing_if_position_is_gt_track_length(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
     core.playback.seek(20000)
 
@@ -944,9 +992,9 @@ def test_set_position_does_nothing_if_position_is_gt_track_length(
 
 
 def test_set_position_is_noop_if_track_id_isnt_current_track(
-    core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, core: CoreProxy, player: Player
 ):
-    core.tracklist.add([Track(uri="dummy:a", length=40000)])
+    add_to_tracklist(Track(uri="dummy:a", length=40000))
     core.playback.play().get()
     core.playback.seek(20000)
 
@@ -1001,10 +1049,10 @@ def test_open_uri_adds_uri_to_tracklist(backend, core: CoreProxy, player: Player
 
 
 def test_open_uri_starts_playback_of_new_track_if_stopped(
-    backend, core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, backend, core: CoreProxy, player: Player
 ):
     backend.library.dummy_library = [Track(uri="dummy:/test/uri")]
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     assert core.playback.get_state().get() == STOPPED
 
     player.OpenUri("dummy:/test/uri")
@@ -1014,10 +1062,10 @@ def test_open_uri_starts_playback_of_new_track_if_stopped(
 
 
 def test_open_uri_starts_playback_of_new_track_if_paused(
-    backend, core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, backend, core: CoreProxy, player: Player
 ):
     backend.library.dummy_library = [Track(uri="dummy:/test/uri")]
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     core.playback.pause().get()
     assert core.playback.get_state().get() == PAUSED
@@ -1030,10 +1078,10 @@ def test_open_uri_starts_playback_of_new_track_if_paused(
 
 
 def test_open_uri_starts_playback_of_new_track_if_playing(
-    backend, core: CoreProxy, player: Player
+    add_to_tracklist: AddToTracklist, backend, core: CoreProxy, player: Player
 ):
     backend.library.dummy_library = [Track(uri="dummy:/test/uri")]
-    core.tracklist.add([Track(uri="dummy:a"), Track(uri="dummy:b")])
+    add_to_tracklist(Track(uri="dummy:a"), Track(uri="dummy:b"))
     core.playback.play().get()
     assert core.playback.get_state().get() == PLAYING
     assert core.playback.get_current_track().get().uri == "dummy:a"

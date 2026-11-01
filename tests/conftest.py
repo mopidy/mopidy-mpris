@@ -14,6 +14,9 @@ if TYPE_CHECKING:
     from mopidy.backend import BackendProxy
     from mopidy.core import CoreProxy
     from mopidy.mixer import MixerProxy
+    from mopidy.models import TlTrack, Track
+
+    from tests import AddToTracklist
 
 
 @pytest.fixture
@@ -57,3 +60,19 @@ def core(config, backend, mixer, audio) -> Generator[CoreProxy]:
     )
     yield actor
     actor.stop()
+
+
+@pytest.fixture
+def add_to_tracklist(backend: BackendProxy, core: CoreProxy) -> AddToTracklist:
+    """Put tracks in the dummy library, and add them to the tracklist by URI."""
+
+    def add(*tracks: Track) -> list[TlTrack]:
+        uris = [track.uri for track in tracks]
+        library = backend.library.dummy_library.get()
+        backend.library.dummy_library = [
+            *[track for track in library if track.uri not in uris],
+            *tracks,
+        ]
+        return core.tracklist.add(uris=uris).get()
+
+    return add
