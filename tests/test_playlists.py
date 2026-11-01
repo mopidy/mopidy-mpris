@@ -12,6 +12,8 @@ if TYPE_CHECKING:
     from mopidy.config import Config
     from mopidy.core import CoreProxy
 
+    from tests import AddToTracklist
+
 
 @pytest.fixture
 def dummy_playlists(core: CoreProxy) -> dict[str, Playlist]:
@@ -36,11 +38,12 @@ def playlists(
 
 
 def test_activate_playlist_appends_tracks_to_tracklist(
+    add_to_tracklist: AddToTracklist,
     core: CoreProxy,
     playlists: Playlists,
     dummy_playlists: dict[str, Playlist],
 ):
-    core.tracklist.add([Track(uri="dummy:old-a"), Track(uri="dummy:old-b")])
+    add_to_tracklist(Track(uri="dummy:old-a"), Track(uri="dummy:old-b"))
     assert core.tracklist.get_length().get() == 2
 
     pl = dummy_playlists["baz"]
